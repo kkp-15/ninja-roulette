@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>配信ルーレット｜OBSに映せる無料のお題・話題ルーレット（登録不要）</title>
+<meta name="description" content="雑談のお題・企画・視聴者名を貼って回すだけ。OBSのブラウザソースで透過表示できる専用ページつき。項目はこの端末にだけ保存、ログイン不要・無料。YouTube・Twitch・TikTokのライブ配信で使えます。">
+<link rel="canonical" href="https://roulette.kkpwebninja.com/">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<meta name="theme-color" content="#e2600f">
+<!-- WEBNINJA_UNIFIED_FAVICON -->
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<meta property="og:title" content="配信ルーレット｜OBSに映せる無料のお題・話題ルーレット">
+<meta property="og:description" content="お題・企画・視聴者名を貼って回すだけ。OBSで透過表示できる専用ページつき。登録不要・無料。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://roulette.kkpwebninja.com/">
+<meta property="og:site_name" content="配信ルーレット">
+<meta property="og:image" content="https://roulette.kkpwebninja.com/ogp.png?d=20261015">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://roulette.kkpwebninja.com/ogp.png?d=20261015">
+<script src="/ga.js"></script>
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@graph":[
+    {"@type":"WebApplication","@id":"https://roulette.kkpwebninja.com/#app","name":"配信ルーレット","url":"https://roulette.kkpwebninja.com/","applicationCategory":"UtilitiesApplication","operatingSystem":"Web","inLanguage":"ja","datePublished":"2026-10-15","dateModified":"2026-10-15","description":"ライブ配信の雑談のお題・企画・視聴者名を貼って回す無料のルーレット。OBSのブラウザソースで透過表示できる専用ページつき。項目は端末内にだけ保存、ログイン不要。","offers":{"@type":"Offer","price":"0","priceCurrency":"JPY"},"author":{"@type":"Organization","name":"web忍者の砦"},"publisher":{"@type":"Organization","name":"web忍者の砦","url":"https://kkpwebninja.com/"}},
+    {"@type":"FAQPage","@id":"https://roulette.kkpwebninja.com/#faq","mainEntity":[
+      {"@type":"Question","name":"OBSで背景が透明になりません","acceptedAnswer":{"@type":"Answer","text":"OBS表示ページ（/view/）はページ側で背景を透過にしています。ブラウザソースの「カスタムCSS」に body の背景色を指定する行が残っていると透過になりません。カスタムCSSを空にするか、設定の背景を「透過」に戻してください。"}},
+      {"@type":"Question","name":"配信用のPCと操作用のスマホが別の端末でも使えますか","acceptedAnswer":{"@type":"Answer","text":"同じ端末では自動で同期します。別の端末のときは、設定の「別端末用のURL」を使ってください。項目をURLに載せた表示ページを開けます（回す操作は表示ページ側で行います）。"}},
+      {"@type":"Question","name":"入力した視聴者名やお題はどこかに送られますか","acceptedAnswer":{"@type":"Answer","text":"送られません。項目はこのブラウザの中（localStorage）にだけ残り、「消す」で消せます。計測は回した回数など回数だけで、項目の中身は送りません。"}},
+      {"@type":"Question","name":"スマホでも使えますか","acceptedAnswer":{"@type":"Answer","text":"使えます。画面が縦に並ぶだけで、回す・除外・履歴は同じです。OBSで映す配信はPCが前提なので、PCの横画面に合わせて作っています。"}}
+    ]}
+  ]
+}
+</script>
+<style>
+:root{--ink:#2b2b2b;--sub:#5f5f5f;--line:#cfc6b8;--line-l:#e8e1d6;--head:#fff6ea;--accent:#e2600f;--accent-d:#b84c0a;--link:#0b57a4;--maru:"M PLUS Rounded 1c","Hiragino Maru Gothic ProN","Hiragino Sans","Noto Sans JP",sans-serif}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:#fff;color:var(--ink);font-family:"Hiragino Sans","Noto Sans JP","Yu Gothic Medium",Meiryo,sans-serif;font-size:16px;line-height:1.7}
+a{color:var(--link)}
+p{margin:0 0 .8rem}
+ul,ol{padding-left:1.4rem;margin:.2rem 0 .8rem}
+li{margin:0 0 .3rem}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+code{font-size:.92em;background:#f4f1ec;padding:1px 5px;border-radius:3px}
+.site{border-bottom:2px solid var(--accent)}
+.site-in{max-width:1180px;margin:0 auto;padding:9px 16px;display:flex;align-items:baseline;justify-content:space-between;gap:6px 12px;flex-wrap:wrap}
+.site-name{font-weight:700;font-size:15px;color:var(--ink);text-decoration:none}
+.site-nav{font-size:13.5px}
+.site-nav a{color:var(--sub);text-decoration:none;margin-left:14px;display:inline-block;padding:4px 0}
+.site-nav a:first-child{margin-left:0}
+.wrap{max-width:1180px;margin:0 auto;padding:12px 16px 40px}
+h1{font-size:21px;font-weight:700;margin:0 0 .2rem;line-height:1.4}
+.lead{font-size:15px;margin:0 0 .2rem}
+.meta{font-size:12.5px;color:var(--sub);margin:0 0 .8rem}
+h2{font-size:19px;font-weight:700;margin:2.4rem 0 .6rem;padding:0 0 .3rem;border-bottom:2px solid var(--ink);line-height:1.4;scroll-margin-top:8px}
+h3{font-size:16.5px;font-weight:700;margin:1.4rem 0 .4rem;padding-left:.55rem;border-left:4px solid var(--accent);line-height:1.4}
+table{border-collapse:collapse;width:100%;font-size:14.5px;background:#fff}
+th,td{border:1px solid var(--line);padding:7px 10px;text-align:left;vertical-align:top;line-height:1.55}
+th{background:var(--head);font-weight:700;white-space:nowrap}
+.note{font-size:13px;color:var(--sub)}
+.narrow{max-width:760px}
+
+/* 道具 */
+.tool{display:grid;grid-template-columns:minmax(280px,340px) minmax(0,1fr);gap:16px 28px;align-items:start;margin-top:6px}
+@media(max-width:860px){.tool{grid-template-columns:1fr}textarea#items{min-height:150px}}
+.col-in label.lab{display:block;font-weight:700;font-size:14px;margin:0 0 4px}
+textarea#items{width:100%;min-height:260px;padding:10px;border:1px solid var(--line);resize:vertical;line-height:1.6;font-size:15px}
+.opt{font-size:14px;margin:8px 0 0;display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center}
+.opt label{display:inline-flex;align-items:center;gap:5px}
+.btn{border:1px solid var(--ink);background:#fff;padding:7px 12px;font-size:14px;font-weight:700;line-height:1.2}
+.btn:hover{background:#f4f1ec}
+.btn.sm{padding:4px 9px;font-size:13px;font-weight:400}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.count{font-size:13px;color:var(--sub);margin:6px 0 0}
+.col-wheel{display:flex;flex-direction:column;align-items:center}
+.stage{position:relative;width:100%;display:flex;justify-content:center}
+#wheel{display:block;max-width:100%}
+#confetti{position:absolute;inset:0;pointer-events:none;width:100%;height:100%}
+.spin{margin:16px 0 0;background:var(--accent);color:#fff;border:0;padding:14px 48px;font-size:20px;font-weight:700;letter-spacing:.04em;min-width:260px;min-height:52px}
+.spin:hover{background:var(--accent-d)}
+.spin[disabled]{background:#c9c2b8;cursor:not-allowed}
+.spin small{display:block;font-size:12px;font-weight:400;letter-spacing:0}
+.result{width:100%;max-width:560px;margin:16px 0 0;border:2px solid var(--ink);padding:10px 14px 12px;text-align:center;min-height:74px}
+.result .r-lab{font-size:12.5px;color:var(--sub);line-height:1.2}
+.result .r-txt{font-family:var(--maru);font-size:34px;font-weight:700;line-height:1.3;word-break:break-word}
+.result .r-txt.wait{font-size:16px;font-weight:400;color:var(--sub)}
+.hist{margin:14px 0 0;width:100%;max-width:560px;font-size:13.5px}
+.hist-h{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.hist-h b{font-size:13.5px}
+.hist ol{margin:4px 0 0;padding-left:1.6rem;max-height:120px;overflow:auto}
+.hist li{margin:0;color:var(--sub)}
+.hist li span{color:var(--ink)}
+
+/* 広告（標準サイズ・高さ予約） */
+.kkp-ad{text-align:center;margin:22px auto 0;max-width:680px;min-height:288px;padding-top:6px;width:100%}
+.kkp-ad[hidden]{display:none}
+.kkp-ad-label{font-size:11px;color:#999;letter-spacing:.08em;margin:0 0 6px;line-height:1}
+.kkp-ad ins.adsbygoogle,.kkp-ad ins.adsbygoogle-later{display:block;width:300px;height:250px;margin:0 auto}
+@media(min-width:768px){.kkp-ad{min-height:318px}.kkp-ad ins.adsbygoogle,.kkp-ad ins.adsbygoogle-later{width:336px;height:280px}}
+.kkp-ad:has(ins[data-ad-status="unfilled"]){display:none}
+
+/* 使い方・設定 */
+.steps{list-style:none;padding:0;margin:0 0 .8rem;border-top:1px solid var(--line-l)}
+.steps li{border-bottom:1px solid var(--line-l);padding:8px 0;margin:0;display:grid;grid-template-columns:5.2em 1fr;gap:10px}
+.steps li b{font-weight:700}
+.urlrow{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:4px 0 8px}
+.urlrow input{flex:1 1 320px;padding:7px 9px;border:1px solid var(--line);font-size:14px;background:#faf8f4}
+.set{width:100%;max-width:760px}
+.set th{width:11em}
+.set td label{display:inline-flex;align-items:center;gap:5px;margin-right:14px}
+.set select,.set input[type=color]{padding:4px 6px;border:1px solid var(--line)}
+.set input[type=color]{width:46px;height:30px;padding:2px}
+.flash{font-size:13px;color:var(--accent-d);margin-left:4px}
+details{border-top:1px solid var(--line-l);padding:8px 0}
+details:last-of-type{border-bottom:1px solid var(--line-l)}
+summary{cursor:pointer;font-weight:700;font-size:15px}
+details p{margin:.5rem 0 .3rem;font-size:15px}
+.uf{text-align:center;padding:2rem 1rem 2.5rem;font-size:.78rem;color:#94a3b8;line-height:2;border-top:1px solid #f0e6d2;margin-top:2.5rem;background:#fffcf7}
+.uf-name{font-weight:800;color:#8b6b3d;font-size:.85rem;margin-bottom:.4rem}
+.uf a{color:#8b6b3d;text-decoration:none;margin:0 .5rem}
+.uf-c{margin-top:.5rem;color:#bfa97a}
+</style>
+</head>
+<body>
+<div class="site"><div class="site-in">
+  <a class="site-name" href="/">配信ルーレット</a>
+  <nav class="site-nav"><a href="#howto">使い方</a><a href="#obs">OBSに映す</a><a href="#settings">設定</a><a href="#faq">よくある質問</a></nav>
+</div></div>
+<div class="wrap">
+<header>
+  <h1>配信ルーレット　お題・企画・視聴者名を貼って回す（OBS表示つき）</h1>
+  <p class="lead">1行に1つ項目を貼る → 回す → 配信に映すなら <a href="#obs">OBS表示ページ</a> をブラウザソースに。</p>
+  <p class="meta">更新日 2026年10月15日　項目はこの端末にだけ残ります（送信しません）。ログイン不要・無料。</p>
+</header>
+
+<main>
+<div class="tool">
+  <div class="col-in">
+    <label class="lab" for="items">項目（1行に1つ。貼り付けOK。「名前*3」で当たりやすさ3倍）</label>
+    <textarea id="items" spellcheck="false" placeholder="最近ハマっていること
+今日のごはん
+視聴者さんに質問コーナー
+歌ってみた*2"></textarea>
+    <div class="opt">
+      <label><input type="checkbox" id="exclude"> 当たった項目を次から外す</label>
+      <button class="btn sm" id="restore" hidden>外した項目を戻す（<span id="exN">0</span>）</button>
+    </div>
+    <div class="opt">
+      <button class="btn sm" id="sample">例を入れる</button>
+      <button class="btn sm" id="clear">全部消す</button>
+    </div>
+    <p class="count" id="count">項目を2つ以上入れると回せます。</p>
+  </div>
+  <div class="col-wheel">
+    <div class="stage"><canvas id="wheel" width="10" height="10" aria-label="ルーレット"></canvas><canvas id="confetti"></canvas></div>
+    <button class="spin" id="spin" disabled>回す<small>スペースキーでも回せます</small></button>
+    <div class="result" aria-live="polite">
+      <div class="r-lab">結果</div>
+      <div class="r-txt wait" id="rtxt">まだ回していません</div>
+    </div>
+    <div class="hist" id="hist" hidden>
+      <div class="hist-h"><b>履歴（新しい順・最大20件）</b><span><button class="btn sm" id="copyHist">コピー</button> <button class="btn sm" id="clearHist">消す</button></span></div>
+      <ol id="histList"></ol>
+    </div>
+    <div class="kkp-ad" id="adResult" hidden>
+      <div class="kkp-ad-label">広告</div>
+      <ins class="adsbygoogle-later" style="display:block" data-ad-client="ca-pub-1298304917726270" data-ad-slot="2937937957" data-ad-format="rectangle" data-full-width-responsive="false"></ins>
+    </div>
+  </div>
+</div>
+
+<div class="narrow">
+<h2 id="howto">使い方（3段）</h2>
+<ol class="steps">
+  <li><b>1. 項目を貼る</b><span>雑談のお題・企画名・視聴者名などを1行に1つ。メモ帳やコメント欄からまとめて貼り付けできます。「*3」のように付けると当たりやすさを変えられます。</span></li>
+  <li><b>2. 回す</b><span>「回す」ボタンかスペースキー。3〜4秒で止まって結果が大きく出ます。「当たった項目を次から外す」にチェックすると、同じ項目が続けて出ません。</span></li>
+  <li><b>3. 配信に映す</b><span>下の「OBSに映す」のURLをブラウザソースに入れると、この画面で回した結果が配信画面にも同じ動きで出ます（操作ボタンや広告は映りません）。</span></li>
+</ol>
+
+<h2 id="obs">OBSに映す（ブラウザソース）</h2>
+<p>同じPCでOBSを動かしているなら、このURLをそのまま使えます。回す操作はこの画面で行い、表示ページには結果だけが出ます。</p>
+<div class="urlrow"><input type="text" id="viewUrl" readonly value="https://roulette.kkpwebninja.com/view/"><button class="btn" id="copyView">URLをコピー</button><a class="btn" id="openView" href="/view/" target="_blank" rel="noopener">表示ページを開く</a><span class="flash" id="copyMsg"></span></div>
+<ol>
+  <li>OBSの「ソース」で「＋」→「ブラウザ」を選び、新規作成。</li>
+  <li>URLに上のアドレスを貼り、幅 <b>1920</b>・高さ <b>1080</b>（配信の解像度に合わせる）。「カスタムCSS」は空のままにします。</li>
+  <li>OKを押すと透過の背景にルーレットが出ます。位置と大きさはOBS側で調整してください。</li>
+</ol>
+<p class="note">背景を透過でなく単色にしたいとき、文字の大きさ、盤面と結果のどちらを出すかは下の「設定」で変えられます。変更はすぐ表示ページに反映されます。</p>
+
+<div class="kkp-ad" id="adHowto">
+  <div class="kkp-ad-label">広告</div>
+  <ins class="adsbygoogle-later" style="display:block" data-ad-client="ca-pub-1298304917726270" data-ad-slot="2937937957" data-ad-format="rectangle" data-full-width-responsive="false"></ins>
+</div>
+
+<h2 id="settings">設定（表示ページの見た目）</h2>
+<table class="set">
+<tr><th>背景</th><td>
+  <label><input type="radio" name="bg" value="transparent" checked> 透過（OBS向け）</label>
+  <label><input type="radio" name="bg" value="#ffffff"> 白</label>
+  <label><input type="radio" name="bg" value="#00b140"> 緑（クロマキー）</label>
+  <label><input type="radio" name="bg" value="#000000"> 黒</label>
+  <label><input type="radio" name="bg" value="custom"> 色を選ぶ <input type="color" id="bgColor" value="#fff6ea"></label>
+</td></tr>
+<tr><th>出すもの</th><td>
+  <label><input type="radio" name="layout" value="both" checked> 盤面と結果</label>
+  <label><input type="radio" name="layout" value="wheel"> 盤面だけ</label>
+  <label><input type="radio" name="layout" value="result"> 結果の文字だけ</label>
+</td></tr>
+<tr><th>結果の文字の大きさ</th><td>
+  <label><input type="radio" name="size" value="1"> 小</label>
+  <label><input type="radio" name="size" value="2" checked> 中</label>
+  <label><input type="radio" name="size" value="3"> 大</label>
+</td></tr>
+<tr><th>文字の色</th><td>
+  <label><input type="radio" name="ink" value="dark" checked> 黒（白ふち）</label>
+  <label><input type="radio" name="ink" value="light"> 白（黒ふち）</label>
+</td></tr>
+<tr><th>隅の表記</th><td><label><input type="checkbox" id="credit" checked> 右下に小さく「roulette.kkpwebninja.com」を出す</label><div class="note">視聴者が同じルーレットを探せるようにする表記です。外しても構いません。</div></td></tr>
+<tr><th>効果音</th><td>
+  <label><input type="checkbox" id="sound"> この画面で鳴らす</label>
+  <label><input type="checkbox" id="viewSound"> 表示ページ（OBS側）で鳴らす</label>
+  <div class="note">どちらも最初はオフ。音はブラウザで合成しているので音源ファイルの読み込みはありません。</div>
+</td></tr>
+<tr><th>別端末用のURL</th><td>
+  <div class="note">配信用PCと操作する端末が別のときは、項目を載せたこのURLを配信用PCで開いてください（表示ページ側でスペースキーかクリックで回せます）。項目を変えたらURLを作り直します。</div>
+  <div class="urlrow"><input type="text" id="remoteUrl" readonly><button class="btn" id="copyRemote">URLをコピー</button></div>
+</td></tr>
+</table>
+
+<h2 id="trouble">配信が重い・止まるときに見るところ</h2>
+<p>ルーレット自体は軽い（画像も音源ファイルも読み込まない）ので、配信が止まるときはたいてい別の原因です。順に確かめてください。</p>
+<ol>
+  <li><b>OBSのブラウザソースを何枚も重ねていないか。</b>使っていないブラウザソースは非表示でなく削除するか、「表示されていないときにソースをシャットダウン」をオンにします。</li>
+  <li><b>上り（アップロード）の回線速度が配信のビットレートに足りているか。</b>目安は各サービスの公式ページにあります：<a href="https://support.google.com/youtube/answer/2853702" target="_blank" rel="noopener">YouTube ライブ配信のエンコーダ設定</a>／<a href="https://help.twitch.tv/s/article/broadcasting-guidelines" target="_blank" rel="noopener">Twitch の配信ガイドライン</a>。Wi-Fiなら有線に替えるだけで安定することが多いです。</li>
+  <li><b>PCの負荷。</b>OBSの統計（表示→統計）で「レンダリングラグ」「エンコードラグ」が出ていればPC側の限界です。配信の解像度かフレームレートを一段下げます。</li>
+</ol>
+<div id="affBox" hidden></div>
+
+<h2 id="faq">よくある質問</h2>
+<details><summary>OBSで背景が透明になりません</summary><p>表示ページはページ側で背景を透過にしています。ブラウザソースの「カスタムCSS」に <code>body { background-color: ... }</code> が残っていると透過になりません。カスタムCSSを空にするか、上の設定で背景を「透過」に戻してください。</p></details>
+<details><summary>配信用のPCと操作するスマホが別でも使えますか</summary><p>同じ端末・同じブラウザなら自動で同期します（タブをまたいで通信するだけで、サーバーは通りません）。別の端末のときは設定の「別端末用のURL」を配信用PCで開いてください。項目がURLに入っているので、そのページ側でスペースキーかクリックで回せます。</p></details>
+<details><summary>入力した視聴者名やお題はどこかに送られますか</summary><p>送られません。項目はこのブラウザの中（localStorage）にだけ残り、「全部消す」で消せます。計測は「回した回数」のような回数だけで、項目の中身は送りません。</p></details>
+<details><summary>同じ項目ばかり出ます</summary><p>「当たった項目を次から外す」にチェックを入れると、出た項目は候補から外れます。全部出し切ったら「外した項目を戻す」で最初からにできます。</p></details>
+<details><summary>音が出ません</summary><p>最初はオフです。設定の「効果音」を入れてください。OBSのブラウザソースで音を配信に乗せるには、ソースの「音声をコントロール」をオンにし、「表示ページ（OBS側）で鳴らす」にもチェックを入れます。ブラウザの決まりで、ページを一度クリックするまで音が鳴らないことがあります。</p></details>
+<details><summary>スマホでも使えますか</summary><p>使えます。画面が縦に並ぶだけで、回す・除外・履歴は同じです。配信に映す使い方はPCが前提なので、PCの横画面に合わせて作っています。</p></details>
+<details><summary>配信や動画で使ってもいいですか</summary><p>はい。個人・法人を問わず、配信・録画・切り抜き・収益化に使えます。細かい条件は <a href="https://kkpwebninja.com/guidelines" target="_blank" rel="noopener">配信・動画でのご利用について</a> にまとめています。</p></details>
+
+<h2>個人情報の扱い</h2>
+<p>このページに入力した項目（お題・視聴者名など）は、お使いのブラウザの中にだけ保存されます。サーバーには送らず、運営者も見られません。計測（Google アナリティクス）は「回した回数」「表示ページを開いた回数」のような回数だけで、入力した文字は含みません。</p>
+</div>
+</main>
+</div>
+
+<!-- WEBNINJA_UNIFIED_FOOTER -->
+<footer class="uf">
+  <div class="uf-name">web忍者の砦</div>
+  <div><a href="https://kkpwebninja.com/" target="_blank" rel="noopener">本丸トップ</a>·<a href="https://privacypolicy.kkpwebninja.com/" target="_blank" rel="noopener">プライバシーポリシー</a>·<a href="https://kkpwebninja.com/otoiawase" target="_blank" rel="noopener">お問い合わせ</a>·<a href="https://x.com/kkp_webninja" target="_blank" rel="noopener">@kkp_webninja</a></div>
+  <div class="uf-c">© 2025-2026 web忍者の砦</div>
+</footer>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1298304917726270" crossorigin="anonymous"></script>
+<script src="/wheel.js"></script>
+<script>
+(function () {
+  'use strict';
+  var K = window.KkpWheel;
+  var $ = function (id) { return document.getElementById(id); };
+  var LS = { text: 'kkp_roulette_text', set: 'kkp_roulette_settings', ex: 'kkp_roulette_excluded', hist: 'kkp_roulette_history', msg: 'kkp_roulette_msg', state: 'kkp_roulette_state' };
+  var ORIGIN = 'https://roulette.kkpwebninja.com';
+  var SAMPLE = '最近ハマっていること\n今日のごはん\n視聴者さんに質問コーナー\n子どものころの夢\n最近の失敗談\n歌ってみた*2\n休憩（5分）';
+
+  function load(k, d) { try { var v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } }
+  function save(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { /* 保存できなくても動く */ } }
+
+  var settings = Object.assign({ bg: 'transparent', bgColor: '#fff6ea', layout: 'both', size: 2, ink: 'dark', credit: true, sound: false, viewSound: false, exclude: false }, load(LS.set, {}));
+  var excluded = load(LS.ex, []);
+  var history = load(LS.hist, []);
+  var items = [], pool = [];
+  var wheel = new K.Wheel($('wheel'));
+  var chan = null;
+  try { chan = new BroadcastChannel('kkp-roulette'); } catch (e) { chan = null; }
+
+  function send(msg) {
+    msg.ts = Date.now();
+    if (chan) { try { chan.postMessage(msg); } catch (e) {} }
+    save(LS.msg, msg);  // 別タブへの保険（storage イベント）
+  }
+  function viewSettings() {
+    return { bg: settings.bg === 'custom' ? settings.bgColor : settings.bg, layout: settings.layout, size: settings.size, ink: settings.ink, credit: settings.credit, sound: settings.viewSound };
+  }
+  function pushState(result) {
+    var st = { t: 'state', items: pool, settings: viewSettings(), result: result === undefined ? null : result };
+    save(LS.state, st);
+    send(st);
+  }
+
+  // 項目
+  function readItems() {
+    items = K.parseItems($('items').value);
+    pool = items.filter(function (it) { return excluded.indexOf(it.label) < 0; });
+    wheel.setItems(pool);
+    var n = pool.length;
+    $('count').textContent = n < 2 ? '項目を2つ以上入れると回せます。' : n + '件の候補' + (excluded.length ? '（' + excluded.length + '件を外しています）' : '');
+    $('spin').disabled = n < 2 || wheel.spinning;
+    $('exN').textContent = excluded.length;
+    $('restore').hidden = excluded.length === 0;
+    $('remoteUrl').value = ORIGIN + '/view/?' + remoteQuery();
+  }
+  function remoteQuery() {
+    var vs = viewSettings();
+    var q = ['items=' + encodeURIComponent(pool.map(function (i) { return i.weight === 1 ? i.label : i.label + '*' + i.weight; }).join('\n'))];
+    q.push('bg=' + encodeURIComponent(vs.bg), 'layout=' + vs.layout, 'size=' + vs.size, 'ink=' + vs.ink, 'credit=' + (vs.credit ? 1 : 0), 'sound=' + (vs.sound ? 1 : 0));
+    return q.join('&');
+  }
+  var saveTimer = null;
+  $('items').addEventListener('input', function () {
+    readItems();
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(function () { save(LS.text, $('items').value); pushState(); }, 300);
+  });
+  $('items').addEventListener('paste', function () { kkpEvent('items_paste'); });
+  $('sample').addEventListener('click', function () { $('items').value = SAMPLE; excluded = []; save(LS.ex, excluded); $('items').dispatchEvent(new Event('input')); });
+  $('clear').addEventListener('click', function () {
+    if (!$('items').value.trim() || confirm('項目・外した項目・履歴をこの端末から消します。よいですか？')) {
+      $('items').value = ''; excluded = []; history = []; save(LS.ex, excluded); save(LS.hist, history); renderHist();
+      $('items').dispatchEvent(new Event('input'));
+    }
+  });
+  $('restore').addEventListener('click', function () { excluded = []; save(LS.ex, excluded); readItems(); pushState(); });
+  $('exclude').addEventListener('change', function () { settings.exclude = this.checked; save(LS.set, settings); });
+
+  // 回す
+  var tickOn = false;
+  wheel.onTick = function () { if (settings.sound) K.sound('tick'); };
+  function spin() {
+    if (wheel.spinning || pool.length < 2) return;
+    var from = wheel.angle, final = wheel.pickFinal(5 + Math.floor(Math.random() * 2)), dur = 3400 + Math.random() * 600;
+    var id = Date.now();
+    $('spin').disabled = true;
+    $('rtxt').className = 'r-txt wait'; $('rtxt').textContent = '回っています…';
+    send({ t: 'spin', items: pool, from: from, final: final, dur: dur, id: id, settings: viewSettings() });
+    kkpEvent('spin');
+    wheel.spin(from, final, dur, function (idx) {
+      var label = pool[idx] ? pool[idx].label : '';
+      $('rtxt').className = 'r-txt'; $('rtxt').textContent = label;
+      if (settings.sound) K.sound('done');
+      K.confetti($('confetti'));
+      history.unshift({ l: label, t: Date.now() });
+      history = history.slice(0, 20); save(LS.hist, history); renderHist();
+      kkpEvent('result');
+      showResultAd();
+      if (settings.exclude && pool.length > 1) { excluded.push(label); save(LS.ex, excluded); }
+      readItems();
+      save(LS.state, { t: 'state', items: pool, settings: viewSettings(), result: label });
+    });
+  }
+  $('spin').addEventListener('click', spin);
+  document.addEventListener('keydown', function (e) {
+    var tag = (e.target.tagName || '').toLowerCase();
+    if (tag === 'textarea' || tag === 'input' || tag === 'select' || tag === 'button') return;
+    if (e.code === 'Space' || e.key === 'Enter') { e.preventDefault(); spin(); }
+  });
+
+  // 履歴
+  function renderHist() {
+    $('hist').hidden = history.length === 0;
+    $('histList').innerHTML = history.map(function (h) {
+      var d = new Date(h.t);
+      return '<li><span></span> <small>' + ('0' + d.getHours()).slice(-2) + ':' + ('0' + d.getMinutes()).slice(-2) + '</small></li>';
+    }).join('');
+    var li = $('histList').querySelectorAll('li span');
+    history.forEach(function (h, i) { li[i].textContent = h.l; });
+  }
+  $('copyHist').addEventListener('click', function () { copy(history.map(function (h) { return h.l; }).join('\n'), this); });
+  $('clearHist').addEventListener('click', function () { history = []; save(LS.hist, history); renderHist(); });
+
+  // 広告（表示されてから1回だけ push。DOM順で最初の未使用の枠に当たるので、後から出す枠は -later にしておく）
+  function pushAdWhenVisible(box) {
+    var ins = box.querySelector('ins');
+    if (!ins || ins.dataset.pushed) return;
+    function fire() {
+      if (ins.dataset.pushed) return;
+      ins.dataset.pushed = '1';
+      requestAnimationFrame(function () { ins.className = 'adsbygoogle'; try { (window.adsbygoogle = window.adsbygoogle || []).push({}); } catch (e) {} });
+    }
+    if (!('IntersectionObserver' in window)) { fire(); return; }
+    var io = new IntersectionObserver(function (en) { en.forEach(function (x) { if (x.isIntersecting && box.offsetWidth > 0) { io.disconnect(); fire(); } }); });
+    io.observe(box);
+  }
+  function showResultAd() { var a = $('adResult'); if (a.hidden) { a.hidden = false; pushAdWhenVisible(a); } }
+  pushAdWhenVisible($('adHowto'));
+
+  // 設定
+  function applySettingsToForm() {
+    var bg = document.querySelector('input[name=bg][value="' + settings.bg + '"]'); if (bg) bg.checked = true;
+    $('bgColor').value = settings.bgColor;
+    document.querySelector('input[name=layout][value="' + settings.layout + '"]').checked = true;
+    document.querySelector('input[name=size][value="' + settings.size + '"]').checked = true;
+    document.querySelector('input[name=ink][value="' + settings.ink + '"]').checked = true;
+    $('credit').checked = !!settings.credit; $('sound').checked = !!settings.sound; $('viewSound').checked = !!settings.viewSound; $('exclude').checked = !!settings.exclude;
+  }
+  function readForm() {
+    settings.bg = document.querySelector('input[name=bg]:checked').value;
+    settings.bgColor = $('bgColor').value;
+    settings.layout = document.querySelector('input[name=layout]:checked').value;
+    settings.size = parseInt(document.querySelector('input[name=size]:checked').value, 10);
+    settings.ink = document.querySelector('input[name=ink]:checked').value;
+    settings.credit = $('credit').checked; settings.sound = $('sound').checked; settings.viewSound = $('viewSound').checked;
+    save(LS.set, settings);
+    readItems();
+    pushState();
+  }
+  document.querySelectorAll('.set input').forEach(function (el) { el.addEventListener('change', readForm); el.addEventListener('input', readForm); });
+  $('bgColor').addEventListener('input', function () { document.querySelector('input[name=bg][value=custom]').checked = true; });
+
+  // URLコピー
+  function copy(text, btn) {
+    var done = function () { $('copyMsg').textContent = 'コピーしました'; setTimeout(function () { $('copyMsg').textContent = ''; }, 1800); if (btn) { var o = btn.textContent; btn.textContent = 'コピーしました'; setTimeout(function () { btn.textContent = o; }, 1800); } };
+    if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(text).then(done, done); }
+    else { var ta = document.createElement('textarea'); ta.value = text; document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); } catch (e) {} document.body.removeChild(ta); done(); }
+  }
+  $('copyView').addEventListener('click', function () { copy($('viewUrl').value, this); kkpEvent('obs_url_copy'); });
+  $('copyRemote').addEventListener('click', function () { copy($('remoteUrl').value, this); kkpEvent('obs_url_copy', { from: 'remote' }); });
+  $('openView').addEventListener('click', function () { kkpEvent('view_open_click'); });
+
+  // 盤面の大きさ（PCは高さに合わせる）
+  function fit() {
+    var col = document.querySelector('.col-wheel');
+    var w = Math.min(col.clientWidth, 560);
+    var h = Math.max(240, window.innerHeight - 390);
+    wheel.resize(Math.max(220, Math.floor(Math.min(w, h))));
+  }
+  window.addEventListener('resize', fit);
+
+  // 初期化
+  var saved = load(LS.text, null);
+  $('items').value = saved === null ? '' : saved;
+  applySettingsToForm();
+  fit();
+  readItems();
+  renderHist();
+  pushState();
+})();
+</script>
+</body>
+</html>

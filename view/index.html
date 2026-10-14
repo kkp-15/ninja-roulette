@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>配信ルーレット OBS表示ページ</title>
+<meta name="robots" content="noindex,follow">
+<link rel="canonical" href="https://roulette.kkpwebninja.com/">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
+<script src="/ga.js"></script>
+<style>
+/* OBS のブラウザソース向け: 背景は透過（既定）。操作ボタン・広告は置かない */
+:root{--ink:#2b2b2b;--edge:#fff;--rsize:7vw;--maru:"M PLUS Rounded 1c","Hiragino Maru Gothic ProN","Hiragino Sans","Noto Sans JP",sans-serif}
+html,body{margin:0;height:100%;overflow:hidden}
+body{background:transparent;font-family:var(--maru);color:var(--ink)}
+.stage{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;gap:4vw;padding:3vh 3vw}
+.stage.layout-result .wheelbox{display:none}
+.stage.layout-wheel .resbox{display:none}
+.wheelbox{position:relative;flex:0 0 auto}
+#wheel{display:block}
+#confetti{position:absolute;inset:0;pointer-events:none;width:100%;height:100%}
+.resbox{flex:1 1 auto;min-width:0;text-align:center}
+.r-lab{font-size:calc(var(--rsize) * .32);font-weight:700;opacity:.85;line-height:1.2;margin-bottom:.3em}
+.r-txt{font-size:var(--rsize);font-weight:700;line-height:1.25;word-break:break-word;overflow-wrap:anywhere}
+.ink-dark{--ink:#2b2b2b;--edge:#fff}
+.ink-light{--ink:#fff;--edge:#2b2b2b}
+.r-lab,.r-txt{color:var(--ink);text-shadow:0 0 .06em var(--edge),0 0 .06em var(--edge),0 0 .12em var(--edge),.03em .03em 0 var(--edge),-.03em -.03em 0 var(--edge),.03em -.03em 0 var(--edge),-.03em .03em 0 var(--edge)}
+.layout-result .r-txt{font-size:calc(var(--rsize) * 1.4)}
+.size-1{--rsize:5vw}.size-2{--rsize:7vw}.size-3{--rsize:10vw}
+.credit{position:fixed;right:10px;bottom:8px;font-size:14px;font-family:"Hiragino Sans","Noto Sans JP",sans-serif;color:var(--ink);text-shadow:0 0 3px var(--edge),0 0 3px var(--edge);opacity:.8;pointer-events:none}
+.credit[hidden]{display:none}
+.hint{position:fixed;left:10px;bottom:8px;font-size:14px;font-family:"Hiragino Sans","Noto Sans JP",sans-serif;color:var(--ink);text-shadow:0 0 3px var(--edge),0 0 3px var(--edge);opacity:.8}
+.hint[hidden]{display:none}
+.r-txt.wait{opacity:.6;font-size:calc(var(--rsize) * .5)}
+@media(max-aspect-ratio:1/1){.stage{flex-direction:column}.size-1{--rsize:8vw}.size-2{--rsize:11vw}.size-3{--rsize:14vw}}
+</style>
+</head>
+<body class="ink-dark size-2">
+<div class="stage layout-both" id="stage">
+  <div class="wheelbox"><canvas id="wheel" width="10" height="10"></canvas><canvas id="confetti"></canvas></div>
+  <div class="resbox"><div class="r-lab" id="rlab" hidden>結果</div><div class="r-txt wait" id="rtxt"></div></div>
+</div>
+<div class="hint" id="hint" hidden>クリックかスペースキーで回す</div>
+<div class="credit" id="credit">roulette.kkpwebninja.com</div>
+<script src="/wheel.js"></script>
+<script>
+(function () {
+  'use strict';
+  var K = window.KkpWheel;
+  var $ = function (id) { return document.getElementById(id); };
+  var wheel = new K.Wheel($('wheel'));
+  var q = new URLSearchParams(location.search);
+  var remote = q.has('items');   // 別端末モード: 項目はURLから。回す操作はこのページで
+  var settings = { bg: 'transparent', layout: 'both', size: 2, ink: 'dark', credit: true, sound: false };
+  var items = [];
+  var lastId = 0;
+
+  function load(k) { try { var v = localStorage.getItem(k); return v === null ? null : JSON.parse(v); } catch (e) { return null; } }
+
+  function applySettings(s) {
+    if (!s) return;
+    settings = Object.assign(settings, s);
+    document.body.style.background = settings.bg === 'transparent' ? 'transparent' : settings.bg;
+    $('stage').className = 'stage layout-' + (settings.layout || 'both');
+    document.body.className = 'ink-' + (settings.ink || 'dark') + ' size-' + (settings.size || 2);
+    $('credit').hidden = settings.credit === false || settings.credit === 0;
+    fit();
+  }
+  function setItems(list) { items = list || []; wheel.setItems(items); }
+  function showResult(label) {
+    $('rlab').hidden = !label;
+    $('rtxt').className = 'r-txt' + (label ? '' : ' wait');
+    $('rtxt').textContent = label || '';
+  }
+  function runSpin(msg) {
+    if (msg.id && msg.id === lastId) return;
+    lastId = msg.id || 0;
+    if (msg.items) setItems(msg.items);
+    if (msg.settings) applySettings(msg.settings);
+    $('rlab').hidden = true; $('rtxt').className = 'r-txt wait'; $('rtxt').textContent = '';
+    wheel.spin(msg.from, msg.final, msg.dur, function (idx) {
+      var label = items[idx] ? items[idx].label : '';
+      showResult(label);
+      if (settings.sound) K.sound('done');
+      K.confetti($('confetti'));
+    });
+  }
+  wheel.onTick = function () { if (settings.sound) K.sound('tick'); };
+
+  function handle(msg) {
+    if (!msg || !msg.t) return;
+    if (msg.t === 'spin') runSpin(msg);
+    else if (msg.t === 'state') { if (msg.settings) applySettings(msg.settings); if (!wheel.spinning) { setItems(msg.items); if (msg.result) showResult(msg.result); } }
+  }
+
+  if (remote) {
+    setItems(K.parseItems(q.get('items')));
+    applySettings({ bg: q.get('bg') || 'transparent', layout: q.get('layout') || 'both', size: parseInt(q.get('size') || '2', 10), ink: q.get('ink') || 'dark', credit: q.get('credit') !== '0', sound: q.get('sound') === '1' });
+    $('hint').hidden = false;
+    var spinHere = function () {
+      if (wheel.spinning || items.length < 2) return;
+      $('hint').hidden = true;
+      kkpEvent('spin', { from: 'remote' });
+      runSpin({ from: wheel.angle, final: wheel.pickFinal(5 + Math.floor(Math.random() * 2)), dur: 3400 + Math.random() * 600, id: Date.now() });
+    };
+    document.addEventListener('click', spinHere);
+    document.addEventListener('keydown', function (e) { if (e.code === 'Space' || e.key === 'Enter') { e.preventDefault(); spinHere(); } });
+  } else {
+    var st = load('kkp_roulette_state');
+    if (st) handle(st);
+    try {
+      var chan = new BroadcastChannel('kkp-roulette');
+      chan.onmessage = function (e) { handle(e.data); };
+    } catch (e) { /* storage イベントで受ける */ }
+    window.addEventListener('storage', function (e) {
+      if (e.key === 'kkp_roulette_msg' && e.newValue) { try { handle(JSON.parse(e.newValue)); } catch (err) {} }
+    });
+  }
+
+  function fit() {
+    var W = window.innerWidth, H = window.innerHeight, s;
+    var layout = settings.layout || 'both';
+    if (W >= H) s = layout === 'wheel' ? Math.min(W, H) * 0.9 : Math.min(W * 0.46, H * 0.9);
+    else s = layout === 'wheel' ? Math.min(W, H) * 0.9 : Math.min(W * 0.9, H * 0.55);
+    wheel.resize(Math.max(120, Math.floor(s)));
+  }
+  window.addEventListener('resize', fit);
+  fit();
+  kkpEvent('view_obs_open', { from: remote ? 'remote' : 'local' });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+.git
+.github
+wrangler.jsonc
+.assetsignore
+node_modules
+package.json
+package-lock.json
+README.md
+CNAME
+CLAUDE.md
+CLAUDE.local.md
+AGENTS.md
+.claude
