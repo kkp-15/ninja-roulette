@@ -414,6 +414,7 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
 
   // ガチャ
   var wheel = new K.Wheel($('wheel')), wheelItems = [];
+  wheel.setArt(K.ART);
   function go() {
     if (busy) { skip(); return; }
     if (!pool.length) return;
@@ -445,10 +446,11 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
     // 盤面は中身を伏せる（「？？？」）。止まったらテロップで発表する
     var items = cands.map(function (c, k) { return { label: '？？？', weight: 1 }; });
     var reveal = cands.map(function (c) { return { text: c.text, r: c.r, packName: packName[c.pack] || '' }; });
-    $('gwheel').hidden = false; fitWheel(); wheel.setItems(items);
-    var from = wheel.angle, final = wheel.pickFinal(5 + Math.floor(Math.random() * 2)), dur = 3400 + Math.random() * 600;
+    $('gwheel').hidden = false; fitWheel(); wheel.fx = S.fx; wheel.setItems(items);
+    var from = wheel.angle, final = wheel.pickFinal(5 + Math.floor(Math.random() * 2)), dur = 4600 + Math.random() * 600;
     setBusy(true); $('skip').hidden = true;
-    send({ t: 'spin', items: items, reveal: reveal, from: from, final: final, dur: dur, id: Date.now(), settings: viewSettings() });
+    var vs = viewSettings(); vs.wfx = S.fx;
+    send({ t: 'spin', items: items, reveal: reveal, from: from, final: final, dur: dur, id: Date.now(), settings: vs });
     kkpEvent('gacha_draw', { mode: 'wheel', fx: S.fx });
     wheel.spin(from, final, dur, function (idx) {
       var it = wheelItems[idx]; setBusy(false); if (!it) return;

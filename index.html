@@ -128,6 +128,7 @@ textarea#items{width:100%;min-height:260px;padding:10px;border:1px solid var(--l
 .set{width:100%;max-width:760px}
 .set th{width:11em}
 .set td label{display:inline-flex;align-items:center;gap:5px;margin-right:14px}
+@media(max-width:600px){.set,.set tbody,.set tr,.set th,.set td{display:block;width:auto}.set th{white-space:normal;border-bottom:0}.set td label{margin:2px 12px 2px 0}.urlrow input{min-width:0;flex-basis:100%}}
 .set select,.set input[type=color]{padding:4px 6px;border:1px solid var(--line)}
 .set input[type=color]{width:46px;height:30px;padding:2px}
 .flash{font-size:13px;color:var(--accent-d);margin-left:4px}
@@ -195,7 +196,7 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
 <h2 id="howto">使い方（3段）</h2>
 <ol class="steps">
   <li><b>1. 項目を貼る</b><span>雑談のお題・企画名・視聴者名などを1行に1つ。メモ帳やコメント欄からまとめて貼り付けできます。「*3」のように付けると当たりやすさを変えられます。</span></li>
-  <li><b>2. 回す</b><span>「回す」ボタンかスペースキー。3〜4秒で止まって結果が大きく出ます。「当たった項目を次から外す」にチェックすると、同じ項目が続けて出ません。</span></li>
+  <li><b>2. 回す</b><span>「回す」ボタンかスペースキー。5秒ほどで止まって結果が大きく出ます。「当たった項目を次から外す」にチェックすると、同じ項目が続けて出ません。</span></li>
   <li><b>3. 配信に映す</b><span>下の「OBSに映す」のURLをブラウザソースに入れると、この画面で回した結果が配信画面にも同じ動きで出ます（操作ボタンや広告は映りません）。</span></li>
 </ol>
 
@@ -229,6 +230,10 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
   <label><input type="radio" name="place" value="band"> 下の帯</label>
   <label><input type="radio" name="place" value="corner"> 右下に小さく</label>
   <div class="note">ゲーム画面の上に重ねるなら「下の帯」か「右下に小さく」。縦長の配信画面では自動で縦に並びます。</div>
+</td></tr>
+<tr><th>盤の光り方</th><td>
+  <label><input type="radio" name="wfx" value="full" checked> 派手（電球が追いかけて光る・止まると点滅）</label>
+  <label><input type="radio" name="wfx" value="lite"> 控えめ（電球は点いたまま・残像なし）</label>
 </td></tr>
 <tr><th>出すもの</th><td>
   <label><input type="radio" name="layout" value="both" checked> 盤面と結果</label>
@@ -301,11 +306,12 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
   function load(k, d) { try { var v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } }
   function save(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { /* 保存できなくても動く */ } }
 
-  var settings = Object.assign({ bg: 'transparent', bgColor: '#fff6ea', layout: 'both', place: 'full', size: 2, ink: 'dark', credit: true, sound: false, viewSound: false, exclude: false }, load(LS.set, {}));
+  var settings = Object.assign({ bg: 'transparent', bgColor: '#fff6ea', layout: 'both', place: 'full', wfx: 'full', size: 2, ink: 'dark', credit: true, sound: false, viewSound: false, exclude: false }, load(LS.set, {}));
   var excluded = load(LS.ex, []);
   var history = load(LS.hist, []);
   var items = [], pool = [];
   var wheel = new K.Wheel($('wheel'));
+  wheel.setArt(K.ART);
   var chan = null;
   try { chan = new BroadcastChannel('kkp-roulette'); } catch (e) { chan = null; }
 
@@ -315,7 +321,7 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
     save(LS.msg, msg);  // 別タブへの保険（storage イベント）
   }
   function viewSettings() {
-    return { bg: settings.bg === 'custom' ? settings.bgColor : settings.bg, layout: settings.layout, place: settings.place, size: settings.size, ink: settings.ink, credit: settings.credit, sound: settings.viewSound };
+    return { bg: settings.bg === 'custom' ? settings.bgColor : settings.bg, layout: settings.layout, place: settings.place, wfx: settings.wfx, size: settings.size, ink: settings.ink, credit: settings.credit, sound: settings.viewSound };
   }
   function pushState(result) {
     var st = { t: 'state', items: pool, settings: viewSettings(), result: result === undefined ? null : result };
@@ -338,7 +344,7 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
   function remoteQuery() {
     var vs = viewSettings();
     var q = ['items=' + encodeURIComponent(pool.map(function (i) { return i.weight === 1 ? i.label : i.label + '*' + i.weight; }).join('\n'))];
-    q.push('bg=' + encodeURIComponent(vs.bg), 'layout=' + vs.layout, 'place=' + vs.place, 'size=' + vs.size, 'ink=' + vs.ink, 'credit=' + (vs.credit ? 1 : 0), 'sound=' + (vs.sound ? 1 : 0));
+    q.push('bg=' + encodeURIComponent(vs.bg), 'layout=' + vs.layout, 'place=' + vs.place, 'wfx=' + vs.wfx, 'size=' + vs.size, 'ink=' + vs.ink, 'credit=' + (vs.credit ? 1 : 0), 'sound=' + (vs.sound ? 1 : 0));
     return q.join('&');
   }
   var saveTimer = null;
@@ -363,7 +369,7 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
   wheel.onTick = function () { if (settings.sound) K.sound('tick'); };
   function spin() {
     if (wheel.spinning || pool.length < 2) return;
-    var from = wheel.angle, final = wheel.pickFinal(5 + Math.floor(Math.random() * 2)), dur = 3400 + Math.random() * 600;
+    var from = wheel.angle, final = wheel.pickFinal(5 + Math.floor(Math.random() * 2)), dur = 4600 + Math.random() * 600;
     var id = Date.now();
     $('spin').disabled = true;
     $('rtxt').className = 'r-txt wait'; $('rtxt').textContent = '回っています…';
@@ -426,6 +432,7 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
     $('bgColor').value = settings.bgColor;
     document.querySelector('input[name=layout][value="' + settings.layout + '"]').checked = true;
     var pl = document.querySelector('input[name=place][value="' + settings.place + '"]'); if (pl) pl.checked = true;
+    var wf = document.querySelector('input[name=wfx][value="' + settings.wfx + '"]'); if (wf) wf.checked = true; wheel.fx = settings.wfx;
     document.querySelector('input[name=size][value="' + settings.size + '"]').checked = true;
     document.querySelector('input[name=ink][value="' + settings.ink + '"]').checked = true;
     $('credit').checked = !!settings.credit; $('sound').checked = !!settings.sound; $('viewSound').checked = !!settings.viewSound; $('exclude').checked = !!settings.exclude;
@@ -435,6 +442,7 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
     settings.bgColor = $('bgColor').value;
     settings.layout = document.querySelector('input[name=layout]:checked').value;
     settings.place = document.querySelector('input[name=place]:checked').value;
+    settings.wfx = document.querySelector('input[name=wfx]:checked').value; wheel.fx = settings.wfx;
     settings.size = parseInt(document.querySelector('input[name=size]:checked').value, 10);
     settings.ink = document.querySelector('input[name=ink]:checked').value;
     settings.credit = $('credit').checked; settings.sound = $('sound').checked; settings.viewSound = $('viewSound').checked;

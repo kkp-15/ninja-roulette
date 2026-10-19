@@ -64,6 +64,7 @@ body{background:transparent;font-family:"M PLUS Rounded 1c","Hiragino Maru Gothi
   var K = window.KkpWheel, G = window.KkpGacha;
   var $ = function (id) { return document.getElementById(id); };
   var wheel = new K.Wheel($('wheel'));
+  wheel.setArt(K.ART);
   var q = new URLSearchParams(location.search);
   var remote = q.has('items');   // 別端末モード: 項目はURLから。回す操作はこのページで
   var gremote = q.has('gacha');  // 別端末のお題ガチャ: パックはURLから。このページで引く
@@ -78,6 +79,7 @@ body{background:transparent;font-family:"M PLUS Rounded 1c","Hiragino Maru Gothi
   function applySettings(s) {
     if (!s) return;
     settings = Object.assign(settings, s);
+    wheel.fx = settings.wfx === 'lite' || settings.wfx === 'off' ? settings.wfx : 'full';
     document.body.style.background = settings.bg === 'transparent' ? 'transparent' : settings.bg;
     $('stage').className = 'stage place-' + place() + ' layout-' + (settings.layout || 'both');
     $('gstage').className = 'gstage g-' + place();
@@ -138,7 +140,7 @@ body{background:transparent;font-family:"M PLUS Rounded 1c","Hiragino Maru Gothi
   }
 
   function look() {
-    return { bg: q.get('bg') || 'transparent', layout: q.get('layout') || 'both', place: q.get('place') || 'full', size: parseInt(q.get('size') || '2', 10), ink: q.get('ink') || 'dark', credit: q.get('credit') !== '0', sound: q.get('sound') === '1' };
+    return { bg: q.get('bg') || 'transparent', layout: q.get('layout') || 'both', place: q.get('place') || 'full', wfx: q.get('wfx') || 'full', size: parseInt(q.get('size') || '2', 10), ink: q.get('ink') || 'dark', credit: q.get('credit') !== '0', sound: q.get('sound') === '1' };
   }
   if (gremote) {
     // 別端末: このページでお題ガチャを引く（クリック・スペース。演出中ならスキップ）
@@ -170,7 +172,7 @@ body{background:transparent;font-family:"M PLUS Rounded 1c","Hiragino Maru Gothi
       if (wheel.spinning || items.length < 2) return;
       $('hint').hidden = true;
       kkpEvent('spin', { from: 'remote' });
-      runSpin({ from: wheel.angle, final: wheel.pickFinal(5 + Math.floor(Math.random() * 2)), dur: 3400 + Math.random() * 600, id: Date.now() });
+      runSpin({ from: wheel.angle, final: wheel.pickFinal(5 + Math.floor(Math.random() * 2)), dur: 4600 + Math.random() * 600, id: Date.now() });
     };
     document.addEventListener('click', spinHere);
     document.addEventListener('keydown', function (e) { if (e.code === 'Space' || e.key === 'Enter') { e.preventDefault(); spinHere(); } });
