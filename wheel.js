@@ -4,7 +4,9 @@
 (function () {
   'use strict';
   var TAU = Math.PI * 2;
-  var COLORS = ['#ffb36b', '#ffe3b0', '#ff9a56', '#ffd58f', '#ffc07a', '#fff0cf'];
+  // 配信で映える強めの配色（濃い色には白文字、淡い色には黒文字）
+  var COLORS = ['#e2600f', '#fff1d6', '#ffb21e', '#ffffff', '#f47b20', '#ffe08a'];
+  var DARK = { '#e2600f': 1, '#f47b20': 1 };
   var FONT = '"M PLUS Rounded 1c","Hiragino Maru Gothic ProN","Hiragino Sans","Noto Sans JP","Yu Gothic Medium",Meiryo,sans-serif';
 
   // 「名前*3」の重み付きで、各区画の開始・終了角を出す
@@ -33,6 +35,12 @@
 
   function fitText(ctx, text, max) {
     if (ctx.measureText(text).width <= max) return text;
+    // まず文字を小さくして全部入れる（7割まで）。それでも入らなければ末尾を省く
+    var m = ctx.font.match(/(\d+(?:\.\d+)?)px/), base = m ? parseFloat(m[1]) : 16;
+    for (var k = 0.92; k >= 0.7; k -= 0.06) {
+      ctx.font = ctx.font.replace(/\d+(?:\.\d+)?px/, (base * k).toFixed(1) + 'px');
+      if (ctx.measureText(text).width <= max) return text;
+    }
     var s = text;
     while (s.length > 1 && ctx.measureText(s + '…').width > max) s = s.slice(0, -1);
     return s + '…';
@@ -69,7 +77,7 @@
   Wheel.prototype.draw = function () {
     var ctx = this.ctx, s = this.size;
     if (!s) return;
-    var c = s / 2, R = s / 2 - s * 0.03, n = this.segs.length, i;
+    var c = s / 2, R = s / 2 - s * 0.075, n = this.segs.length, i;
     ctx.clearRect(0, 0, s, s);
     ctx.save();
     ctx.translate(c, c);
@@ -78,52 +86,70 @@
       ctx.beginPath(); ctx.arc(0, 0, R, 0, TAU);
       ctx.fillStyle = '#fff5e8'; ctx.fill();
     }
+    var cols = [];
     for (i = 0; i < n; i++) {
       var sg = this.segs[i];
       var color = COLORS[i % COLORS.length];
-      if (n > 1 && i === n - 1 && i % COLORS.length === 0) color = COLORS[1];  // 最後と最初が同じ色にならないように
+      if (n > 1 && i === n - 1 && i % COLORS.length === 0) color = COLORS[3];  // 最後と最初が同じ色にならないように
+      cols.push(color);
       ctx.beginPath();
       ctx.moveTo(0, 0);
       ctx.arc(0, 0, R, sg.start, sg.end);
       ctx.closePath();
       ctx.fillStyle = color;
       ctx.fill();
-      if (n > 1) { ctx.strokeStyle = '#fff'; ctx.lineWidth = Math.max(1, s * 0.004); ctx.stroke(); }
+      if (n > 1) { ctx.strokeStyle = '#2b2b2b'; ctx.lineWidth = Math.max(1.5, s * 0.006); ctx.stroke(); }
     }
-    // 文字
-    var fs = Math.max(10, Math.min(s * 0.055, s * 0.9 / Math.max(n, 1) * 0.5));
-    ctx.fillStyle = '#2b2b2b';
-    ctx.font = '700 ' + fs + 'px ' + FONT;
+    // 文字（極太・縁取り）
+    var fs = Math.max(11, Math.min(s * 0.062, s * 0.95 / Math.max(n, 1) * 0.55));
     ctx.textBaseline = 'middle';
+    ctx.lineJoin = 'round';
     for (i = 0; i < n; i++) {
       var g = this.segs[i], mid = (g.start + g.end) / 2;
-      if ((g.end - g.start) * R < fs * 1.1) continue;  // 細すぎる区画は文字を省く
+      ctx.font = '900 ' + fs + 'px ' + FONT;
+      if ((g.end - g.start) * R < fs * 1.05) continue;  // 細すぎる区画は文字を省く
       ctx.save();
       ctx.rotate(mid);
-      // 画面の左半分に来た文字は裏返して、どの区画も読める向きにする
       var abs = ((mid + this.angle - Math.PI / 2) % TAU + TAU) % TAU;
-      var txt = fitText(ctx, g.label, R * 0.7);
-      if (abs > Math.PI / 2 && abs < Math.PI * 1.5) { ctx.rotate(Math.PI); ctx.textAlign = 'left'; ctx.fillText(txt, -R * 0.94, 0); }
-      else { ctx.textAlign = 'right'; ctx.fillText(txt, R * 0.94, 0); }
+      var txt = fitText(ctx, g.label, R * 0.68);
+      var dark = DARK[cols[i]];
+      ctx.lineWidth = Math.max(2, fs * 0.22);
+      ctx.strokeStyle = dark ? '#2b2b2b' : '#ffffff';
+      ctx.fillStyle = dark ? '#ffffff' : '#2b2b2b';
+      // 画面の左半分に来た文字は裏返して、どの区画も読める向きにする
+      if (abs > Math.PI / 2 && abs < Math.PI * 1.5) { ctx.rotate(Math.PI); ctx.textAlign = 'left'; ctx.strokeText(txt, -R * 0.9, 0); ctx.fillText(txt, -R * 0.9, 0); }
+      else { ctx.textAlign = 'right'; ctx.strokeText(txt, R * 0.9, 0); ctx.fillText(txt, R * 0.9, 0); }
       ctx.restore();
     }
     ctx.restore();
-    // 外枠・中心
+    // 外枠（濃い縁＋オレンジの輪＋ピン）・中心
     ctx.save();
     ctx.translate(c, c);
-    ctx.beginPath(); ctx.arc(0, 0, R, 0, TAU);
-    ctx.strokeStyle = '#2b2b2b'; ctx.lineWidth = Math.max(3, s * 0.018); ctx.stroke();
-    ctx.beginPath(); ctx.arc(0, 0, Math.max(8, s * 0.06), 0, TAU);
-    ctx.fillStyle = '#fff'; ctx.fill(); ctx.stroke();
-    // 針（真上）
-    var pw = Math.max(8, s * 0.045), ph = Math.max(14, s * 0.08);
+    var rim = Math.max(6, s * 0.035);
+    ctx.beginPath(); ctx.arc(0, 0, R + rim * 0.5, 0, TAU);
+    ctx.strokeStyle = '#2b2b2b'; ctx.lineWidth = rim + Math.max(3, s * 0.012); ctx.stroke();
+    ctx.beginPath(); ctx.arc(0, 0, R + rim * 0.5, 0, TAU);
+    ctx.strokeStyle = '#e2600f'; ctx.lineWidth = rim; ctx.stroke();
+    var pins = Math.max(12, Math.min(36, n * 2));
+    for (i = 0; i < pins; i++) {
+      var pa = this.angle + i / pins * TAU;
+      ctx.beginPath(); ctx.arc(Math.cos(pa) * (R + rim * 0.5), Math.sin(pa) * (R + rim * 0.5), rim * 0.26, 0, TAU);
+      ctx.fillStyle = '#fff1d6'; ctx.fill();
+    }
+    ctx.beginPath(); ctx.arc(0, 0, Math.max(10, s * 0.075), 0, TAU);
+    ctx.fillStyle = '#e2600f'; ctx.fill(); ctx.lineWidth = Math.max(3, s * 0.012); ctx.strokeStyle = '#2b2b2b'; ctx.stroke();
+    ctx.beginPath(); ctx.arc(0, 0, Math.max(4, s * 0.03), 0, TAU);
+    ctx.fillStyle = '#fff1d6'; ctx.fill(); ctx.stroke();
+    // 針（真上・太い縁）
+    var pw = Math.max(10, s * 0.055), ph = Math.max(16, s * 0.1), top = -R - rim * 1.6;
     ctx.beginPath();
-    ctx.moveTo(-pw, -R - s * 0.035);
-    ctx.lineTo(pw, -R - s * 0.035);
-    ctx.lineTo(0, -R + ph * 0.55);
+    ctx.moveTo(-pw, top);
+    ctx.lineTo(pw, top);
+    ctx.lineTo(0, top + ph);
     ctx.closePath();
-    ctx.fillStyle = '#e2600f'; ctx.fill();
-    ctx.strokeStyle = '#fff'; ctx.lineWidth = Math.max(2, s * 0.008); ctx.stroke();
+    ctx.lineJoin = 'round';
+    ctx.fillStyle = '#ffd23f'; ctx.fill();
+    ctx.strokeStyle = '#2b2b2b'; ctx.lineWidth = Math.max(3, s * 0.012); ctx.stroke();
     ctx.restore();
   };
 

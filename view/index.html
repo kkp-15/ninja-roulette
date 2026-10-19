@@ -7,80 +7,114 @@
 <meta name="robots" content="noindex,follow">
 <link rel="canonical" href="https://roulette.kkpwebninja.com/">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@800;900&display=swap" rel="stylesheet">
 <script src="/ga.js"></script>
 <style>
-/* OBS のブラウザソース向け: 背景は透過（既定）。操作ボタン・広告は置かない */
-:root{--ink:#2b2b2b;--edge:#fff;--rsize:7vw;--maru:"M PLUS Rounded 1c","Hiragino Maru Gothic ProN","Hiragino Sans","Noto Sans JP",sans-serif}
+/* OBS のブラウザソース向け: 背景は透過（既定）。操作ボタン・広告・説明文は映さない
+   置き方: full（全画面）/ band（下の帯）/ corner（右下に小さく）。縦長の画面では縦に並べる */
 html,body{margin:0;height:100%;overflow:hidden}
-body{background:transparent;font-family:var(--maru);color:var(--ink)}
-.stage{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;gap:4vw;padding:3vh 3vw}
-.stage.layout-result .wheelbox{display:none}
-.stage.layout-wheel .resbox{display:none}
+body{background:transparent;font-family:"M PLUS Rounded 1c","Hiragino Maru Gothic ProN","Hiragino Sans","Noto Sans JP",sans-serif;color:#2b2b2b}
+.stage{position:fixed;display:flex;align-items:center;justify-content:center;gap:3vw}
+.place-full{inset:0;padding:3vh 3vw}
+.place-band{left:0;right:0;bottom:0;height:36vh;padding:1.5vh 2vw;justify-content:flex-start;gap:2vw}
+.place-corner{right:2vw;bottom:3vh;width:44vw;height:56vh;flex-direction:column;align-items:flex-end;justify-content:flex-end;gap:1.5vh}
+.layout-result .wheelbox{display:none}
+.layout-wheel .resbox{display:none}
 .wheelbox{position:relative;flex:0 0 auto}
 #wheel{display:block}
 #confetti{position:absolute;inset:0;pointer-events:none;width:100%;height:100%}
-.resbox{flex:1 1 auto;min-width:0;text-align:center}
-.r-lab{font-size:calc(var(--rsize) * .32);font-weight:700;opacity:.85;line-height:1.2;margin-bottom:.3em}
-.r-txt{font-size:var(--rsize);font-weight:700;line-height:1.25;word-break:break-word;overflow-wrap:anywhere}
-.ink-dark{--ink:#2b2b2b;--edge:#fff}
-.ink-light{--ink:#fff;--edge:#2b2b2b}
-.r-lab,.r-txt{color:var(--ink);text-shadow:0 0 .06em var(--edge),0 0 .06em var(--edge),0 0 .12em var(--edge),.03em .03em 0 var(--edge),-.03em -.03em 0 var(--edge),.03em -.03em 0 var(--edge),-.03em .03em 0 var(--edge)}
-.layout-result .r-txt{font-size:calc(var(--rsize) * 1.4)}
-.size-1{--rsize:5vw}.size-2{--rsize:7vw}.size-3{--rsize:10vw}
-.credit{position:fixed;right:10px;bottom:8px;font-size:14px;font-family:"Hiragino Sans","Noto Sans JP",sans-serif;color:var(--ink);text-shadow:0 0 3px var(--edge),0 0 3px var(--edge);opacity:.8;pointer-events:none}
-.credit[hidden]{display:none}
-.hint{position:fixed;left:10px;bottom:8px;font-size:14px;font-family:"Hiragino Sans","Noto Sans JP",sans-serif;color:var(--ink);text-shadow:0 0 3px var(--edge),0 0 3px var(--edge);opacity:.8}
-.hint[hidden]{display:none}
-.r-txt.wait{opacity:.6;font-size:calc(var(--rsize) * .5)}
-@media(max-aspect-ratio:1/1){.stage{flex-direction:column}.size-1{--rsize:8vw}.size-2{--rsize:11vw}.size-3{--rsize:14vw}}
+.resbox{flex:1 1 auto;min-width:0;display:flex;align-items:center}
+.place-corner .resbox{flex:0 0 auto;width:100%}
+.gstage{position:fixed}
+.gstage[hidden]{display:none}
+.g-full{inset:0}
+.g-band{left:0;right:0;bottom:0;height:36vh}
+.g-corner{right:2vw;bottom:3vh;width:44vw;height:56vh}
+.credit,.hint{position:fixed;font-size:15px;font-weight:800;color:#fff;text-shadow:0 0 2px #2b2b2b,1px 1px 0 #2b2b2b,-1px -1px 0 #2b2b2b,1px -1px 0 #2b2b2b,-1px 1px 0 #2b2b2b;pointer-events:none}
+.credit{right:12px;bottom:8px;opacity:.9}
+.credit.top{bottom:auto;top:8px}
+.credit[hidden],.hint[hidden]{display:none}
+.hint{left:12px;bottom:8px}
+@media(max-aspect-ratio:1/1){
+  .place-full{flex-direction:column}
+  .place-band{height:30vh}
+  .place-corner{width:70vw;height:44vh}
+  .g-band{height:30vh}
+  .g-corner{width:70vw;height:44vh}
+}
 </style>
 </head>
-<body class="ink-dark size-2">
-<div class="stage layout-both" id="stage">
+<body>
+<div class="stage place-full layout-both" id="stage">
   <div class="wheelbox"><canvas id="wheel" width="10" height="10"></canvas><canvas id="confetti"></canvas></div>
-  <div class="resbox"><div class="r-lab" id="rlab" hidden>結果</div><div class="r-txt wait" id="rtxt"></div></div>
+  <div class="resbox" id="resbox"></div>
 </div>
+<div class="gstage g-full" id="gstage" hidden></div>
 <div class="hint" id="hint" hidden>クリックかスペースキーで回す</div>
 <div class="credit" id="credit">roulette.kkpwebninja.com</div>
 <script src="/wheel.js"></script>
+<script src="/gacha.js"></script>
+<script src="/odai-gacha/packs.js"></script>
 <script>
 (function () {
   'use strict';
-  var K = window.KkpWheel;
+  var K = window.KkpWheel, G = window.KkpGacha;
   var $ = function (id) { return document.getElementById(id); };
   var wheel = new K.Wheel($('wheel'));
   var q = new URLSearchParams(location.search);
   var remote = q.has('items');   // 別端末モード: 項目はURLから。回す操作はこのページで
-  var settings = { bg: 'transparent', layout: 'both', size: 2, ink: 'dark', credit: true, sound: false };
-  var items = [];
-  var lastId = 0;
+  var gremote = q.has('gacha');  // 別端末のお題ガチャ: パックはURLから。このページで引く
+  var settings = { bg: 'transparent', layout: 'both', place: 'full', size: 2, ink: 'dark', credit: true, sound: false };
+  var items = [], lastId = 0, gctl = null, lastResult = '';
 
   function load(k) { try { var v = localStorage.getItem(k); return v === null ? null : JSON.parse(v); } catch (e) { return null; } }
+  function place() { return /^(full|band|corner)$/.test(settings.place) ? settings.place : 'full'; }
+  function scale() { return [0, 0.8, 1, 1.25][settings.size] || 1; }
+  function band() { return settings.ink === 'light' ? 'dark' : 'orange'; }
 
   function applySettings(s) {
     if (!s) return;
     settings = Object.assign(settings, s);
     document.body.style.background = settings.bg === 'transparent' ? 'transparent' : settings.bg;
-    $('stage').className = 'stage layout-' + (settings.layout || 'both');
-    document.body.className = 'ink-' + (settings.ink || 'dark') + ' size-' + (settings.size || 2);
+    $('stage').className = 'stage place-' + place() + ' layout-' + (settings.layout || 'both');
+    $('gstage').className = 'gstage g-' + place();
     $('credit').hidden = settings.credit === false || settings.credit === 0;
+    $('credit').className = 'credit' + (place() === 'full' ? '' : ' top');
     fit();
+    if (lastResult && !wheel.spinning) showResult(lastResult, false);
   }
   function setItems(list) { items = list || []; wheel.setItems(items); }
-  function showResult(label) {
-    $('rlab').hidden = !label;
-    $('rtxt').className = 'r-txt' + (label ? '' : ' wait');
-    $('rtxt').textContent = label || '';
+  function showResult(label, anim) {
+    lastResult = label || '';
+    var box = $('resbox'); box.innerHTML = '';
+    if (!label) return;
+    var t = G.telop(box, { tag: '結果', text: label, band: band() });
+    if (anim) t.classList.add('in');
+  }
+  // お題ガチャ（置き方に合わせた範囲で演出）
+  function showGacha(on) {
+    $('gstage').hidden = !on; $('stage').style.visibility = on ? 'hidden' : '';
+    if (!on && $('gstage')._kg) $('gstage')._kg.destroy();
+  }
+  function runGacha(msg, quiet) {
+    if (!quiet) { if (msg.id && msg.id === lastId) return; lastId = msg.id || 0; }
+    if (msg.settings) applySettings(msg.settings);
+    showGacha(true);
+    var o = { rarity: msg.rarity, text: msg.text, packName: msg.packName, scale: scale(), place: place(), band: band() };
+    gctl = quiet ? G.show($('gstage'), o) : G.play($('gstage'), Object.assign(o, { fx: msg.fx || 'full', sound: !!settings.sound }));
   }
   function runSpin(msg) {
     if (msg.id && msg.id === lastId) return;
     lastId = msg.id || 0;
+    showGacha(false);
     if (msg.items) setItems(msg.items);
     if (msg.settings) applySettings(msg.settings);
-    $('rlab').hidden = true; $('rtxt').className = 'r-txt wait'; $('rtxt').textContent = '';
+    showResult('', false);
     wheel.spin(msg.from, msg.final, msg.dur, function (idx) {
       var label = items[idx] ? items[idx].label : '';
-      showResult(label);
+      showResult(label, true);
       if (settings.sound) K.sound('done');
       K.confetti($('confetti'));
     });
@@ -90,12 +124,45 @@ body{background:transparent;font-family:var(--maru);color:var(--ink)}
   function handle(msg) {
     if (!msg || !msg.t) return;
     if (msg.t === 'spin') runSpin(msg);
-    else if (msg.t === 'state') { if (msg.settings) applySettings(msg.settings); if (!wheel.spinning) { setItems(msg.items); if (msg.result) showResult(msg.result); } }
+    else if (msg.t === 'gacha') runGacha(msg);
+    else if (msg.t === 'gskip') { if (gctl && gctl.playing()) gctl.skip(); }
+    else if (msg.t === 'state' && msg.kind === 'gacha') { if (!(gctl && gctl.playing())) runGacha(msg, true); }
+    else if (msg.t === 'state') {
+      if (gctl && gctl.playing()) return;
+      showGacha(false);
+      if (msg.settings) applySettings(msg.settings);
+      if (!wheel.spinning) { setItems(msg.items); if (msg.result) showResult(msg.result, false); }
+    }
   }
 
-  if (remote) {
+  function look() {
+    return { bg: q.get('bg') || 'transparent', layout: q.get('layout') || 'both', place: q.get('place') || 'full', size: parseInt(q.get('size') || '2', 10), ink: q.get('ink') || 'dark', credit: q.get('credit') !== '0', sound: q.get('sound') === '1' };
+  }
+  if (gremote) {
+    // 別端末: このページでお題ガチャを引く（クリック・スペース。演出中ならスキップ）
+    var gp = (q.get('gacha') || '').split(',').filter(Boolean);
+    if (!gp.length) gp = window.KKP_ODAI_PACKS.filter(function (p) { return p.on; }).map(function (p) { return p.id; });
+    var gpool = G.buildPool(window.KKP_ODAI_PACKS, gp, '', []);
+    var gseenKey = 'kkp_odai_seen_remote', gseen = load(gseenKey) || [];
+    var gnames = {}; window.KKP_ODAI_PACKS.forEach(function (p) { gnames[p.id] = p.name; });
+    applySettings(Object.assign(look(), { layout: 'result' }));
+    $('hint').textContent = 'クリックかスペースキーでお題ガチャを引く'; $('hint').hidden = false;
+    var gFx = /^(full|lite|off)$/.test(q.get('fx') || '') ? q.get('fx') : 'full';
+    var gHere = function () {
+      if (gctl && gctl.playing()) { gctl.skip(); return; }
+      if (!gpool.length) return;
+      var d = G.draw(gpool, gseen); if (!d) return;
+      if (d.resetR) gseen = G.clearRarity(gpool, gseen, d.resetR);
+      gseen.push(d.item.id); try { localStorage.setItem(gseenKey, JSON.stringify(gseen)); } catch (e) {}
+      $('hint').hidden = true;
+      kkpEvent('gacha_draw', { rarity: d.item.r, mode: 'remote', fx: gFx });
+      runGacha({ id: Date.now(), rarity: d.item.r, text: d.item.text, packName: gnames[d.item.pack] || '', fx: gFx });
+    };
+    document.addEventListener('click', gHere);
+    document.addEventListener('keydown', function (e) { if (e.code === 'Space' || e.key === 'Enter') { e.preventDefault(); gHere(); } });
+  } else if (remote) {
     setItems(K.parseItems(q.get('items')));
-    applySettings({ bg: q.get('bg') || 'transparent', layout: q.get('layout') || 'both', size: parseInt(q.get('size') || '2', 10), ink: q.get('ink') || 'dark', credit: q.get('credit') !== '0', sound: q.get('sound') === '1' });
+    applySettings(look());
     $('hint').hidden = false;
     var spinHere = function () {
       if (wheel.spinning || items.length < 2) return;
@@ -117,16 +184,22 @@ body{background:transparent;font-family:var(--maru);color:var(--ink)}
     });
   }
 
+  // 盤面とテロップの大きさ（置き方ごと）
   function fit() {
-    var W = window.innerWidth, H = window.innerHeight, s;
-    var layout = settings.layout || 'both';
-    if (W >= H) s = layout === 'wheel' ? Math.min(W, H) * 0.9 : Math.min(W * 0.46, H * 0.9);
-    else s = layout === 'wheel' ? Math.min(W, H) * 0.9 : Math.min(W * 0.9, H * 0.55);
+    var W = window.innerWidth, H = window.innerHeight, s, th, layout = settings.layout || 'both', p = place(), port = H > W;
+    if (p === 'band') { var bh = H * (port ? 0.3 : 0.36); s = bh * 0.94; th = Math.min(W * (port ? 0.05 : 0.034), bh * 0.2); }
+    else if (p === 'corner') { var cw = W * (port ? 0.7 : 0.44), chh = H * (port ? 0.44 : 0.56); s = Math.min(cw, chh) * 0.66; th = Math.min(cw * 0.075, chh * 0.11); if (layout === 'wheel') s = Math.min(cw, chh) * 0.95; }
+    else if (layout === 'wheel') { s = Math.min(W, H) * 0.9; th = 0; }
+    else if (port) { s = Math.min(W * 0.9, H * 0.52); th = Math.min(W * 0.07, H * 0.05); }
+    else { s = Math.min(W * 0.46, H * 0.9); th = layout === 'result' ? Math.min(W * 0.05, H * 0.095) : Math.min(W * 0.036, H * 0.075); }
     wheel.resize(Math.max(120, Math.floor(s)));
+    $('resbox').style.setProperty('--th', Math.max(16, th * scale()) + 'px');
   }
   window.addEventListener('resize', fit);
   fit();
-  kkpEvent('view_obs_open', { from: remote ? 'remote' : 'local' });
+  // 丸ゴシックの読み込みが終わったら盤面を描き直す（先に描くと細い代わりの字になる）
+  try { document.fonts.ready.then(function () { wheel.draw(); }); } catch (e) {}
+  kkpEvent('view_obs_open', { from: gremote ? 'gacha_remote' : remote ? 'remote' : 'local' });
 })();
 </script>
 </body>

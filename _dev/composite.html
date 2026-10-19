@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="ja"><head><meta charset="UTF-8"><title>配信画面の合成（確認用・配信しない）</title>
+<style>
+html,body{margin:0;width:1920px;height:1080px;overflow:hidden;font-family:"Hiragino Sans",sans-serif}
+/* 架空のゲーム画面（CSSだけで描いた背景。実在のゲーム素材は使わない） */
+.game{position:absolute;inset:0;background:linear-gradient(180deg,#7ec8ff 0%,#bfe6ff 48%,#6cbf5a 48%,#4e9a3f 100%)}
+.game:before{content:"";position:absolute;left:8%;top:30%;width:260px;height:180px;background:#8b5a2b;box-shadow:300px 40px 0 -20px #a0522d,900px -10px 0 10px #8b5a2b}
+.game:after{content:"";position:absolute;left:44%;top:52%;width:90px;height:140px;background:#ff6f61;border:6px solid #2b2b2b;border-radius:40px 40px 10px 10px}
+.hud{position:absolute;left:30px;top:24px;color:#fff;font:900 34px sans-serif;text-shadow:2px 2px 0 #000}
+.cam{position:absolute;left:30px;bottom:30px;width:360px;height:220px;background:#d8c7b0;border:4px solid #fff;display:flex;align-items:center;justify-content:center;color:#6b5a45;font:700 22px sans-serif}
+iframe{position:absolute;inset:0;width:1920px;height:1080px;border:0;background:transparent}
+</style></head><body>
+<div class="game"></div><div class="hud">STAGE 3　残り 2:15</div><div class="cam">配信者のカメラ枠</div>
+<iframe id="v" allowtransparency="true"></iframe>
+<script>document.getElementById('v').src='/view/'+location.search;</script>
+</body></html>

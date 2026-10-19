@@ -12,6 +12,9 @@
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png">
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@800;900&display=swap" rel="stylesheet">
 <meta property="og:title" content="配信ルーレット｜OBSに映せる無料のお題・話題ルーレット">
 <meta property="og:description" content="お題・企画・視聴者名を貼って回すだけ。OBSで透過表示できる専用ページつき。登録不要・無料。">
 <meta property="og:type" content="website">
@@ -25,7 +28,7 @@
 {
   "@context":"https://schema.org",
   "@graph":[
-    {"@type":"WebApplication","@id":"https://roulette.kkpwebninja.com/#app","name":"配信ルーレット","url":"https://roulette.kkpwebninja.com/","applicationCategory":"UtilitiesApplication","operatingSystem":"Web","inLanguage":"ja","datePublished":"2026-10-15","dateModified":"2026-10-15","description":"ライブ配信の雑談のお題・企画・視聴者名を貼って回す無料のルーレット。OBSのブラウザソースで透過表示できる専用ページつき。項目は端末内にだけ保存、ログイン不要。","offers":{"@type":"Offer","price":"0","priceCurrency":"JPY"},"author":{"@type":"Organization","name":"web忍者の砦"},"publisher":{"@type":"Organization","name":"web忍者の砦","url":"https://kkpwebninja.com/"}},
+    {"@type":"WebApplication","@id":"https://roulette.kkpwebninja.com/#app","name":"配信ルーレット","url":"https://roulette.kkpwebninja.com/","applicationCategory":"UtilitiesApplication","operatingSystem":"Web","inLanguage":"ja","datePublished":"2026-10-15","dateModified":"2026-10-19","description":"ライブ配信の雑談のお題・企画・視聴者名を貼って回す無料のルーレット。OBSのブラウザソースで透過表示できる専用ページつき。項目は端末内にだけ保存、ログイン不要。","offers":{"@type":"Offer","price":"0","priceCurrency":"JPY"},"author":{"@type":"Organization","name":"web忍者の砦"},"publisher":{"@type":"Organization","name":"web忍者の砦","url":"https://kkpwebninja.com/"}},
     {"@type":"FAQPage","@id":"https://roulette.kkpwebninja.com/#faq","mainEntity":[
       {"@type":"Question","name":"OBSで背景が透明になりません","acceptedAnswer":{"@type":"Answer","text":"OBS表示ページ（/view/）はページ側で背景を透過にしています。ブラウザソースの「カスタムCSS」に body の背景色を指定する行が残っていると透過になりません。カスタムCSSを空にするか、設定の背景を「透過」に戻してください。"}},
       {"@type":"Question","name":"配信用のPCと操作用のスマホが別の端末でも使えますか","acceptedAnswer":{"@type":"Answer","text":"同じ端末では自動で同期します。別の端末のときは、設定の「別端末用のURL」を使ってください。項目をURLに載せた表示ページを開けます（回す操作は表示ページ側で行います）。"}},
@@ -77,17 +80,20 @@ textarea#items{width:100%;min-height:260px;padding:10px;border:1px solid var(--l
 .btn.sm{padding:4px 9px;font-size:13px;font-weight:400}
 .btn[disabled]{opacity:.45;cursor:not-allowed}
 .count{font-size:13px;color:var(--sub);margin:6px 0 0}
+.gacha-link{font-size:14px;margin:10px 0 0;padding:8px 0 0;border-top:1px solid var(--line-l);line-height:1.6}
 .col-wheel{display:flex;flex-direction:column;align-items:center}
 .stage{position:relative;width:100%;display:flex;justify-content:center}
 #wheel{display:block;max-width:100%}
 #confetti{position:absolute;inset:0;pointer-events:none;width:100%;height:100%}
-.spin{margin:16px 0 0;background:var(--accent);color:#fff;border:0;padding:14px 48px;font-size:20px;font-weight:700;letter-spacing:.04em;min-width:260px;min-height:52px}
+.spin{margin:14px 0 0;width:100%;max-width:560px;background:var(--accent);color:#fff;border:2px solid #2b2b2b;box-shadow:0 4px 0 #2b2b2b;padding:12px 24px;font-size:24px;font-weight:800;letter-spacing:.06em;min-height:64px}
+.spin:active{transform:translateY(3px);box-shadow:0 1px 0 #2b2b2b}
+.keys{width:100%;max-width:560px;font-size:12.5px;color:var(--sub);margin:8px 0 0;text-align:left}
+.keys kbd{font-family:inherit;font-size:12px;border:1px solid var(--line);border-bottom-width:2px;padding:0 5px;background:#faf8f4;color:var(--ink);margin:0 2px}
 .spin:hover{background:var(--accent-d)}
 .spin[disabled]{background:#c9c2b8;cursor:not-allowed}
-.spin small{display:block;font-size:12px;font-weight:400;letter-spacing:0}
-.result{width:100%;max-width:560px;margin:16px 0 0;border:2px solid var(--ink);padding:10px 14px 12px;text-align:center;min-height:74px}
-.result .r-lab{font-size:12.5px;color:var(--sub);line-height:1.2}
-.result .r-txt{font-family:var(--maru);font-size:34px;font-weight:700;line-height:1.3;word-break:break-word}
+.result{width:100%;max-width:560px;margin:12px 0 0;border-top:2px solid var(--ink);border-bottom:1px solid var(--line);padding:6px 0 8px;text-align:left;display:grid;grid-template-columns:5.5em 1fr;gap:4px 10px;align-items:baseline}
+.result .r-lab{font-size:13px;font-weight:700;color:var(--sub);line-height:1.2}
+.result .r-txt{font-family:var(--maru);font-size:28px;font-weight:800;line-height:1.3;word-break:break-word}
 .result .r-txt.wait{font-size:16px;font-weight:400;color:var(--sub)}
 .hist{margin:14px 0 0;width:100%;max-width:560px;font-size:13.5px}
 .hist-h{display:flex;justify-content:space-between;align-items:center;gap:8px}
@@ -129,13 +135,13 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
 <body>
 <div class="site"><div class="site-in">
   <a class="site-name" href="/">配信ルーレット</a>
-  <nav class="site-nav"><a href="#howto">使い方</a><a href="#obs">OBSに映す</a><a href="#settings">設定</a><a href="#faq">よくある質問</a></nav>
+  <nav class="site-nav"><a href="/odai-gacha/">お題ガチャ</a><a href="#howto">使い方</a><a href="#obs">OBSに映す</a><a href="#settings">設定</a><a href="#faq">よくある質問</a></nav>
 </div></div>
 <div class="wrap">
 <header>
   <h1>配信ルーレット　お題・企画・視聴者名を貼って回す（OBS表示つき）</h1>
   <p class="lead">1行に1つ項目を貼る → 回す → 配信に映すなら <a href="#obs">OBS表示ページ</a> をブラウザソースに。</p>
-  <p class="meta">更新日 2026年10月15日　項目はこの端末にだけ残ります（送信しません）。ログイン不要・無料。</p>
+  <p class="meta">更新日 2026年10月19日　項目はこの端末にだけ残ります（送信しません）。ログイン不要・無料。</p>
 </header>
 
 <main>
@@ -155,12 +161,14 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
       <button class="btn sm" id="clear">全部消す</button>
     </div>
     <p class="count" id="count">項目を2つ以上入れると回せます。</p>
+    <p class="gacha-link">お題を考えるのが大変なら <a href="/odai-gacha/">お題ガチャ</a>（雑談・二択・罰ゲーム・縛りの330個をレア度つきで引く）</p>
   </div>
   <div class="col-wheel">
     <div class="stage"><canvas id="wheel" width="10" height="10" aria-label="ルーレット"></canvas><canvas id="confetti"></canvas></div>
-    <button class="spin" id="spin" disabled>回す<small>スペースキーでも回せます</small></button>
+    <button class="spin" id="spin" disabled>回す</button>
+    <p class="keys"><kbd>Space</kbd>か<kbd>Enter</kbd>で回す　OBSに映すなら <a href="#obs">表示ページのURL</a></p>
     <div class="result" aria-live="polite">
-      <div class="r-lab">結果</div>
+      <div class="r-lab">直前の結果</div>
       <div class="r-txt wait" id="rtxt">まだ回していません</div>
     </div>
     <div class="hist" id="hist" hidden>
@@ -202,9 +210,16 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
 <tr><th>背景</th><td>
   <label><input type="radio" name="bg" value="transparent" checked> 透過（OBS向け）</label>
   <label><input type="radio" name="bg" value="#ffffff"> 白</label>
+  <label><input type="radio" name="bg" value="#fff6ea"> クリーム</label>
   <label><input type="radio" name="bg" value="#00b140"> 緑（クロマキー）</label>
   <label><input type="radio" name="bg" value="#000000"> 黒</label>
   <label><input type="radio" name="bg" value="custom"> 色を選ぶ <input type="color" id="bgColor" value="#fff6ea"></label>
+</td></tr>
+<tr><th>置き方</th><td>
+  <label><input type="radio" name="place" value="full" checked> 全画面</label>
+  <label><input type="radio" name="place" value="band"> 下の帯</label>
+  <label><input type="radio" name="place" value="corner"> 右下に小さく</label>
+  <div class="note">ゲーム画面の上に重ねるなら「下の帯」か「右下に小さく」。縦長の配信画面では自動で縦に並びます。</div>
 </td></tr>
 <tr><th>出すもの</th><td>
   <label><input type="radio" name="layout" value="both" checked> 盤面と結果</label>
@@ -216,9 +231,9 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
   <label><input type="radio" name="size" value="2" checked> 中</label>
   <label><input type="radio" name="size" value="3"> 大</label>
 </td></tr>
-<tr><th>文字の色</th><td>
-  <label><input type="radio" name="ink" value="dark" checked> 黒（白ふち）</label>
-  <label><input type="radio" name="ink" value="light"> 白（黒ふち）</label>
+<tr><th>結果の帯の色</th><td>
+  <label><input type="radio" name="ink" value="dark" checked> オレンジ</label>
+  <label><input type="radio" name="ink" value="light"> 黒</label>
 </td></tr>
 <tr><th>隅の表記</th><td><label><input type="checkbox" id="credit" checked> 右下に小さく「roulette.kkpwebninja.com」を出す</label><div class="note">視聴者が同じルーレットを探せるようにする表記です。外しても構いません。</div></td></tr>
 <tr><th>効果音</th><td>
@@ -232,13 +247,14 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
 </td></tr>
 </table>
 
-<h2 id="trouble">配信が重い・止まるときに見るところ</h2>
+<details id="trouble"><summary>配信が重い・止まるときに見るところ</summary>
 <p>ルーレット自体は軽い（画像も音源ファイルも読み込まない）ので、配信が止まるときはたいてい別の原因です。順に確かめてください。</p>
 <ol>
   <li><b>OBSのブラウザソースを何枚も重ねていないか。</b>使っていないブラウザソースは非表示でなく削除するか、「表示されていないときにソースをシャットダウン」をオンにします。</li>
   <li><b>上り（アップロード）の回線速度が配信のビットレートに足りているか。</b>目安は各サービスの公式ページにあります：<a href="https://support.google.com/youtube/answer/2853702" target="_blank" rel="noopener">YouTube ライブ配信のエンコーダ設定</a>／<a href="https://help.twitch.tv/s/article/broadcasting-guidelines" target="_blank" rel="noopener">Twitch の配信ガイドライン</a>。Wi-Fiなら有線に替えるだけで安定することが多いです。</li>
   <li><b>PCの負荷。</b>OBSの統計（表示→統計）で「レンダリングラグ」「エンコードラグ」が出ていればPC側の限界です。配信の解像度かフレームレートを一段下げます。</li>
 </ol>
+</details>
 <div id="affBox" hidden></div>
 
 <h2 id="faq">よくある質問</h2>
@@ -276,7 +292,7 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
   function load(k, d) { try { var v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } }
   function save(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { /* 保存できなくても動く */ } }
 
-  var settings = Object.assign({ bg: 'transparent', bgColor: '#fff6ea', layout: 'both', size: 2, ink: 'dark', credit: true, sound: false, viewSound: false, exclude: false }, load(LS.set, {}));
+  var settings = Object.assign({ bg: 'transparent', bgColor: '#fff6ea', layout: 'both', place: 'full', size: 2, ink: 'dark', credit: true, sound: false, viewSound: false, exclude: false }, load(LS.set, {}));
   var excluded = load(LS.ex, []);
   var history = load(LS.hist, []);
   var items = [], pool = [];
@@ -290,7 +306,7 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
     save(LS.msg, msg);  // 別タブへの保険（storage イベント）
   }
   function viewSettings() {
-    return { bg: settings.bg === 'custom' ? settings.bgColor : settings.bg, layout: settings.layout, size: settings.size, ink: settings.ink, credit: settings.credit, sound: settings.viewSound };
+    return { bg: settings.bg === 'custom' ? settings.bgColor : settings.bg, layout: settings.layout, place: settings.place, size: settings.size, ink: settings.ink, credit: settings.credit, sound: settings.viewSound };
   }
   function pushState(result) {
     var st = { t: 'state', items: pool, settings: viewSettings(), result: result === undefined ? null : result };
@@ -313,7 +329,7 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
   function remoteQuery() {
     var vs = viewSettings();
     var q = ['items=' + encodeURIComponent(pool.map(function (i) { return i.weight === 1 ? i.label : i.label + '*' + i.weight; }).join('\n'))];
-    q.push('bg=' + encodeURIComponent(vs.bg), 'layout=' + vs.layout, 'size=' + vs.size, 'ink=' + vs.ink, 'credit=' + (vs.credit ? 1 : 0), 'sound=' + (vs.sound ? 1 : 0));
+    q.push('bg=' + encodeURIComponent(vs.bg), 'layout=' + vs.layout, 'place=' + vs.place, 'size=' + vs.size, 'ink=' + vs.ink, 'credit=' + (vs.credit ? 1 : 0), 'sound=' + (vs.sound ? 1 : 0));
     return q.join('&');
   }
   var saveTimer = null;
@@ -380,6 +396,7 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
 
   // 広告（表示されてから1回だけ push。DOM順で最初の未使用の枠に当たるので、後から出す枠は -later にしておく）
   function pushAdWhenVisible(box) {
+    if (window.__kkpTest) return;
     var ins = box.querySelector('ins');
     if (!ins || ins.dataset.pushed) return;
     function fire() {
@@ -399,6 +416,7 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
     var bg = document.querySelector('input[name=bg][value="' + settings.bg + '"]'); if (bg) bg.checked = true;
     $('bgColor').value = settings.bgColor;
     document.querySelector('input[name=layout][value="' + settings.layout + '"]').checked = true;
+    var pl = document.querySelector('input[name=place][value="' + settings.place + '"]'); if (pl) pl.checked = true;
     document.querySelector('input[name=size][value="' + settings.size + '"]').checked = true;
     document.querySelector('input[name=ink][value="' + settings.ink + '"]').checked = true;
     $('credit').checked = !!settings.credit; $('sound').checked = !!settings.sound; $('viewSound').checked = !!settings.viewSound; $('exclude').checked = !!settings.exclude;
@@ -407,6 +425,7 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
     settings.bg = document.querySelector('input[name=bg]:checked').value;
     settings.bgColor = $('bgColor').value;
     settings.layout = document.querySelector('input[name=layout]:checked').value;
+    settings.place = document.querySelector('input[name=place]:checked').value;
     settings.size = parseInt(document.querySelector('input[name=size]:checked').value, 10);
     settings.ink = document.querySelector('input[name=ink]:checked').value;
     settings.credit = $('credit').checked; settings.sound = $('sound').checked; settings.viewSound = $('viewSound').checked;
@@ -431,10 +450,12 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
   function fit() {
     var col = document.querySelector('.col-wheel');
     var w = Math.min(col.clientWidth, 560);
-    var h = Math.max(240, window.innerHeight - 390);
+    var h = Math.max(240, window.innerHeight - 330);
     wheel.resize(Math.max(220, Math.floor(Math.min(w, h))));
   }
   window.addEventListener('resize', fit);
+  // 丸ゴシックの読み込みが終わったら盤面を描き直す（先に描くと細い代わりの字になる）
+  try { document.fonts.ready.then(function () { wheel.draw(); }); } catch (e) {}
 
   // 初期化
   var saved = load(LS.text, null);

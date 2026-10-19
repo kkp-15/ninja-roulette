@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>お題ガチャ｜配信の雑談お題・罰ゲーム・縛りをガチャで引く（OBS表示つき・無料）</title>
+<meta name="description" content="雑談のお題・究極の二択・罰ゲーム・ゲーム実況の縛りなど330個をガチャで引けます。N・R・SR・SSRのレア度つき演出、OBSのブラウザソースで透過表示。同じお題は一周するまで出ません。自分のお題も足せる・登録不要・無料。">
+<link rel="canonical" href="https://roulette.kkpwebninja.com/odai-gacha/">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<meta name="theme-color" content="#e2600f">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@800;900&display=swap" rel="stylesheet">
+<meta property="og:title" content="お題ガチャ｜配信の雑談お題・罰ゲーム・縛りをガチャで引く">
+<meta property="og:description" content="雑談お題・二択・罰ゲーム・縛り330個。レア度つきのガチャ演出をOBSに映せます。登録不要・無料。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://roulette.kkpwebninja.com/odai-gacha/">
+<meta property="og:site_name" content="配信ルーレット">
+<meta property="og:image" content="https://roulette.kkpwebninja.com/ogp.png?d=20261015">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://roulette.kkpwebninja.com/ogp.png?d=20261015">
+<script src="/ga.js"></script>
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@graph":[
+    {"@type":"WebApplication","@id":"https://roulette.kkpwebninja.com/odai-gacha/#app","name":"お題ガチャ（配信ルーレット）","url":"https://roulette.kkpwebninja.com/odai-gacha/","applicationCategory":"UtilitiesApplication","operatingSystem":"Web","inLanguage":"ja","datePublished":"2026-10-19","dateModified":"2026-10-19","description":"ライブ配信の雑談お題・究極の二択・罰ゲーム・縛りをレア度つきのガチャで引く無料ツール。OBSのブラウザソースで透過表示できる。お題はすべてオリジナル。","offers":{"@type":"Offer","price":"0","priceCurrency":"JPY"},"author":{"@type":"Organization","name":"web忍者の砦"},"publisher":{"@type":"Organization","name":"web忍者の砦","url":"https://kkpwebninja.com/"}},
+    {"@type":"FAQPage","@id":"https://roulette.kkpwebninja.com/odai-gacha/#faq","mainEntity":[
+      {"@type":"Question","name":"SSRはどのくらいの確率で出ますか","acceptedAnswer":{"@type":"Answer","text":"N 55%・R 30%・SR 12%・SSR 3%です。SSRはおよそ33回に1回。何回目でもこの割合は変わりません。"}},
+      {"@type":"Question","name":"同じお題が続けて出ませんか","acceptedAnswer":{"@type":"Answer","text":"出ません。一度出たお題は、同じレア度のお題を一周するまで出ません（SSRは数が少ないので早く一周します）。一周したレア度は自動で最初に戻ります。「最初から」でいつでも全部戻せます。"}},
+      {"@type":"Question","name":"罰ゲームはきつすぎませんか","acceptedAnswer":{"@type":"Answer","text":"誰でもその場で安全にできるものだけにしています。体を張るもの、飲食の強要、個人情報を言わせるもの、性的なもの、人を傷つけるもの、他人を巻き込むものは入れていません。SSRでも語尾や話し方を長めに続ける程度です。"}},
+      {"@type":"Question","name":"自分で考えたお題も入れられますか","acceptedAnswer":{"@type":"Answer","text":"入れられます。「自分のお題」に1行1つ書きます。行の最後に *SSR のように付けるとレア度を決められます（付けなければR）。書いたお題はこのブラウザの中にだけ保存され、送信しません。"}},
+      {"@type":"Question","name":"演出がまぶしい・長いときは","acceptedAnswer":{"@type":"Answer","text":"演出を「控えめ」にすると、画面全体が白く光る演出と画面の揺れがなくなり、少し短くなります。「なし」は結果だけを出します。演出中はスペースキーかスキップで飛ばせます。"}}
+    ]}
+  ]
+}
+</script>
+<style>
+:root{--ink:#2b2b2b;--sub:#5f5f5f;--line:#cfc6b8;--line-l:#e8e1d6;--head:#fff6ea;--accent:#e2600f;--accent-d:#b84c0a;--link:#0b57a4;--maru:"M PLUS Rounded 1c","Hiragino Maru Gothic ProN","Hiragino Sans","Noto Sans JP",sans-serif}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:#fff;color:var(--ink);font-family:"Hiragino Sans","Noto Sans JP","Yu Gothic Medium",Meiryo,sans-serif;font-size:16px;line-height:1.7}
+a{color:var(--link)}
+p{margin:0 0 .8rem}
+ul,ol{padding-left:1.4rem;margin:.2rem 0 .8rem}
+li{margin:0 0 .3rem}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+.site{border-bottom:2px solid var(--accent)}
+.site-in{max-width:1440px;margin:0 auto;padding:9px 16px;display:flex;align-items:baseline;justify-content:space-between;gap:6px 12px;flex-wrap:wrap}
+.site-name{font-weight:700;font-size:15px;color:var(--ink);text-decoration:none}
+.site-nav{font-size:13.5px}
+.site-nav a{color:var(--sub);text-decoration:none;margin-left:14px;display:inline-block;padding:4px 0}
+.site-nav a:first-child{margin-left:0}
+.site-nav a[aria-current]{color:var(--ink);font-weight:700}
+.wrap{max-width:1440px;margin:0 auto;padding:12px 16px 40px}
+.wrap .narrow{max-width:760px}
+h1{font-size:21px;font-weight:700;margin:0 0 .2rem;line-height:1.4}
+.lead{font-size:15px;margin:0 0 .2rem}
+.meta{font-size:12.5px;color:var(--sub);margin:0 0 .8rem}
+h2{font-size:19px;font-weight:700;margin:2.4rem 0 .6rem;padding:0 0 .3rem;border-bottom:2px solid var(--ink);line-height:1.4;scroll-margin-top:8px}
+h3{font-size:16.5px;font-weight:700;margin:1.4rem 0 .4rem;padding-left:.55rem;border-left:4px solid var(--accent);line-height:1.4}
+table{border-collapse:collapse;width:100%;font-size:14.5px;background:#fff}
+th,td{border:1px solid var(--line);padding:7px 10px;text-align:left;vertical-align:top;line-height:1.55}
+th{background:var(--head);font-weight:700;white-space:nowrap}
+.note{font-size:13px;color:var(--sub)}
+.narrow{max-width:760px}
+.btn{border:1px solid var(--ink);background:#fff;padding:7px 12px;font-size:14px;font-weight:700;line-height:1.2;min-height:40px;color:var(--ink)}
+.btn:hover{background:#f4f1ec}
+.btn.sm{padding:4px 9px;font-size:13px;font-weight:400;min-height:34px}
+
+/* 道具（配信中に一瞬で操作できる並び: 左=映る絵、右=操作） */
+.tool{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:14px 24px;align-items:start;margin-top:4px}
+.col-stage{min-width:0}
+@media(max-width:860px){.tool{grid-template-columns:1fr}}
+.gstage{position:relative;width:100%;aspect-ratio:16/9;max-height:calc(100vh - 150px);margin:0 auto;min-height:200px;border:2px solid var(--ink);background:#fff6ea;background-image:linear-gradient(rgba(226,96,15,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(226,96,15,.07) 1px,transparent 1px);background-size:40px 40px;overflow:hidden}
+.gidle{position:absolute;inset:0;display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-end;color:var(--sub);font-size:14px;padding:14px 18px;line-height:1.6}
+.gidle b{font-family:var(--maru);font-size:24px;font-weight:800;color:var(--ink)}
+.gidle[hidden]{display:none}
+.gwheel{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+.gwheel[hidden]{display:none}
+.gbar{display:flex;gap:8px;align-items:stretch}
+.go{flex:1 1 auto;background:var(--accent);color:#fff;border:2px solid #2b2b2b;box-shadow:0 4px 0 #2b2b2b;padding:10px 16px;font-size:24px;font-weight:800;letter-spacing:.06em;min-height:72px}
+.go:hover{background:var(--accent-d)}
+.go:active{transform:translateY(3px);box-shadow:0 1px 0 #2b2b2b}
+.go[disabled]{background:#c9c2b8;box-shadow:none;cursor:not-allowed}
+.skip{flex:0 0 auto;border:2px solid var(--ink);background:#fff;font-weight:800;font-size:16px;padding:0 16px;min-height:72px}
+.skip[hidden]{display:none}
+.keys{font-size:12.5px;color:var(--sub);margin:8px 0 0;line-height:1.9}
+kbd{font-family:inherit;font-size:12px;border:1px solid var(--line);border-bottom-width:2px;padding:0 5px;background:#faf8f4;color:var(--ink);margin:0 2px}
+.stat{font-size:14px;margin:8px 0 0;padding:6px 0;border-top:2px solid var(--ink);border-bottom:1px solid var(--line);display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.stat #leftTxt{font-weight:700}
+.flash{font-size:13px;color:var(--accent-d)}
+.sec{margin:12px 0 4px;font-size:13.5px;display:flex;gap:8px;align-items:baseline}
+.sec .note{font-size:12px}
+.packs{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.pk{display:flex;align-items:center;gap:6px;text-align:left;border:2px solid var(--ink);background:#fff;padding:6px 8px;min-height:48px;font-size:14px;font-weight:700;line-height:1.25}
+.pk .n{font-size:11px;font-weight:700;color:var(--sub);border:1px solid var(--line);padding:0 4px;flex:0 0 auto}
+.pk .c{margin-left:auto;font-size:11.5px;font-weight:400;color:var(--sub);flex:0 0 auto}
+.pk[aria-pressed=true]{background:var(--accent);color:#fff;box-shadow:inset 0 -3px 0 rgba(0,0,0,.25)}
+.pk[aria-pressed=true] .n{color:#fff;border-color:rgba(255,255,255,.6)}
+.pk[aria-pressed=true] .c{color:#fff}
+.seg{display:flex;border:2px solid var(--ink)}
+.seg label{flex:1 1 0;position:relative;min-height:40px;display:flex}
+.seg input{position:absolute;opacity:0;pointer-events:none}
+.seg span{flex:1;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;padding:4px 6px;cursor:pointer;border-left:1px solid var(--line);text-align:center;line-height:1.2}
+.seg label:first-child span{border-left:0}
+.seg input:checked+span{background:var(--ink);color:#fff}
+.seg input:focus-visible+span{outline:3px solid var(--accent);outline-offset:-3px}
+.chk{display:flex;gap:16px;font-size:14px}
+.chk label{display:inline-flex;align-items:center;gap:5px;min-height:36px}
+details.my{margin:12px 0 0;border-top:1px solid var(--line-l);border-bottom:1px solid var(--line-l)}
+details.my .lab{display:block;font-size:13px;margin:4px 0 0}
+textarea#my{width:100%;min-height:96px;padding:8px;border:1px solid var(--line);resize:vertical;line-height:1.6;font-size:15px;margin:4px 0 8px}
+.rates{margin:10px 0 0;font-size:13px;line-height:1.8}
+.tag{display:inline-block;font-weight:800;color:#fff;padding:0 6px;font-size:12px;margin-right:3px;letter-spacing:.03em}
+.res{margin:10px 0 0;border-top:2px solid var(--ink);border-bottom:1px solid var(--line);padding:6px 0;display:flex;gap:6px 10px;align-items:center;flex-wrap:wrap}
+.res[hidden]{display:none}
+.res .rl{font-size:13px;font-weight:700;color:var(--sub)}
+.res .rt{font-family:var(--maru);font-weight:800;font-size:20px;flex:1 1 240px;line-height:1.4}
+.hist{margin:8px 0 0;font-size:13.5px}
+.hist[hidden]{display:none}
+.hist-h{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.hist ol{margin:4px 0 0;padding-left:1.6rem;max-height:132px;overflow:auto}
+.hist li{margin:0;color:var(--sub)}
+.hist li span{color:var(--ink)}
+.t-N{background:#6f7b88}.t-R{background:#1f6fe0}.t-SR{background:#c88700}.t-SSR{background:linear-gradient(90deg,#e8463f,#e88a12,#c9a400,#25a85e,#2f7de1,#8a4be0)}
+@media(max-width:860px){
+  body{padding-bottom:96px}
+  .gbar{position:fixed;left:0;right:0;bottom:0;padding:10px 16px calc(10px + env(safe-area-inset-bottom));background:#fff;border-top:1px solid var(--line);z-index:20}
+  .go,.skip{min-height:60px}
+  .keys{display:none}
+}
+
+/* 広告（標準サイズ・高さ予約） */
+.kkp-ad{text-align:center;margin:22px auto 0;max-width:680px;min-height:288px;padding-top:6px;width:100%}
+.kkp-ad[hidden]{display:none}
+.kkp-ad-label{font-size:11px;color:#999;letter-spacing:.08em;margin:0 0 6px;line-height:1}
+.kkp-ad ins.adsbygoogle,.kkp-ad ins.adsbygoogle-later{display:block;width:300px;height:250px;margin:0 auto}
+@media(min-width:768px){.kkp-ad{min-height:318px}.kkp-ad ins.adsbygoogle,.kkp-ad ins.adsbygoogle-later{width:336px;height:280px}}
+.kkp-ad:has(ins[data-ad-status="unfilled"]){display:none}
+
+.steps{list-style:none;padding:0;margin:0 0 .8rem;border-top:1px solid var(--line-l)}
+.steps li{border-bottom:1px solid var(--line-l);padding:8px 0;margin:0;display:grid;grid-template-columns:5.6em 1fr;gap:10px}
+.urlrow{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:4px 0 8px}
+.urlrow input{flex:1 1 320px;padding:7px 9px;border:1px solid var(--line);font-size:14px;background:#faf8f4}
+details{border-top:1px solid var(--line-l);padding:8px 0}
+details:last-of-type{border-bottom:1px solid var(--line-l)}
+summary{cursor:pointer;font-weight:700;font-size:15px;min-height:32px}
+details p{margin:.5rem 0 .3rem;font-size:15px}
+.olist{list-style:none;padding:0;margin:6px 0 4px;columns:2 300px;column-gap:24px}
+.olist li{break-inside:avoid;margin:0;font-size:14px;line-height:1.5}
+.olist label{display:flex;gap:6px;align-items:flex-start;padding:3px 0}
+.olist input{margin-top:3px;flex:0 0 auto}
+.olist .tag{font-size:11px;font-weight:800;color:#fff;padding:0 5px;flex:0 0 auto;margin-top:2px;min-width:2.4em;text-align:center}
+.olist .off span.tx{color:#aaa;text-decoration:line-through}
+.fromstream{border:2px solid var(--accent);background:var(--head);padding:8px 12px;margin:0 0 10px;font-size:14.5px;display:flex;gap:10px;align-items:flex-start}
+.fromstream[hidden]{display:none}
+.fromstream p{margin:0;flex:1}
+.uf{text-align:center;padding:2rem 1rem 2.5rem;font-size:.78rem;color:#94a3b8;line-height:2;border-top:1px solid #f0e6d2;margin-top:2.5rem;background:#fffcf7}
+.uf-name{font-weight:800;color:#8b6b3d;font-size:.85rem;margin-bottom:.4rem}
+.uf a{color:#8b6b3d;text-decoration:none;margin:0 .5rem}
+.uf-c{margin-top:.5rem;color:#bfa97a}
+</style>
+</head>
+<body>
+<div class="site"><div class="site-in">
+  <a class="site-name" href="/">配信ルーレット</a>
+  <nav class="site-nav"><a href="/">ルーレット</a><a href="/odai-gacha/" aria-current="page">お題ガチャ</a><a href="#obs">OBSに映す</a><a href="#list">お題の一覧</a><a href="#faq">よくある質問</a></nav>
+</div></div>
+<div class="wrap">
+<header>
+  <div class="fromstream" id="fromStream" hidden><p>配信で見たお題ガチャはこれです。パックを選んで「ガチャを回す」だけ。登録なし・無料で、自分の配信でもそのまま使えます。</p><button class="btn sm" id="fromStreamX" aria-label="閉じる">閉じる</button></div>
+  <h1>お題ガチャ　雑談・二択・罰ゲーム・縛りをレア度つきで引く</h1>
+  <p class="lead">パックを選ぶ → ガチャを回す → 配信に映すなら <a href="#obs">OBS表示ページ</a> をブラウザソースに。お題は330個、すべてこのサイトのオリジナルです。</p>
+  <p class="meta">更新日 2026年10月19日　選んだパック・自分のお題はこの端末にだけ残ります（送信しません）。</p>
+</header>
+
+<main>
+<div class="tool">
+  <div class="col-stage">
+    <div class="gstage" id="gstage">
+      <div class="gidle" id="gidle"><b>ここにお題が出ます</b>配信に映るのと同じ演出です（OBS側は背景が透過）。</div>
+      <div class="gwheel" id="gwheel" hidden><canvas id="wheel" width="10" height="10" aria-label="ルーレット"></canvas></div>
+    </div>
+    <div class="res" id="res" hidden aria-live="polite">
+      <span class="rl">直前</span><span class="tag" id="resTag">N</span><span class="rt" id="resTxt"></span>
+      <span class="ra"><button class="btn sm" id="offBtn">今後出さない</button> <button class="btn sm" id="copyRes">コピー</button></span>
+    </div>
+    <div class="hist" id="hist" hidden>
+      <div class="hist-h"><b>出たお題（新しい順・最大20件）</b><span><button class="btn sm" id="copyHist">コピー</button> <button class="btn sm" id="clearHist">消す</button></span></div>
+      <ol id="histList"></ol>
+    </div>
+    <div class="kkp-ad" id="adResult" hidden>
+      <div class="kkp-ad-label">広告</div>
+      <ins class="adsbygoogle-later" style="display:block" data-ad-client="ca-pub-1298304917726270" data-ad-slot="2937937957" data-ad-format="rectangle" data-full-width-responsive="false"></ins>
+    </div>
+  </div>
+
+  <div class="col-ctl">
+    <div class="gbar">
+      <button class="go" id="go">ガチャを回す</button>
+      <button class="skip" id="skip" hidden>スキップ</button>
+    </div>
+    <p class="keys"><kbd>Space</kbd><kbd>Enter</kbd>回す・演出中はスキップ　<kbd>S</kbd>スキップ　<kbd>1</kbd>〜<kbd>9</kbd>パック切替</p>
+    <div class="stat"><span id="leftTxt"></span> <button class="btn sm" id="resetSeen">最初から</button> <span class="flash" id="flash"></span></div>
+    <div class="sec"><b>パック</b><span class="note">押すたびに入る・外れる。混ぜられます</span></div>
+    <div class="packs" id="packs"></div>
+    <div class="sec"><b>回し方</b></div>
+    <div class="seg" role="radiogroup"><label><input type="radio" name="mode" value="gacha" checked><span>ガチャ</span></label><label><input type="radio" name="mode" value="wheel"><span>ルーレット（8つから）</span></label></div>
+    <div class="sec"><b>演出</b><span class="note">控えめ＝光る・揺れるなし</span></div>
+    <div class="seg" role="radiogroup"><label><input type="radio" name="fx" value="full" checked><span>派手</span></label><label><input type="radio" name="fx" value="lite"><span>控えめ</span></label><label><input type="radio" name="fx" value="off"><span>なし</span></label></div>
+    <div class="sec"><b>効果音</b></div>
+    <div class="chk"><label><input type="checkbox" id="snd"> この画面</label><label><input type="checkbox" id="vsnd"> OBS側</label></div>
+    <details class="my"><summary>自分のお題を足す（<span id="myN">0</span>個）</summary>
+      <label class="lab" for="my">1行に1つ。行末に <b>*SSR</b> などでレア度（なければR）</label>
+      <textarea id="my" spellcheck="false" placeholder="好きな配信者さんの話をする *SR
+最近のマイブーム"></textarea>
+    </details>
+    <p class="rates">出る割合　<span class="tag t-N">N</span>55%　<span class="tag t-R">R</span>30%　<span class="tag t-SR">SR</span>12%　<span class="tag t-SSR">SSR</span>3%<br><span class="note">何回目でも同じ割合。同じお題はレア度ごとに一周するまで出ません。</span></p>
+  </div>
+</div>
+
+<div class="narrow">
+<h2 id="howto">使い方（3段）</h2>
+<ol class="steps">
+  <li><b>1. 選ぶ</b><span>パックのボタンを押す（数字キー 1〜9 でも）。雑談なら「自分の話」「もしも」「二択」「リスナーに聞く」、ゲーム実況なら「縛り」、負けたら「罰ゲーム」。いくつでも混ぜられます。</span></li>
+  <li><b>2. 回す</b><span>「ガチャを回す」かスペースキー。カプセルの色が N（灰）→ R（青）→ SR（金）→ SSR（虹）と上がっていき、割れてお題が出ます。演出中にもう一度押すとスキップ。</span></li>
+  <li><b>3. 映す</b><span>下の「OBSに映す」のURLをブラウザソースに入れると、同じ演出が配信画面に出ます（操作ボタンや広告は映りません）。</span></li>
+</ol>
+
+<h2 id="obs">OBSに映す（ブラウザソース）</h2>
+<p>ルーレットと同じ表示ページを使います。同じPCのOBSなら、このURLをブラウザソースに入れるだけで、この画面で回したガチャがそのまま出ます。</p>
+<div class="urlrow"><input type="text" id="viewUrl" readonly value="https://roulette.kkpwebninja.com/view/"><button class="btn" id="copyView">URLをコピー</button><a class="btn" id="openView" href="/view/" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;text-decoration:none;color:inherit">表示ページを開く</a></div>
+<ol>
+  <li>OBSの「ソース」で「＋」→「ブラウザ」。URLに上のアドレス、幅 <b>1920</b>・高さ <b>1080</b>。「カスタムCSS」は空のまま。</li>
+  <li>効果音を配信に乗せるなら、ソースの「音声をOBSで制御する」をオンにして、上の「効果音：OBS側」にチェック。</li>
+  <li>背景（透過・クリーム・緑など）、置き方（全画面・下の帯・右下に小さく）、文字の大きさは <a href="/#settings">ルーレットの設定</a> と共通です。</li>
+</ol>
+<h3>配信用のPCと操作する端末が別のとき</h3>
+<p class="note">このURLを配信用PCで開くと、そのページ自体がガチャになります（クリックかスペースキーで回す・選んだパックはURLに入っています）。パックを変えたら作り直してください。</p>
+<div class="urlrow"><input type="text" id="remoteUrl" readonly><button class="btn" id="copyRemote">URLをコピー</button></div>
+
+<div class="kkp-ad" id="adHowto">
+  <div class="kkp-ad-label">広告</div>
+  <ins class="adsbygoogle-later" style="display:block" data-ad-client="ca-pub-1298304917726270" data-ad-slot="2937937957" data-ad-format="rectangle" data-full-width-responsive="false"></ins>
+</div>
+
+<h2 id="list">お題の一覧（チェックを外すと出なくなります）</h2>
+<p>どのパックも、YouTubeの雑談配信や切り抜きで盛り上がりやすい型（失敗談、もしも、究極の二択、ランキング、リスナーに聞く、即興、語尾やセリフの罰ゲーム、〇〇禁止の縛り）をもとに、文面はこのサイトで作りました。</p>
+<div id="olists"></div>
+<p class="note" style="margin-top:8px"><button class="btn sm" id="restoreOff">外したお題を全部戻す</button> <span id="offN"></span></p>
+
+<h2 id="safe">罰ゲームと縛りの決まり</h2>
+<ul>
+  <li>入れていないもの: 体を張る・痛い・危ないこと、飲食の強要、本名や住所など個人情報を言わせること、性的な内容、見た目や属性をからかうこと、他人を巻き込むこと（電話・突撃など）、長時間の耐久。</li>
+  <li>「リスナーに決めてもらう」ものは、配信者が候補から選ぶ形にしています。常識の範囲で。</li>
+  <li>縛りは遊ぶゲームに合わないことがあります。合わなければ遠慮なく引き直してください。</li>
+</ul>
+
+<h2 id="faq">よくある質問</h2>
+<details><summary>SSRはどのくらいの確率で出ますか</summary><p>N 55%・R 30%・SR 12%・SSR 3% です。SSRはおよそ33回に1回。何回目に引いてもこの割合は変わりません。</p></details>
+<details><summary>同じお題が続けて出ませんか</summary><p>出ません。一度出たお題は、同じレア度のお題を一周するまで出ません。SSRは数が少ないので早く一周し、一周したレア度だけ自動で最初に戻ります。「最初から」でいつでも全部戻せます。</p></details>
+<details><summary>演出がまぶしい・長いときは</summary><p>演出を「控えめ」にすると、画面全体が白く光る演出と画面の揺れがなくなり、少し短くなります。「なし」は結果だけを出します。演出中はスペースキーか「スキップ」で飛ばせます。端末で「視差効果を減らす（動きを減らす）」を設定していると、最初から「控えめ」になります。</p></details>
+<details><summary>自分で考えたお題も入れられますか</summary><p>入れられます。「自分のお題」に1行1つ書きます。行の最後に <b>*SSR</b> のように付けるとレア度を決められます（付けなければR）。書いたお題はこのブラウザの中にだけ保存され、送信しません。</p></details>
+<details><summary>ルーレットで回したい</summary><p>「回し方」を「ルーレット（8つから）」にすると、選んだパックからまだ出ていないお題を8つ選んで盤面にし、回して決めます。項目を自分で全部決めたいときは <a href="/">配信ルーレット</a> を使ってください。</p></details>
+<details><summary>配信や動画で使ってもいいですか</summary><p>はい。配信・録画・切り抜き・収益化に使えます。お題の文面を配信で読み上げるのも自由です。細かい条件は <a href="https://kkpwebninja.com/guidelines" target="_blank" rel="noopener">配信・動画でのご利用について</a> にまとめています。</p></details>
+
+<h2>個人情報の扱い</h2>
+<p>選んだパック・自分のお題・出たお題の記録は、お使いのブラウザの中にだけ保存されます。サーバーには送りません。計測（Google アナリティクス）は「回した回数」「出たレア度」「選んだパックの名前」のような回数だけで、自分で書いたお題の中身は含みません。</p>
+</div>
+</main>
+</div>
+
+<!-- WEBNINJA_UNIFIED_FOOTER -->
+<footer class="uf">
+  <div class="uf-name">web忍者の砦</div>
+  <div><a href="https://kkpwebninja.com/" target="_blank" rel="noopener">本丸トップ</a>·<a href="https://privacypolicy.kkpwebninja.com/" target="_blank" rel="noopener">プライバシーポリシー</a>·<a href="https://kkpwebninja.com/otoiawase" target="_blank" rel="noopener">お問い合わせ</a>·<a href="https://x.com/kkp_webninja" target="_blank" rel="noopener">@kkp_webninja</a></div>
+  <div class="uf-c">© 2025-2026 web忍者の砦</div>
+</footer>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1298304917726270" crossorigin="anonymous"></script>
+<script src="/wheel.js"></script>
+<script src="/gacha.js"></script>
+<script src="/odai-gacha/packs.js"></script>
+<script>
+(function () {
+  'use strict';
+  var G = window.KkpGacha, K = window.KkpWheel, PACKS = window.KKP_ODAI_PACKS;
+  var $ = function (id) { return document.getElementById(id); };
+  var ORIGIN = 'https://roulette.kkpwebninja.com';
+  var LS = { set: 'kkp_odai_settings', my: 'kkp_odai_custom', off: 'kkp_odai_off', seen: 'kkp_odai_seen', hist: 'kkp_odai_history', msg: 'kkp_roulette_msg', state: 'kkp_roulette_state', rset: 'kkp_roulette_settings' };
+  function load(k, d) { try { var v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } }
+  function save(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { /* 保存できなくても動く */ } }
+  var reduce = false; try { reduce = matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
+  var defPacks = PACKS.filter(function (p) { return p.on; }).map(function (p) { return p.id; });
+  var S = Object.assign({ packs: defPacks, mode: 'gacha', fx: reduce ? 'lite' : 'full', snd: false, vsnd: false }, load(LS.set, {}));
+  var off = load(LS.off, []), seen = load(LS.seen, []), hist = load(LS.hist, []);
+  var pool = [], last = null, busy = false, ctl = null;
+  var packName = { my: '自分のお題' }; PACKS.forEach(function (p) { packName[p.id] = p.name; });
+  var chan = null; try { chan = new BroadcastChannel('kkp-roulette'); } catch (e) {}
+  function send(msg) { msg.ts = Date.now(); if (chan) { try { chan.postMessage(msg); } catch (e) {} } save(LS.msg, msg); }
+  function viewSettings() {
+    var r = Object.assign({ bg: 'transparent', bgColor: '#fff6ea', layout: 'both', size: 2, ink: 'dark', credit: true }, load(LS.rset, {}));
+    return { bg: r.bg === 'custom' ? r.bgColor : r.bg, layout: r.layout, place: r.place || 'full', size: r.size, ink: r.ink, credit: r.credit, sound: S.vsnd };
+  }
+  function saveS() { save(LS.set, S); }
+
+  // パック（ボタン1つで入る・外れる。1〜9キーでも）
+  var PK = PACKS.concat([{ id: 'my', name: '自分のお題', desc: '', items: null }]);
+  function togglePack(id) {
+    var i = S.packs.indexOf(id);
+    if (i >= 0) S.packs.splice(i, 1); else { S.packs.push(id); kkpEvent('gacha_pack', { pack: id }); }
+    saveS(); renderPacks(); rebuild();
+  }
+  function renderPacks() {
+    var box = $('packs'); box.innerHTML = '';
+    PK.forEach(function (p, k) {
+      var n = p.items ? p.items.length : G.parseCustom($('my').value).length;
+      var b = document.createElement('button');
+      b.className = 'pk'; b.type = 'button'; b.setAttribute('aria-pressed', S.packs.indexOf(p.id) >= 0 ? 'true' : 'false');
+      b.innerHTML = '<span class="n">' + (k + 1) + '</span><span class="t"></span><span class="c">' + n + '</span>';
+      b.querySelector('.t').textContent = p.name; b.title = p.desc || '';
+      b.addEventListener('click', function () { togglePack(p.id); });
+      box.appendChild(b);
+    });
+    $('myN').textContent = G.parseCustom($('my').value).length;
+  }
+  function rebuild() {
+    pool = G.buildPool(PACKS, S.packs, $('my').value, off);
+    var ids = {}; pool.forEach(function (it) { ids[it.id] = 1; });
+    var seenIn = seen.filter(function (id) { return ids[id]; }).length;
+    $('leftTxt').textContent = pool.length ? '残り ' + (pool.length - seenIn) + ' / ' + pool.length + ' 個' : 'パックを1つ以上選んでください';
+    $('go').disabled = pool.length < (S.mode === 'wheel' ? 2 : 1);
+    $('remoteUrl').value = ORIGIN + '/view/?gacha=' + encodeURIComponent(S.packs.filter(function (x) { return x !== 'my'; }).join(',')) + '&fx=' + S.fx + '&sound=' + (S.vsnd ? 1 : 0) + remoteLook();
+    var o = off.length; $('offN').textContent = o ? '（' + o + '個を外しています）' : '';
+  }
+  function remoteLook() { var v = viewSettings(); return '&bg=' + encodeURIComponent(v.bg) + '&place=' + v.place + '&size=' + v.size + '&ink=' + v.ink + '&credit=' + (v.credit ? 1 : 0); }
+
+  // お題の一覧（チェックを外すと出ない）
+  function renderLists() {
+    var box = $('olists'); box.innerHTML = '';
+    var offSet = {}; off.forEach(function (id) { offSet[id] = 1; });
+    PACKS.forEach(function (p) {
+      var d = document.createElement('details');
+      d.innerHTML = '<summary></summary><ul class="olist"></ul>';
+      d.querySelector('summary').textContent = p.name + '（' + p.items.length + '個）— ' + p.desc;
+      var ul = d.querySelector('ul');
+      p.items.forEach(function (line) {
+        var k = line.indexOf('|'), r = line.slice(0, k), t = line.slice(k + 1), id = p.id + ':' + G.hash(t);
+        var li = document.createElement('li'); if (offSet[id]) li.className = 'off';
+        li.innerHTML = '<label><input type="checkbox"><span class="tag t-' + r + '">' + r + '</span><span class="tx"></span></label>';
+        li.querySelector('.tx').textContent = t;
+        var cb = li.querySelector('input'); cb.checked = !offSet[id];
+        cb.addEventListener('change', function () { setOff(id, !this.checked); li.className = this.checked ? '' : 'off'; });
+        ul.appendChild(li);
+      });
+      box.appendChild(d);
+    });
+  }
+  function setOff(id, on) {
+    var i = off.indexOf(id);
+    if (on && i < 0) off.push(id); if (!on && i >= 0) off.splice(i, 1);
+    save(LS.off, off); rebuild();
+  }
+
+  // 結果の記録
+  function record(it) {
+    last = it;
+    if (seen.indexOf(it.id) < 0) seen.push(it.id); save(LS.seen, seen);
+    hist.unshift({ t: it.text, r: it.r, ts: Date.now() }); hist = hist.slice(0, 20); save(LS.hist, hist); renderHist();
+    $('res').hidden = false; $('resTag').className = 'tag t-' + it.r; $('resTag').textContent = it.r; $('resTxt').textContent = it.text;
+    rebuild(); showResultAd();
+    save(LS.state, { t: 'state', kind: 'gacha', rarity: it.r, text: it.text, packName: packName[it.pack] || '', settings: viewSettings() });
+  }
+  function renderHist() {
+    $('hist').hidden = !hist.length;
+    $('histList').innerHTML = hist.map(function (h) { return '<li><span></span> <small></small></li>'; }).join('');
+    var li = $('histList').querySelectorAll('li');
+    hist.forEach(function (h, i) { li[i].querySelector('span').textContent = h.t; li[i].querySelector('small').textContent = h.r; });
+  }
+  function flash(t) { $('flash').textContent = t; setTimeout(function () { $('flash').textContent = ''; }, 2600); }
+
+  function pick() {
+    var d = G.draw(pool, seen);
+    if (!d) return null;
+    if (d.resetR) { seen = G.clearRarity(pool, seen, d.resetR); flash(d.resetR + ' のお題を一周したので、' + d.resetR + ' だけ最初に戻しました'); kkpEvent('gacha_reset', { rarity: d.resetR }); }
+    return d.item;
+  }
+  function setBusy(b) { busy = b; $('skip').hidden = !b; $('go').disabled = b || pool.length < 1; }
+
+  // ガチャ
+  var wheel = new K.Wheel($('wheel')), wheelItems = [];
+  function go() {
+    if (busy) { skip(); return; }
+    if (!pool.length) return;
+    $('gidle').hidden = true;
+    if (S.mode === 'wheel') return spinWheel();
+    $('gwheel').hidden = true;
+    var it = pick(); if (!it) return;
+    var id = Date.now(), pn = packName[it.pack] || '';
+    setBusy(true);
+    send({ t: 'gacha', id: id, rarity: it.r, text: it.text, packName: pn, fx: S.fx, settings: viewSettings() });
+    kkpEvent('gacha_draw', { rarity: it.r, mode: 'gacha', fx: S.fx });
+    if (seen.indexOf(it.id) < 0) seen.push(it.id);
+    ctl = G.play($('gstage'), { rarity: it.r, text: it.text, packName: pn, fx: S.fx, sound: S.snd, place: 'full', band: viewSettings().ink === 'light' ? 'dark' : 'orange', onDone: function () { setBusy(false); record(it); } });
+  }
+  function skip() { if (ctl && ctl.playing()) { ctl.skip(); send({ t: 'gskip' }); } }
+
+  // ルーレット（まだ出ていないお題から8つ）
+  function spinWheel() {
+    if (pool.length < 2) return;
+    if ($('gstage')._kg) $('gstage')._kg.destroy();
+    var tmpSeen = seen.slice(), cands = [];
+    for (var i = 0; i < 8 && cands.length < pool.length; i++) {
+      var d = G.draw(pool, tmpSeen); if (!d) break;
+      if (d.resetR) { if (cands.some(function (c) { return c.id === d.item.id; })) continue; }
+      cands.push(d.item); tmpSeen.push(d.item.id);
+    }
+    if (cands.length < 2) { seen = []; save(LS.seen, seen); return spinWheel(); }
+    wheelItems = cands;
+    var items = cands.map(function (c) { return { label: c.text, weight: 1 }; });
+    $('gwheel').hidden = false; fitWheel(); wheel.setItems(items);
+    var from = wheel.angle, final = wheel.pickFinal(5 + Math.floor(Math.random() * 2)), dur = 3400 + Math.random() * 600;
+    setBusy(true); $('skip').hidden = true;
+    send({ t: 'spin', items: items, from: from, final: final, dur: dur, id: Date.now(), settings: viewSettings() });
+    kkpEvent('gacha_draw', { mode: 'wheel', fx: S.fx });
+    wheel.spin(from, final, dur, function (idx) {
+      var it = wheelItems[idx]; setBusy(false); if (!it) return;
+      record(it);
+      if (S.snd) G.sfx('reveal', it.r);
+      kkpEvent('gacha_result', { rarity: it.r, mode: 'wheel' });
+    });
+  }
+  wheel.onTick = function () { if (S.snd) K.sound('tick'); };
+  function fitWheel() { var h = $('gstage').clientHeight; wheel.resize(Math.max(160, Math.floor(h * 0.94))); }
+  window.addEventListener('resize', function () { if (!$('gwheel').hidden) fitWheel(); });
+  // 丸ゴシックの読み込みが終わったら盤面を描き直す（先に描くと細い代わりの字になる）
+  try { document.fonts.ready.then(function () { wheel.draw(); }); } catch (e) {}
+
+  $('go').addEventListener('click', go);
+  $('skip').addEventListener('click', skip);
+  document.addEventListener('keydown', function (e) {
+    var tag = (e.target.tagName || '').toLowerCase();
+    if (tag === 'textarea' || tag === 'input' || tag === 'select' || tag === 'button' || tag === 'summary') return;
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    if (e.code === 'Space' || e.key === 'Enter') { e.preventDefault(); go(); }
+    else if (e.key === 's' || e.key === 'S') { skip(); }
+    else if (/^[1-9]$/.test(e.key) && PK[+e.key - 1] && !busy) { togglePack(PK[+e.key - 1].id); }
+  });
+
+  // 操作の設定
+  function bindRadios(name, key) {
+    document.querySelectorAll('input[name=' + name + ']').forEach(function (r) {
+      r.checked = r.value === S[key];
+      r.addEventListener('change', function () { S[key] = this.value; saveS(); rebuild(); });
+    });
+  }
+  bindRadios('mode', 'mode'); bindRadios('fx', 'fx');
+  $('snd').checked = !!S.snd; $('vsnd').checked = !!S.vsnd;
+  $('snd').addEventListener('change', function () { S.snd = this.checked; saveS(); });
+  $('vsnd').addEventListener('change', function () { S.vsnd = this.checked; saveS(); rebuild(); });
+
+  var myTimer = null;
+  $('my').value = load(LS.my, '');
+  $('my').addEventListener('input', function () {
+    clearTimeout(myTimer);
+    myTimer = setTimeout(function () {
+      save(LS.my, $('my').value);
+      var n = G.parseCustom($('my').value).length;
+      if (n && S.packs.indexOf('my') < 0) { S.packs.push('my'); saveS(); }
+      if (!n) { S.packs = S.packs.filter(function (x) { return x !== 'my'; }); saveS(); }
+      renderPacks(); rebuild();
+    }, 300);
+  });
+
+  $('offBtn').addEventListener('click', function () { if (!last) return; setOff(last.id, true); renderLists(); flash('このお題は今後出ません（一覧で戻せます）'); kkpEvent('odai_off'); });
+  $('restoreOff').addEventListener('click', function () { off = []; save(LS.off, off); renderLists(); rebuild(); });
+  $('resetSeen').addEventListener('click', function () { seen = []; save(LS.seen, seen); rebuild(); flash('最初からにしました'); });
+  $('clearHist').addEventListener('click', function () { hist = []; save(LS.hist, hist); renderHist(); });
+  function copy(text, btn) {
+    var done = function () { var o = btn.textContent; btn.textContent = 'コピーしました'; setTimeout(function () { btn.textContent = o; }, 1600); };
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done, done);
+    else { var ta = document.createElement('textarea'); ta.value = text; document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); } catch (e) {} document.body.removeChild(ta); done(); }
+  }
+  $('copyRes').addEventListener('click', function () { if (last) copy(last.text, this); });
+  $('copyHist').addEventListener('click', function () { copy(hist.map(function (h) { return h.t; }).join('\n'), this); });
+  $('copyView').addEventListener('click', function () { copy($('viewUrl').value, this); kkpEvent('obs_url_copy', { from: 'gacha' }); });
+  $('copyRemote').addEventListener('click', function () { copy($('remoteUrl').value, this); kkpEvent('obs_url_copy', { from: 'gacha_remote' }); });
+  $('openView').addEventListener('click', function () { kkpEvent('view_open_click', { from: 'gacha' }); });
+
+  // 広告（表示されてから1回だけ push）
+  function pushAdWhenVisible(box) {
+    if (window.__kkpTest) return;
+    var ins = box.querySelector('ins'); if (!ins || ins.dataset.pushed) return;
+    function fire() { if (ins.dataset.pushed) return; ins.dataset.pushed = '1'; requestAnimationFrame(function () { ins.className = 'adsbygoogle'; try { (window.adsbygoogle = window.adsbygoogle || []).push({}); } catch (e) {} }); }
+    if (!('IntersectionObserver' in window)) { fire(); return; }
+    var io = new IntersectionObserver(function (en) { en.forEach(function (x) { if (x.isIntersecting && box.offsetWidth > 0) { io.disconnect(); fire(); } }); });
+    io.observe(box);
+  }
+  function showResultAd() { var a = $('adResult'); if (a.hidden) { a.hidden = false; pushAdWhenVisible(a); } }
+  pushAdWhenVisible($('adHowto'));
+
+  // 配信から来た人への一言
+  (function () {
+    var ref = ''; try { ref = new URL(document.referrer).hostname; } catch (e) {}
+    var hit = /(^|\.)(youtube\.com|youtu\.be|twitch\.tv|tiktok\.com|x\.com|t\.co|twitter\.com|nicovideo\.jp|twitcasting\.tv)$/.test(ref) || /[?&]from=stream\b/.test(location.search);
+    if (!hit) return;
+    try { if (sessionStorage.getItem('kkp-odai-fs-x')) return; } catch (e) {}
+    $('fromStream').hidden = false; kkpEvent('gacha_from_stream', { from: ref || 'param' });
+    $('fromStreamX').addEventListener('click', function () { $('fromStream').hidden = true; try { sessionStorage.setItem('kkp-odai-fs-x', '1'); } catch (e) {} });
+  })();
+
+  renderPacks(); renderLists(); rebuild(); renderHist();
+})();
+</script>
+</body>
+</html>
