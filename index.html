@@ -15,6 +15,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&display=swap&text=NRS%E7%B5%90%E6%9E%9C%E6%AE%8B%E3%82%8A0123456789%2F" rel="stylesheet">
 <meta property="og:title" content="配信ルーレット｜OBSに映せる無料のお題・話題ルーレット">
 <meta property="og:description" content="お題・企画・視聴者名を貼って回すだけ。OBSで透過表示できる専用ページつき。登録不要・無料。">
 <meta property="og:type" content="website">
@@ -87,6 +88,14 @@ textarea#items{width:100%;min-height:260px;padding:10px;border:1px solid var(--l
 #confetti{position:absolute;inset:0;pointer-events:none;width:100%;height:100%}
 .spin{margin:14px 0 0;width:100%;max-width:560px;background:var(--accent);color:#fff;border:2px solid #2b2b2b;box-shadow:0 4px 0 #2b2b2b;padding:12px 24px;font-size:24px;font-weight:800;letter-spacing:.06em;min-height:64px}
 .spin:active{transform:translateY(3px);box-shadow:0 1px 0 #2b2b2b}
+.spin{font-family:"M PLUS Rounded 1c","Hiragino Maru Gothic ProN",sans-serif;font-weight:900;letter-spacing:.1em;transition:transform .08s ease,box-shadow .08s ease,background-color .12s}
+.spin:hover:not([disabled]){transform:translateY(-1px);box-shadow:0 5px 0 #2b2b2b}
+.spin[disabled]{box-shadow:none;border-color:#c9c2b8}
+.btn{transition:transform .08s ease,box-shadow .08s ease}
+.btn:hover{transform:translateY(-1px);box-shadow:0 2px 0 #2b2b2b}
+.btn:active{transform:translateY(1px);box-shadow:none}
+.spin:focus-visible,.btn:focus-visible{outline:3px solid #ffd23f;outline-offset:2px}
+.result .r-txt{font-family:"M PLUS Rounded 1c","Hiragino Maru Gothic ProN",sans-serif;font-weight:900;letter-spacing:.01em}
 .keys{width:100%;max-width:560px;font-size:12.5px;color:var(--sub);margin:8px 0 0;text-align:left}
 .keys kbd{font-family:inherit;font-size:12px;border:1px solid var(--line);border-bottom-width:2px;padding:0 5px;background:#faf8f4;color:var(--ink);margin:0 2px}
 .spin:hover{background:var(--accent-d)}

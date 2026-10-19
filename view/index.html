@@ -10,6 +10,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&display=swap&text=NRS%E7%B5%90%E6%9E%9C%E6%AE%8B%E3%82%8A0123456789%2F" rel="stylesheet">
 <script src="/ga.js"></script>
 <style>
 /* OBS のブラウザソース向け: 背景は透過（既定）。操作ボタン・広告・説明文は映さない
@@ -113,8 +114,9 @@ body{background:transparent;font-family:"M PLUS Rounded 1c","Hiragino Maru Gothi
     if (msg.settings) applySettings(msg.settings);
     showResult('', false);
     wheel.spin(msg.from, msg.final, msg.dur, function (idx) {
-      var label = items[idx] ? items[idx].label : '';
-      showResult(label, true);
+      var rv = msg.reveal && msg.reveal[idx];
+      if (rv) { lastResult = ''; var box = $('resbox'); box.innerHTML = ''; G.telop(box, { rarity: rv.r, text: rv.text, packName: rv.packName, band: band() }).classList.add('in'); }
+      else showResult(items[idx] ? items[idx].label : '', true);
       if (settings.sound) K.sound('done');
       K.confetti($('confetti'));
     });

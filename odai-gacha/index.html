@@ -14,6 +14,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&display=swap&text=NRS%E7%B5%90%E6%9E%9C%E6%AE%8B%E3%82%8A0123456789%2F" rel="stylesheet">
 <meta property="og:title" content="お題ガチャ｜配信の雑談お題・罰ゲーム・縛りをガチャで引く">
 <meta property="og:description" content="雑談お題・二択・罰ゲーム・縛り330個。レア度つきのガチャ演出をOBSに映せます。登録不要・無料。">
 <meta property="og:type" content="website">
@@ -125,9 +126,29 @@ textarea#my{width:100%;min-height:96px;padding:8px;border:1px solid var(--line);
 .hist[hidden]{display:none}
 .hist-h{display:flex;justify-content:space-between;align-items:center;gap:8px}
 .hist ol{margin:4px 0 0;padding-left:1.6rem;max-height:132px;overflow:auto}
-.hist li{margin:0;color:var(--sub)}
+.hist li{margin:0 0 3px;color:var(--sub);display:flex;gap:6px;align-items:baseline}
+.hist li .tag{font-size:10.5px;padding:0 4px;min-width:2.6em;text-align:center}
+.hist ol{list-style:none;padding-left:0}
 .hist li span{color:var(--ink)}
-.t-N{background:#6f7b88}.t-R{background:#1f6fe0}.t-SR{background:#c88700}.t-SSR{background:linear-gradient(90deg,#e8463f,#e88a12,#c9a400,#25a85e,#2f7de1,#8a4be0)}
+.t-N{background:linear-gradient(135deg,#e0a874,#a8693b 55%,#7a4a24);color:#fff}
+.t-R{background:linear-gradient(135deg,#ffffff,#c6d0dc 45%,#8a97a8);color:#2b2b2b!important}
+.t-SR{background:linear-gradient(135deg,#fff3a0,#f2bd00 45%,#b67a00);color:#2b2b2b!important}
+.t-SSR{background:linear-gradient(90deg,#e8463f,#e88a12,#c9a400,#25a85e,#2f7de1,#8a4be0);color:#fff}
+.tag{font-family:"Dela Gothic One","M PLUS Rounded 1c",sans-serif;font-weight:400;border:1px solid #2b2b2b;box-shadow:1px 1px 0 #2b2b2b}
+/* 押した感触（浮く→沈む） */
+.btn,.pk,.skip{transition:transform .08s ease,box-shadow .08s ease,background-color .12s}
+.btn:hover,.pk:hover,.skip:hover{transform:translateY(-1px);box-shadow:0 2px 0 #2b2b2b}
+.btn:active,.pk:active,.skip:active{transform:translateY(1px);box-shadow:none}
+.go{transition:transform .08s ease,box-shadow .08s ease,background-color .12s}
+.go:hover{transform:translateY(-1px);box-shadow:0 5px 0 #2b2b2b}
+.go:focus-visible,.pk:focus-visible,.btn:focus-visible{outline:3px solid #ffd23f;outline-offset:2px}
+.seg span{transition:background-color .12s,color .12s}
+.seg label:hover span{background:#f4f1ec}
+.seg input:checked+span{box-shadow:inset 0 -3px 0 #e2600f}
+.stat #leftTxt,.pk .c,.pk .n{font-variant-numeric:tabular-nums}
+.stat #leftTxt b{font-family:"Dela Gothic One","M PLUS Rounded 1c",sans-serif;font-weight:400;font-size:20px;letter-spacing:.02em;margin:0 2px}
+.go{font-family:"M PLUS Rounded 1c","Hiragino Maru Gothic ProN",sans-serif;font-weight:900;letter-spacing:.08em}
+.res .rt{letter-spacing:.01em}
 @media(max-width:860px){
   body{padding-bottom:96px}
   .gbar{position:fixed;left:0;right:0;bottom:0;padding:10px 16px calc(10px + env(safe-area-inset-bottom));background:#fff;border-top:1px solid var(--line);z-index:20}
@@ -266,7 +287,7 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
 <details><summary>同じお題が続けて出ませんか</summary><p>出ません。一度出たお題は、同じレア度のお題を一周するまで出ません。SSRは数が少ないので早く一周し、一周したレア度だけ自動で最初に戻ります。「最初から」でいつでも全部戻せます。</p></details>
 <details><summary>演出がまぶしい・長いときは</summary><p>演出を「控えめ」にすると、画面全体が白く光る演出と画面の揺れがなくなり、少し短くなります。「なし」は結果だけを出します。演出中はスペースキーか「スキップ」で飛ばせます。端末で「視差効果を減らす（動きを減らす）」を設定していると、最初から「控えめ」になります。</p></details>
 <details><summary>自分で考えたお題も入れられますか</summary><p>入れられます。「自分のお題」に1行1つ書きます。行の最後に <b>*SSR</b> のように付けるとレア度を決められます（付けなければR）。書いたお題はこのブラウザの中にだけ保存され、送信しません。</p></details>
-<details><summary>ルーレットで回したい</summary><p>「回し方」を「ルーレット（8つから）」にすると、選んだパックからまだ出ていないお題を8つ選んで盤面にし、回して決めます。項目を自分で全部決めたいときは <a href="/">配信ルーレット</a> を使ってください。</p></details>
+<details><summary>ルーレットで回したい</summary><p>「回し方」を「ルーレット（8つから）」にすると、選んだパックからまだ出ていないお題を8つ選んで盤面にし、回して決めます。盤面のお題は「？？？」で伏せてあり、止まったところでテロップで発表します。項目を自分で全部決めたいときは <a href="/">配信ルーレット</a> を使ってください。</p></details>
 <details><summary>配信や動画で使ってもいいですか</summary><p>はい。配信・録画・切り抜き・収益化に使えます。お題の文面を配信で読み上げるのも自由です。細かい条件は <a href="https://kkpwebninja.com/guidelines" target="_blank" rel="noopener">配信・動画でのご利用について</a> にまとめています。</p></details>
 
 <h2>個人情報の扱い</h2>
@@ -332,7 +353,7 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
     pool = G.buildPool(PACKS, S.packs, $('my').value, off);
     var ids = {}; pool.forEach(function (it) { ids[it.id] = 1; });
     var seenIn = seen.filter(function (id) { return ids[id]; }).length;
-    $('leftTxt').textContent = pool.length ? '残り ' + (pool.length - seenIn) + ' / ' + pool.length + ' 個' : 'パックを1つ以上選んでください';
+    $('leftTxt').innerHTML = pool.length ? '残り<b>' + (pool.length - seenIn) + '</b>/ ' + pool.length + ' 個' : 'パックを1つ以上選んでください';
     $('go').disabled = pool.length < (S.mode === 'wheel' ? 2 : 1);
     $('remoteUrl').value = ORIGIN + '/view/?gacha=' + encodeURIComponent(S.packs.filter(function (x) { return x !== 'my'; }).join(',')) + '&fx=' + S.fx + '&sound=' + (S.vsnd ? 1 : 0) + remoteLook();
     var o = off.length; $('offN').textContent = o ? '（' + o + '個を外しています）' : '';
@@ -377,9 +398,9 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
   }
   function renderHist() {
     $('hist').hidden = !hist.length;
-    $('histList').innerHTML = hist.map(function (h) { return '<li><span></span> <small></small></li>'; }).join('');
+    $('histList').innerHTML = hist.map(function (h) { return '<li><b class="tag t-' + (/^(N|R|SR|SSR)$/.test(h.r) ? h.r : 'N') + '"></b><span></span></li>'; }).join('');
     var li = $('histList').querySelectorAll('li');
-    hist.forEach(function (h, i) { li[i].querySelector('span').textContent = h.t; li[i].querySelector('small').textContent = h.r; });
+    hist.forEach(function (h, i) { li[i].querySelector('b').textContent = h.r; li[i].querySelector('span').textContent = h.t; });
   }
   function flash(t) { $('flash').textContent = t; setTimeout(function () { $('flash').textContent = ''; }, 2600); }
 
@@ -421,15 +442,18 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
     }
     if (cands.length < 2) { seen = []; save(LS.seen, seen); return spinWheel(); }
     wheelItems = cands;
-    var items = cands.map(function (c) { return { label: c.text, weight: 1 }; });
+    // 盤面は中身を伏せる（「？？？」）。止まったらテロップで発表する
+    var items = cands.map(function (c, k) { return { label: '？？？', weight: 1 }; });
+    var reveal = cands.map(function (c) { return { text: c.text, r: c.r, packName: packName[c.pack] || '' }; });
     $('gwheel').hidden = false; fitWheel(); wheel.setItems(items);
     var from = wheel.angle, final = wheel.pickFinal(5 + Math.floor(Math.random() * 2)), dur = 3400 + Math.random() * 600;
     setBusy(true); $('skip').hidden = true;
-    send({ t: 'spin', items: items, from: from, final: final, dur: dur, id: Date.now(), settings: viewSettings() });
+    send({ t: 'spin', items: items, reveal: reveal, from: from, final: final, dur: dur, id: Date.now(), settings: viewSettings() });
     kkpEvent('gacha_draw', { mode: 'wheel', fx: S.fx });
     wheel.spin(from, final, dur, function (idx) {
       var it = wheelItems[idx]; setBusy(false); if (!it) return;
       record(it);
+      G.show($('gstage'), { rarity: it.r, text: it.text, packName: packName[it.pack] || '', place: 'full', band: viewSettings().ink === 'light' ? 'dark' : 'orange' });
       if (S.snd) G.sfx('reveal', it.r);
       kkpEvent('gacha_result', { rarity: it.r, mode: 'wheel' });
     });
