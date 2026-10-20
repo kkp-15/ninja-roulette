@@ -17,9 +17,10 @@ body.k-page{background:var(--k-surface);color:var(--k-sumi)}
 .site .k-ninja{left:calc(50% - 7px);top:12px}
 .site .k-season{left:calc(50% + 16px);top:4px;width:26px;opacity:.45;transform:rotate(18deg)}
 
-/* 見出し: h1 は筆、h2 は墨の筆跡に白抜き（.k-hd と同じ見た目） */
+/* 見出し: h1 は筆、h2 は kit の .k-hd（短い）/.k-h2（16字を超える）。墨の絵は kit が持つ */
 h1{font-family:var(--k-brush);font-weight:400;font-size:21px;letter-spacing:.06em;line-height:1.4;font-feature-settings:"palt" 1}
-main h2{display:table;margin:2.2rem 0 .7rem -6px;padding:12px 34px 14px 50px;border:0;background:url(kit/img/d2-ink.webp) center/100% 100% no-repeat;color:#fff;text-shadow:0 0 3px var(--k-sumi),0 0 1px var(--k-sumi);font-family:var(--k-brush);font-weight:400;font-size:21px;letter-spacing:.14em;line-height:1.2;font-feature-settings:"palt" 1;transform:rotate(-1deg)}
+main h2.k-hd{display:table;margin:2.2rem 0 .7rem -6px;border:0}
+main h2.k-h2{margin:2.2rem 0 .7rem}
 h3{border-left-color:var(--k-orange)}
 
 /* 主ボタン＝木札（.k-btn.k-btn-main を HTML に付けている。古い .spin/.go の塗り・ふち・影を消して木札に戻す） */
@@ -89,4 +90,4 @@ kbd,.keys kbd{border:1.5px solid var(--k-sumi);border-bottom-width:3px;border-ra
 .uf a{color:var(--k-sumi)}
 .uf-c{color:var(--k-text-2)}
 a.btn{text-decoration:none}
-@media(max-width:600px){main h2{font-size:18px;letter-spacing:.06em;padding:12px 22px 14px 34px;max-width:100%}}
+@media(max-width:600px){main h2.k-hd{font-size:19px;letter-spacing:.08em}}

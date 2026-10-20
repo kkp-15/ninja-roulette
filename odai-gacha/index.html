@@ -262,14 +262,14 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
 </div>
 
 <div class="narrow">
-<h2 id="howto">使い方（3段）</h2>
+<h2 id="howto" class="k-hd">使い方（3段）</h2>
 <ol class="steps">
   <li><b>1. 選ぶ</b><span>パックのボタンを押す（数字キー 1〜9 でも）。雑談なら「自分の話」「もしも」「二択」「リスナーに聞く」、ゲーム実況なら「縛り」、負けたら「罰ゲーム」。いくつでも混ぜられます。</span></li>
   <li><b>2. 回す</b><span>「ガチャを回す」かスペースキー。札の印の色が N（銅）→ R（銀）→ SR（金）→ SSR（虹）と上がっていき、刀で斬れて中からお題が出ます。演出中にもう一度押すとスキップ。</span></li>
   <li><b>3. 映す</b><span>下の「表示ページを開く」で開いたウィンドウを、OBSの「ウィンドウキャプチャ」で取り込むと、同じ演出が配信画面に出ます（操作ボタンや広告は映りません）。</span></li>
 </ol>
 
-<h2 id="obs">OBSに映す（ウィンドウキャプチャ）</h2>
+<h2 id="obs" class="k-h2">OBSに映す（ウィンドウキャプチャ）</h2>
 <p>ルーレットと同じ表示ページを使います。このページと同じブラウザで表示ページを開き、そのウィンドウをOBSで取り込むと、この画面で回したガチャがそのまま出ます。</p>
 <div class="urlrow"><input type="text" id="viewUrl" readonly value="https://roulette.kkpwebninja.com/view/"><button class="btn" id="copyView">URLをコピー</button><a class="btn" id="openView" href="/view/" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;text-decoration:none;color:inherit">表示ページを開く</a></div>
 <ol>
@@ -287,19 +287,19 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
   <ins class="adsbygoogle-later" style="display:block" data-ad-client="ca-pub-1298304917726270" data-ad-slot="2937937957" data-ad-format="rectangle" data-full-width-responsive="false"></ins>
 </div>
 
-<h2 id="list">お題の一覧（チェックを外すと出なくなります）</h2>
+<h2 id="list" class="k-h2">お題の一覧（チェックを外すと出なくなります）</h2>
 <p>どのパックも、YouTubeの雑談配信や切り抜きで盛り上がりやすい型（失敗談、もしも、究極の二択、ランキング、リスナーに聞く、即興、語尾やセリフの罰ゲーム、〇〇禁止の縛り）をもとに、文面はこのサイトで作りました。</p>
 <div id="olists"></div>
 <p class="note" style="margin-top:8px"><button class="btn sm" id="restoreOff">外したお題を全部戻す</button> <span id="offN"></span></p>
 
-<h2 id="safe">罰ゲームと縛りの決まり</h2>
+<h2 id="safe" class="k-hd">罰ゲームと縛りの決まり</h2>
 <ul>
   <li>入れていないもの: 体を張る・痛い・危ないこと、飲食の強要、本名や住所など個人情報を言わせること、性的な内容、見た目や属性をからかうこと、他人を巻き込むこと（電話・突撃など）、長時間の耐久。</li>
   <li>「リスナーに決めてもらう」ものは、配信者が候補から選ぶ形にしています。常識の範囲で。</li>
   <li>縛りは遊ぶゲームに合わないことがあります。合わなければ遠慮なく引き直してください。</li>
 </ul>
 
-<h2 id="faq">よくある質問</h2>
+<h2 id="faq" class="k-hd">よくある質問</h2>
 <details><summary>SSRはどのくらいの確率で出ますか</summary><p>N 55%・R 30%・SR 12%・SSR 3% です。SSRはおよそ33回に1回。何回目に引いてもこの割合は変わりません。</p></details>
 <details><summary>同じお題が続けて出ませんか</summary><p>出ません。一度出たお題は、同じレア度のお題を一周するまで出ません。SSRは数が少ないので早く一周し、一周したレア度だけ自動で最初に戻ります。「最初から」でいつでも全部戻せます。</p></details>
 <details><summary>演出がまぶしい・長いときは</summary><p>演出を「控えめ」にすると、刀で斬ったときの画面の揺れがなくなります。「長さ」を「短い」にすると演出が短くなり、「なし」は結果だけを出します。演出中はスペースキーか「スキップ」で飛ばせます。端末で「視差効果を減らす（動きを減らす）」を設定していると、演出なしですぐ結果が出ます。</p></details>
@@ -307,7 +307,7 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
 <details><summary>ルーレットで回したい</summary><p>「回し方」を「ルーレット（8つから）」にすると、選んだパックからまだ出ていないお題を8つ選んで盤面にし、回して決めます。盤面のお題は「？？？」で伏せてあり、止まったところでテロップで発表します。項目を自分で全部決めたいときは <a href="/">配信ルーレット</a> を使ってください。</p></details>
 <details><summary>配信や動画で使ってもいいですか</summary><p>はい。配信・録画・切り抜き・収益化に使えます。お題の文面を配信で読み上げるのも自由です。使うときは、<a href="https://kkpwebninja.com/otoiawase" target="_blank" rel="noopener">お問い合わせ</a>か X（<a href="https://x.com/kkp_webninja" target="_blank" rel="noopener">@kkp_webninja</a>）で一言いただけると助かります。ご要望があれば、優先してアップデートします。細かい条件は <a href="https://kkpwebninja.com/guidelines" target="_blank" rel="noopener">配信・動画でのご利用について</a> にまとめています。</p></details>
 
-<h2>個人情報の扱い</h2>
+<h2 class="k-hd">個人情報の扱い</h2>
 <p>選んだパック・自分のお題・出たお題の記録は、お使いのブラウザの中にだけ保存されます。サーバーには送りません。計測（Google アナリティクス）は「回した回数」「出たレア度」「選んだパックの名前」のような回数だけで、自分で書いたお題の中身は含みません。</p>
 </div>
 </main>

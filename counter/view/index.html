@@ -26,7 +26,11 @@ body[data-bg="cream"]{background:var(--k-kinari) url(/kit/img/d4-washi.webp) 0 0
 .stage{position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:0 0}
 .tl{position:absolute;font-family:var(--k-bold);color:var(--k-sumi)}
 .seal{display:inline-grid;place-items:center;flex:none;background:url(/kit/img/d4-seal.webp) center/100% 100% no-repeat;color:#fff;font-family:var(--k-brush);line-height:1}
-.rule{display:flex;align-items:center;min-width:0;overflow:hidden;background:url(/kit/img/d2-ink.webp) center/100% 100% no-repeat;color:#fff;font-family:"M PLUS Rounded 1c",sans-serif;font-weight:900;letter-spacing:.06em;line-height:1.15;text-shadow:0 0 4px var(--k-sumi);word-break:auto-phrase;text-wrap:balance;font-feature-settings:"palt" 1}
+.rule{display:flex;align-items:center;min-width:0;overflow:hidden;transform:none;color:#fff;font-family:"M PLUS Rounded 1c",sans-serif;font-weight:900;letter-spacing:.06em;line-height:1.15;text-shadow:0 0 4px var(--k-sumi);word-break:auto-phrase;text-wrap:balance;font-feature-settings:"palt" 1}
+/* 墨の帯は kit の .k-hd（入り・真ん中・端の3枚）。1920 の舞台で高さがあるので、入りと端の幅だけ広げる */
+.rule.k-hd,.fx-out .who.k-hd{background-size:120px 100%,26px 100%,calc(100% - 128px) 100%;background-position:0 0,100% 0,110px 0;text-wrap:balance;letter-spacing:.06em}
+.fx-out .who.k-hd{font-family:"M PLUS Rounded 1c",sans-serif;line-height:normal}
+.tl-corner .rule.k-hd{background-size:96px 100%,22px 100%,calc(100% - 104px) 100%;background-position:0 0,100% 0,88px 0}
 .big-out{font-family:var(--k-bold);color:var(--k-shu);text-shadow:4px 0 0 var(--k-sumi),-4px 0 0 var(--k-sumi),0 4px 0 var(--k-sumi),0 -4px 0 var(--k-sumi),4px 4px 0 var(--k-sumi),-4px -4px 0 var(--k-sumi),4px -4px 0 var(--k-sumi),-4px 4px 0 var(--k-sumi);font-variant-numeric:tabular-nums;display:inline-block;line-height:1}
 .p{position:relative;min-width:0}
 .rule>span{display:block;min-width:0;max-width:100%}
@@ -69,7 +73,7 @@ body[data-bg="cream"]{background:var(--k-kinari) url(/kit/img/d4-washi.webp) 0 0
 .fx-out{position:absolute;left:50%;top:40%;width:900px;margin-left:-450px;margin-top:-260px;display:none;flex-direction:column;align-items:center;pointer-events:none}
 .fx-out.show{display:flex}
 .fx-out .hk{display:grid;place-items:center;width:420px;height:420px;background:url(/kit/img/d4-hanko.webp) center/100% 100% no-repeat;font-family:var(--k-brush);font-size:108px;color:var(--k-shu);line-height:1;transform:rotate(-8deg)}
-.fx-out .who{display:flex;align-items:baseline;gap:18px;max-width:900px;box-sizing:border-box;margin-top:-10px;padding:20px 64px 26px 80px;background:url(/kit/img/d2-ink.webp) center/100% 100% no-repeat;color:#fff;text-shadow:0 0 4px var(--k-sumi);white-space:nowrap}
+.fx-out .who{display:flex;align-items:baseline;gap:18px;max-width:900px;box-sizing:border-box;margin-top:-10px;padding:20px 64px 26px 80px;transform:none;color:#fff;text-shadow:0 0 4px var(--k-sumi);white-space:nowrap}
 .fx-out .who b{min-width:0;overflow:hidden;text-overflow:ellipsis;font-weight:900;font-size:56px}
 .fx-out .who span{flex:none;font-family:var(--k-bold);font-size:48px}
 .fx-out.show .hk{animation:k-stamp .35s cubic-bezier(.3,1.4,.5,1) both}
@@ -121,9 +125,9 @@ body[data-bg="cream"]{background:var(--k-kinari) url(/kit/img/d4-washi.webp) 0 0
 </head>
 <body data-bg="green">
 <div class="stage" id="stage" data-place="band">
-  <div class="tl tl-band"><div class="head"><span class="seal">縛</span><span class="rule" data-rule></span></div><div class="ppl" data-ppl></div></div>
-  <div class="tl tl-corner"><div class="head"><span class="seal">縛</span><span class="rule" data-rule></span></div><div data-ppl></div></div>
-  <div class="fx-out" id="fxOut" aria-hidden="true"><div class="hk">アウト</div><div class="who"><b id="outWho"></b><span id="outN"></span></div></div>
+  <div class="tl tl-band"><div class="head"><span class="seal">縛</span><span class="rule k-hd" data-rule></span></div><div class="ppl" data-ppl></div></div>
+  <div class="tl tl-corner"><div class="head"><span class="seal">縛</span><span class="rule k-hd" data-rule></span></div><div data-ppl></div></div>
+  <div class="fx-out" id="fxOut" aria-hidden="true"><div class="hk">アウト</div><div class="who k-hd"><b id="outWho"></b><span id="outN"></span></div></div>
   <div class="fx-batsu" id="fxBatsu" aria-hidden="true">
     <div class="scr">
       <img class="kin k1" src="/kit/img/d4-kin.webp" alt="">
