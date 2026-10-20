@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>配信カウンター OBS表示ページ</title>
+<meta name="robots" content="noindex,follow">
+<link rel="canonical" href="https://roulette.kkpwebninja.com/counter/">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@800;900&display=swap" rel="stylesheet">
+<!-- k-fonts:start -->
+<link href="https://fonts.googleapis.com/css2?family=Yuji+Syuku&family=RocknRoll+One&display=swap&text=%2F0123456789NRS%E3%82%A2%E3%82%A6%E3%82%B2%E3%83%88%E3%83%A0%E3%83%BC%E5%9B%9E%E7%9B%AE%E7%B8%9B%E7%BD%B0" rel="stylesheet">
+<!-- k-fonts:end -->
+<link rel="stylesheet" href="/kit/kit.css">
+<script src="/ga.js"></script>
+<style>
+/* 配信カウンターの OBS 表示ページ（ウィンドウキャプチャで取り込む）。操作ボタン・広告・説明文は映さない。
+   中身は 1920x1080 の舞台を作り、ウィンドウの大きさに合わせて縮める（どの大きさでもスクロールしない）。
+   背景: green（既定・OBSのクロマキーで抜く）/ transparent（別ブラウザのブラウザソース用）/ cream */
+html,body{margin:0;height:100%;overflow:hidden}
+body{background:#00b140;font-family:"M PLUS Rounded 1c","Hiragino Maru Gothic ProN","Hiragino Sans",sans-serif;color:var(--k-sumi)}
+body[data-bg="transparent"]{background:transparent}
+body[data-bg="cream"]{background:var(--k-kinari) url(/kit/img/d4-washi.webp) 0 0/480px auto}
+.stage{position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:0 0}
+.tl{position:absolute;font-family:var(--k-bold);color:var(--k-sumi)}
+.seal{display:inline-grid;place-items:center;flex:none;background:url(/kit/img/d4-seal.webp) center/100% 100% no-repeat;color:#fff;font-family:var(--k-brush);line-height:1}
+.rule{display:flex;align-items:center;min-width:0;overflow:hidden;background:url(/kit/img/d2-ink.webp) center/100% 100% no-repeat;color:#fff;font-family:"M PLUS Rounded 1c",sans-serif;font-weight:900;letter-spacing:.06em;line-height:1.15;text-shadow:0 0 4px var(--k-sumi);word-break:auto-phrase;text-wrap:balance;font-feature-settings:"palt" 1}
+.big-out{font-family:var(--k-bold);color:var(--k-shu);text-shadow:4px 0 0 var(--k-sumi),-4px 0 0 var(--k-sumi),0 4px 0 var(--k-sumi),0 -4px 0 var(--k-sumi),4px 4px 0 var(--k-sumi),-4px -4px 0 var(--k-sumi),4px -4px 0 var(--k-sumi),-4px 4px 0 var(--k-sumi);font-variant-numeric:tabular-nums;display:inline-block;line-height:1}
+.p{position:relative;min-width:0}
+.rule>span{display:block;min-width:0;max-width:100%}
+.tl .p .nm.two{white-space:normal;word-break:break-all;line-height:1.15;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;text-align:center}
+.p .nm{display:block;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;font-family:"M PLUS Rounded 1c",sans-serif;font-weight:900;font-feature-settings:"palt" 1}
+.p .of{font-family:var(--k-bold);color:var(--k-text-2);font-variant-numeric:tabular-nums}
+.p .bm{position:absolute;display:none;place-items:center;background:url(/kit/img/d4-hanko.webp) center/100% 100% no-repeat;color:var(--k-shu);font-family:var(--k-brush);transform:rotate(-10deg)}
+.p.over .bm{display:grid}
+
+/* 下の帯 */
+.tl-band{left:60px;right:60px;bottom:44px;height:220px;display:none;align-items:center;gap:24px;padding:0 30px 0 26px;background:var(--k-kinari) url(/kit/img/d4-washi.webp) 0 0/480px auto;border:6px solid var(--k-sumi);border-radius:14px;box-shadow:10px 10px 0 var(--k-sumi)}
+.stage[data-place="band"] .tl-band{display:flex}
+.tl-band .head{display:flex;align-items:center;gap:4px;flex:none;width:560px}
+.tl-band .seal{width:112px;height:112px;font-size:58px}
+.tl-band .rule{width:440px;min-height:130px;padding:16px 34px 18px 50px;box-sizing:border-box}
+.tl-band .ppl{flex:1;min-width:0;display:flex;gap:8px;align-self:stretch;padding:14px 0 10px}
+.tl-band .p{flex:1 1 0;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:0 8px;border-left:4px solid var(--k-line-soft)}
+.tl-band .p:first-child{border-left:0}
+.tl-band .p .nm{max-width:100%;font-size:44px;line-height:1.25}
+.tl-band .p .ct{display:flex;align-items:baseline;gap:6px}
+.tl-band .p .big-out{font-size:120px}
+.tl-band .p .of{font-size:36px}
+.tl-band .p .bm{right:-4px;top:-66px;width:96px;height:96px;font-size:46px}
+
+/* 右上に小さく */
+.tl-corner{right:40px;top:40px;width:560px;display:none;padding:0 0 14px;background:var(--k-kinari) url(/kit/img/d4-washi.webp) 0 0/480px auto;border:6px solid var(--k-sumi);border-radius:14px;box-shadow:10px 10px 0 var(--k-sumi)}
+.stage[data-place="corner"] .tl-corner{display:block}
+.tl-corner .head{display:flex;align-items:center;gap:2px;margin:-22px 0 6px -24px}
+.tl-corner .seal{width:88px;height:88px;font-size:46px}
+.tl-corner .rule{flex:1;min-height:96px;margin-right:12px;padding:12px 30px 14px 40px;box-sizing:border-box}
+.tl-corner .p{display:flex;align-items:center;gap:14px;padding:2px 26px 2px 76px;height:84px}
+.tl-corner .p+.p{border-top:3px solid var(--k-line-soft)}
+.tl-corner .p .nm{flex:1;font-size:42px;line-height:1.2}
+.tl-corner .p .ct{display:flex;align-items:baseline;gap:6px;flex:none}
+.tl-corner .p .big-out{font-size:76px}
+.tl-corner .p .of{font-size:30px;min-width:52px}
+.tl-corner .p .bm{left:8px;top:11px;width:62px;height:62px;font-size:30px}
+
+/* アウトの判子 */
+.fx-out{position:absolute;left:50%;top:40%;width:900px;margin-left:-450px;margin-top:-260px;display:none;flex-direction:column;align-items:center;pointer-events:none}
+.fx-out.show{display:flex}
+.fx-out .hk{display:grid;place-items:center;width:420px;height:420px;background:url(/kit/img/d4-hanko.webp) center/100% 100% no-repeat;font-family:var(--k-brush);font-size:108px;color:var(--k-shu);line-height:1;transform:rotate(-8deg)}
+.fx-out .who{display:flex;align-items:baseline;gap:18px;max-width:900px;box-sizing:border-box;margin-top:-10px;padding:20px 64px 26px 80px;background:url(/kit/img/d2-ink.webp) center/100% 100% no-repeat;color:#fff;text-shadow:0 0 4px var(--k-sumi);white-space:nowrap}
+.fx-out .who b{min-width:0;overflow:hidden;text-overflow:ellipsis;font-weight:900;font-size:56px}
+.fx-out .who span{flex:none;font-family:var(--k-bold);font-size:48px}
+.fx-out.show .hk{animation:k-stamp .35s cubic-bezier(.3,1.4,.5,1) both}
+.fx-out.show .who{animation:fade-up .3s ease-out .15s both}
+
+/* 罰ゲーム（届いたとき＝少しだけ／引いたとき＝消すまで出す） */
+.fx-batsu{position:absolute;left:50%;top:40%;width:1240px;margin-left:-620px;transform:translateY(-50%);display:none;pointer-events:none}
+.fx-batsu.show{display:block}
+.fx-batsu .scr{position:relative;border-style:solid;border-width:40px 110px;border-image:url(/kit/img/d3-scroll.webp) 56 84 fill / 40px 110px stretch;padding:8px 0 16px;text-align:center}
+.fx-batsu .lab{display:block;font-family:var(--k-brush);font-size:60px;letter-spacing:.2em;line-height:1.2}
+.fx-batsu .nm{display:block;font-weight:900;font-size:120px;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-feature-settings:"palt" 1}
+.fx-batsu .sub{display:block;font-weight:800;font-size:44px;color:var(--k-text-2)}
+.fx-batsu .item{display:none;margin:6px 20px 0;font-weight:900;font-size:72px;line-height:1.25;color:var(--k-shu);text-shadow:3px 0 0 var(--k-sumi),-3px 0 0 var(--k-sumi),0 3px 0 var(--k-sumi),0 -3px 0 var(--k-sumi),3px 3px 0 var(--k-sumi),-3px -3px 0 var(--k-sumi),3px -3px 0 var(--k-sumi),-3px 3px 0 var(--k-sumi);word-break:auto-phrase;text-wrap:balance;font-feature-settings:"palt" 1}
+.fx-batsu.drawn .item{display:block}
+.fx-batsu.drawn .nm{font-size:76px}
+.fx-batsu .rar{display:none;position:absolute;right:-20px;top:-26px;padding:4px 18px;border:4px solid var(--k-sumi);border-radius:8px;font-family:var(--k-bold);font-size:40px;color:#fff;text-shadow:var(--k-outline);transform:rotate(6deg)}
+.fx-batsu.drawn .rar{display:block}
+.fx-batsu .kin{position:absolute;width:240px;pointer-events:none}
+.fx-batsu .k1{left:-80px;top:-90px}
+.fx-batsu .k2{right:-90px;bottom:-80px;width:200px;transform:rotate(160deg)}
+.fx-batsu.show .scr{animation:k-unroll .6s cubic-bezier(.2,.8,.2,1) both}
+.stage[data-place="corner"] .fx-batsu{top:58%}
+
+.credit{position:absolute;right:28px;top:14px;font-size:24px;font-weight:800;color:#fff;text-shadow:0 0 3px var(--k-sumi),2px 2px 0 var(--k-sumi),-2px -2px 0 var(--k-sumi),2px -2px 0 var(--k-sumi),-2px 2px 0 var(--k-sumi);pointer-events:none}
+.stage[data-place="corner"] .credit{top:auto;bottom:16px}
+.credit[hidden]{display:none}
+.wait{position:absolute;left:60px;top:60px;padding:16px 24px;background:rgba(255,255,255,.9);border:4px solid var(--k-sumi);border-radius:10px;font-size:32px;font-weight:800}
+.wait[hidden]{display:none}
+
+@keyframes fade-up{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+@keyframes bump{0%{transform:scale(1)}35%{transform:scale(1.45) rotate(-6deg)}70%{transform:scale(.92)}100%{transform:scale(1)}}
+.bump{animation:bump .45s cubic-bezier(.3,1.4,.5,1)}
+.fadeout{transition:opacity .4s;opacity:0}
+@media (prefers-reduced-motion:reduce){.bump,.fx-out.show .hk,.fx-out.show .who,.fx-batsu.show .scr{animation:none}}
+</style>
+</head>
+<body data-bg="green">
+<div class="stage" id="stage" data-place="band">
+  <div class="tl tl-band"><div class="head"><span class="seal">縛</span><span class="rule" data-rule></span></div><div class="ppl" data-ppl></div></div>
+  <div class="tl tl-corner"><div class="head"><span class="seal">縛</span><span class="rule" data-rule></span></div><div data-ppl></div></div>
+  <div class="fx-out" id="fxOut" aria-hidden="true"><div class="hk">アウト</div><div class="who"><b id="outWho"></b><span id="outN"></span></div></div>
+  <div class="fx-batsu" id="fxBatsu" aria-hidden="true">
+    <div class="scr">
+      <img class="kin k1" src="/kit/img/d4-kin.webp" alt="">
+      <span class="rar" id="bRar"></span>
+      <span class="lab">罰ゲーム</span>
+      <span class="nm" id="bWho"></span>
+      <span class="sub" id="bSub"></span>
+      <span class="item" id="bItem"></span>
+      <img class="kin k2" src="/kit/img/d4-kin.webp" alt="">
+    </div>
+  </div>
+  <div class="credit" id="credit">roulette.kkpwebninja.com/counter</div>
+  <div class="wait" id="wait" hidden>操作画面（配信カウンター）を同じブラウザで開くと、ここに数が出ます</div>
+</div>
+<script>
+(function () {
+  'use strict';
+  var $ = function (id) { return document.getElementById(id); };
+  var q = new URLSearchParams(location.search);
+  var pv = q.get('pv') === '1';   // 操作画面の中の小さな見本
+  var lock = { bg: q.get('bg'), place: q.get('place'), credit: q.get('credit') };
+  var S = null, lastId = 0, outT = 0, batsuT = 0;
+  var COLOR = { N: '#b9783f', R: '#8e9cae', SR: '#e3a400', SSR: '#ff3d7f' };
+  var reduce = false; try { reduce = matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
+  var stage = $('stage');
+
+  function nm(i) { var v = S && S.names && S.names[i] ? String(S.names[i]).trim() : ''; return v || ('参加者' + (i + 1)); }
+  function opt(k, d) { var v = lock[k] != null ? lock[k] : (S && S[k] != null ? S[k] : d); return v; }
+
+  // はみ出す名前は字を小さく（それでも入らなければ…で切る）
+  function shrink(el, max, min, two) {
+    var fs = max; el.classList.remove('two'); el.style.fontSize = fs + 'px';
+    while (fs > min && el.scrollWidth > el.clientWidth + 1) { fs -= 2; el.style.fontSize = fs + 'px'; }
+    if (!two || el.scrollWidth <= el.clientWidth + 1) return;
+    // 1行に入らない長い名前は2行に（字はあまり小さくしない）
+    el.classList.add('two'); fs = Math.max(min, two);
+    el.style.fontSize = fs + 'px';
+    while (fs > 20 && el.scrollHeight > fs * 1.15 * 2.5) { fs -= 2; el.style.fontSize = fs + 'px'; }
+  }
+  // 縛りの名前は2行まで。長いほど小さく
+  function ruleSize(el, max, min) {
+    var sp = el.firstChild, fs = max; el.style.fontSize = fs + 'px';
+    while (fs > min && (sp.offsetHeight > fs * 1.15 * 2 + 2 || sp.scrollWidth > sp.clientWidth + 1)) { fs -= 2; el.style.fontSize = fs + 'px'; }
+  }
+
+  function render() {
+    if (!S) return;
+    var place = /^(band|corner)$/.test(opt('place', 'band')) ? opt('place', 'band') : 'band';
+    var bg = /^(green|transparent|cream)$/.test(opt('bg', 'green')) ? opt('bg', 'green') : 'green';
+    stage.dataset.place = place;
+    document.body.dataset.bg = pv && bg === 'transparent' ? 'cream' : bg;
+    var cr = opt('credit', true); $('credit').hidden = cr === false || cr === '0' || cr === 0;
+    var rule = String(S.rule || '').trim() || '縛り';
+    var n = Math.min(6, Math.max(2, S.n | 0)), th = Math.min(20, Math.max(1, S.th | 0));
+    document.querySelectorAll('[data-rule]').forEach(function (el) {
+      el.innerHTML = '<span></span>'; el.firstChild.textContent = rule;
+      if (el.closest('.tl-band')) ruleSize(el, 54, 26); else ruleSize(el, 44, 22);
+    });
+    document.querySelectorAll('[data-ppl]').forEach(function (box) {
+      box.innerHTML = '';
+      for (var i = 0; i < n; i++) {
+        var c = S.counts[i] | 0;
+        var p = document.createElement('div'); p.className = 'p' + (c >= th ? ' over' : ''); p.dataset.i = i;
+        p.innerHTML = '<span class="bm">罰</span><span class="nm"></span><span class="ct"><b class="big-out" data-c></b><span class="of">/' + th + '</span></span>';
+        p.querySelector('.nm').textContent = nm(i);
+        p.querySelector('[data-c]').textContent = c;
+        box.appendChild(p);
+      }
+    });
+    if (place === 'band') {
+      var big = n <= 3 ? 52 : n <= 4 ? 46 : 40;
+      stage.querySelectorAll('.tl-band .nm').forEach(function (el) { shrink(el, big, 34, 32); });
+      stage.querySelectorAll('.tl-band .big-out').forEach(function (el) { el.style.fontSize = (n <= 4 ? 120 : 104) + 'px'; });
+    } else {
+      stage.querySelectorAll('.tl-corner .nm').forEach(function (el) { shrink(el, 42, 30, 30); });
+    }
+    showPersist();
+  }
+  function bump(i) {
+    if (reduce) return;
+    stage.querySelectorAll('[data-i="' + i + '"] [data-c]').forEach(function (el) { el.classList.remove('bump'); void el.offsetWidth; el.classList.add('bump'); });
+  }
+
+  function hideFx(el) { el.classList.add('fadeout'); setTimeout(function () { el.classList.remove('show', 'fadeout', 'drawn'); }, 400); }
+  function showOut(i) {
+    var fx = $('fxOut');
+    if (!S.show) $('fxBatsu').classList.remove('show');
+    $('outWho').textContent = nm(i); $('outN').textContent = (S.counts[i] | 0) + '回目';
+    fx.classList.remove('show', 'fadeout'); void fx.offsetWidth; fx.classList.add('show');
+    clearTimeout(outT); outT = setTimeout(function () { hideFx(fx); }, 1300);
+  }
+  function showReach(i) {
+    var fx = $('fxBatsu'); $('fxOut').classList.remove('show');
+    fx.classList.remove('drawn');
+    $('bWho').textContent = nm(i);
+    $('bSub').textContent = (String(S.rule || '').trim() || '縛り') + 'で ' + (S.counts[i] | 0) + '回アウト';
+    fx.classList.remove('show', 'fadeout'); void fx.offsetWidth; fx.classList.add('show');
+    clearTimeout(batsuT); batsuT = setTimeout(function () { if (!S.show) hideFx(fx); }, 3200);
+  }
+  // 引いた罰ゲームは、操作画面で「表示を消す」まで出したまま
+  var shownKey = '';
+  function showPersist() {
+    var fx = $('fxBatsu'), s = S.show;
+    if (!s) { if (fx.classList.contains('drawn')) { shownKey = ''; hideFx(fx); } return; }
+    var key = s.id + '';
+    $('bWho').textContent = nm(s.i);
+    $('bSub').textContent = '';
+    $('bItem').textContent = s.text || '';
+    var r = $('bRar'); r.textContent = s.r || ''; r.style.background = COLOR[s.r] || COLOR.N;
+    fx.classList.add('drawn');
+    clearTimeout(batsuT);
+    if (key !== shownKey) { shownKey = key; fx.classList.remove('show', 'fadeout'); void fx.offsetWidth; }
+    fx.classList.remove('fadeout'); fx.classList.add('show');
+    var it = $('bItem'); var fs = 72; it.style.fontSize = fs + 'px';
+    while (fs > 40 && it.scrollHeight > fs * 1.25 * 2 + 4) { fs -= 4; it.style.fontSize = fs + 'px'; }
+    shrink($('bWho'), 76, 40);
+  }
+
+  function handle(m) {
+    if (!m || !m.s) return;
+    if (m.id && m.id === lastId) return;
+    lastId = m.id || lastId;
+    S = m.s; $('wait').hidden = true;
+    render();
+    var f = m.fx; if (!f) return;
+    if (f.k === 'out') { bump(f.i); showOut(f.i); }
+    else if (f.k === 'reach') { bump(f.i); showReach(f.i); }
+    else if (f.k === 'minus') bump(f.i);
+  }
+
+  // 1920x1080 の舞台をウィンドウに合わせて縮める（横長でも縦長でも全体が入る）
+  function fit() {
+    var W = window.innerWidth, H = window.innerHeight, s = Math.min(W / 1920, H / 1080);
+    stage.style.transform = 'translate(' + Math.round((W - 1920 * s) / 2) + 'px,' + Math.round((H - 1080 * s) / 2) + 'px) scale(' + s + ')';
+  }
+  window.addEventListener('resize', fit); fit();
+
+  try { var st = JSON.parse(localStorage.getItem('kkp_counter_state') || 'null'); if (st) handle({ s: st }); else $('wait').hidden = pv; } catch (e) { $('wait').hidden = pv; }
+  if (!S) { S = { rule: '敬語禁止', n: 3, names: [], counts: [0, 0, 0, 0, 0, 0], th: 3 }; render(); }
+  try { var ch = new BroadcastChannel('kkp-counter'); ch.onmessage = function (e) { handle(e.data); }; } catch (e) { /* storage イベントで受ける */ }
+  window.addEventListener('storage', function (e) {
+    if (e.key === 'kkp_counter_msg' && e.newValue) { try { handle(JSON.parse(e.newValue)); } catch (err) {} }
+  });
+  try { document.fonts.ready.then(render); } catch (e) {}
+  if (!pv) kkpEvent('counter_view_open', { from: 'local' });
+})();
+</script>
+</body>
+</html>
