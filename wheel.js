@@ -362,6 +362,32 @@
     return base + TAU * (turns || 5) + ((TAU - pos) % TAU);
   };
 
+  // i 番目のマスの真ん中（半径の frac の位置）を canvas の中の CSS px で返す。ang は盤の回転量
+  Wheel.prototype.segPoint = function (i, ang, frac) {
+    var g = this.geo(), sg = this.segs[i];
+    if (!sg) return { x: g.cx, y: g.cy };
+    var phi = (sg.start + sg.end) / 2 + ang, r = g.R * (frac || 0.6);
+    return { x: g.cx + Math.sin(phi) * r, y: g.cy - Math.cos(phi) * r };
+  };
+
+  // 止まる瞬間に、手裏剣が飛んできて止まったマスに刺さる（共通部品 KKit.fx.shuriken）。host は canvas を囲む position のある箱
+  // dur は回す長さ。手裏剣の飛ぶ時間を逆算して、盤が止まるときに当たるように投げる。fx が off・動きを減らす設定のときは投げない
+  Wheel.prototype.throwStar = function (host, final, dur, speed, sound) {
+    var FX = window.KKit && window.KKit.fx, self = this;
+    this.clearStar(host);
+    if (!FX || FX.reduce || this.fx === 'off' || !host || !this.segs.length) return;
+    var idx = this.resultAt(final), fl = FX.ms(420, speed);
+    // 投げる合図は回転のフレームの中で出す（タイマーだと、画面が裏にあって描画が遅れたときに盤とずれるため）
+    this._star = { at: Math.max(0, dur - fl), fn: function () {
+      var p = self.segPoint(idx, final, 0.46), cr = self.canvas.getBoundingClientRect(), hr = host.getBoundingClientRect();
+      FX.shuriken(host, { x: cr.left - hr.left + p.x, y: cr.top - hr.top + p.y, size: Math.max(26, self.size * 0.1), speed: speed, sound: sound, from: 'right' });
+    } };
+  };
+  Wheel.prototype.clearStar = function (host) {
+    this._star = null;
+    if (host && window.KKit && window.KKit.fx) window.KKit.fx.clear(host);
+  };
+
   Wheel.prototype.resultAt = function (r) { return this.segs.length ? segmentAt(this.segs, r) : -1; };
 
   // from → final に dur ms かけて回す（加速→減速→じらし）。表示側も同じ表で動くので結果は一致する
@@ -374,6 +400,7 @@
     function frame(ts) {
       if (t0 === null) t0 = ts;
       var t = Math.min(1, (ts - t0) / dur);
+      if (self._star && ts - t0 >= self._star.at) { var sf = self._star.fn; self._star = null; sf(); }
       self.angle = from + (final - from) * ease(t);
       self.vel = self.angle - last; last = self.angle;
       self.updateFlap();
@@ -404,32 +431,6 @@
     return out;
   }
 
-  // 紙吹雪（少量・1.6秒）
-  function confetti(canvas) {
-    var ctx = canvas.getContext('2d');
-    var W = canvas.width = canvas.offsetWidth, H = canvas.height = canvas.offsetHeight;
-    var ps = [], i, cols = ['#e2600f', '#ffc21a', '#1f4e79', '#c8341e', '#fff', '#2e7d4f'];
-    for (i = 0; i < 70; i++) {
-      ps.push({ x: W / 2 + (Math.random() - 0.5) * W * 0.3, y: H * 0.45, vx: (Math.random() - 0.5) * 9, vy: -Math.random() * 9 - 3,
-        c: cols[i % cols.length], s: 5 + Math.random() * 5, r: Math.random() * TAU, vr: (Math.random() - 0.5) * 0.3 });
-    }
-    var t0 = null;
-    function frame(ts) {
-      if (t0 === null) t0 = ts;
-      var el = ts - t0;
-      ctx.clearRect(0, 0, W, H);
-      ps.forEach(function (p) {
-        p.x += p.vx; p.y += p.vy; p.vy += 0.25; p.r += p.vr;
-        ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.r);
-        ctx.globalAlpha = Math.max(0, 1 - el / 1600);
-        ctx.fillStyle = p.c; ctx.fillRect(-p.s / 2, -p.s / 2, p.s, p.s * 0.6);
-        ctx.restore();
-      });
-      if (el < 1600) requestAnimationFrame(frame); else ctx.clearRect(0, 0, W, H);
-    }
-    requestAnimationFrame(frame);
-  }
-
   // 効果音（Web Audio で合成。外部ファイルなし）。tick は針がピンに当たる「カチッ」
   var actx = null;
   function sound(kind) {
@@ -438,6 +439,22 @@
       if (actx.state === 'suspended') actx.resume();
       var o = actx.createOscillator(), g = actx.createGain(), t = actx.currentTime;
       o.connect(g); g.connect(actx.destination);
+      if (kind === 'throw') {
+        // 手裏剣の「ヒュッ」: 高い音から下がる短いノイズ
+        var n = Math.floor(actx.sampleRate * 0.32), b = actx.createBuffer(1, n, actx.sampleRate), d = b.getChannelData(0);
+        for (var i = 0; i < n; i++) d[i] = (Math.random() * 2 - 1) * Math.sin(Math.PI * i / n);
+        var src = actx.createBufferSource(), f = actx.createBiquadFilter(); src.buffer = b;
+        f.type = 'bandpass'; f.Q.value = 2.2; f.frequency.setValueAtTime(2600, t); f.frequency.exponentialRampToValueAtTime(5200, t + 0.3);
+        g.gain.setValueAtTime(0.16, t); src.connect(f); f.connect(g); src.start(t);
+        return;
+      }
+      if (kind === 'hit') {
+        // 刺さった「トン」: 低く短い音
+        o.type = 'triangle'; o.frequency.setValueAtTime(260, t); o.frequency.exponentialRampToValueAtTime(110, t + 0.09);
+        g.gain.setValueAtTime(0.22, t); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.14);
+        o.start(t); o.stop(t + 0.15);
+        return;
+      }
       if (kind === 'tick') {
         o.type = 'triangle'; o.frequency.setValueAtTime(1500, t); o.frequency.exponentialRampToValueAtTime(600, t + 0.03);
         g.gain.setValueAtTime(0.08, t); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.045);
@@ -450,6 +467,15 @@
     } catch (e) { /* 音が出なくても動作は続ける */ }
   }
 
+  // 回す長さ（演出の長さ: short 短い・normal ふつう・long 長い）。動きを減らす設定では一瞬で止める
+  var REDUCE = false; try { REDUCE = matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
+  function spinDur(speed) {
+    if (REDUCE) return 1;
+    if (speed === 'short') return 2800 + Math.random() * 400;
+    if (speed === 'long') return 7000 + Math.random() * 800;
+    return 4600 + Math.random() * 600;
+  }
+
   var ART = { rim: '/img/wheel-rim.webp', hub: '/img/wheel-hub.webp', pointer: '/img/wheel-pointer.webp', stand: '/img/wheel-stand.webp' };
-  window.KkpWheel = { ART: ART, Wheel: Wheel, parseItems: parseItems, confetti: confetti, sound: sound, TAU: TAU, ease: ease };
+  window.KkpWheel = { ART: ART, Wheel: Wheel, spinDur: spinDur, reduce: REDUCE, parseItems: parseItems, sound: sound, TAU: TAU, ease: ease };
 })();

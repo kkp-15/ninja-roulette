@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>配信カウンター｜縛り・NGワードのアウトを数えてOBSに映す（無料・登録不要）</title>
-<meta name="description" content="配信の縛り・NGワードで言ってしまった回数を数えて、配信画面に「アウト」の判子と回数を出す無料ツール。2〜6人・数字キーで＋1・決めた回数で罰ゲームをお題ガチャから引けます。OBSのウィンドウキャプチャで取り込み。登録不要。">
+<meta name="description" content="配信の縛り・NGワードで言ってしまった回数を数えて、配信画面に「アウト」の判子と回数を出す無料ツール。1〜9項目・数字キーで＋1・目標回数で罰ゲームを引けます。OBSのウィンドウキャプチャで取り込み。登録不要。">
 <link rel="canonical" href="https://roulette.kkpwebninja.com/counter/">
 <meta name="robots" content="index,follow,max-image-preview:large">
 <meta name="theme-color" content="#e2600f">
@@ -15,7 +15,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700;800;900&display=swap" rel="stylesheet">
 <meta property="og:title" content="配信カウンター｜縛り・NGワードのアウトを数えてOBSに映す">
-<meta property="og:description" content="＋1で配信画面に「アウト」の判子。決めた回数で罰ゲームをお題ガチャから引けます。2〜6人・登録不要・無料。">
+<meta property="og:description" content="＋1で配信画面に「アウト」の判子。目標回数で罰ゲームを引けます。1〜9項目・登録不要・無料。">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://roulette.kkpwebninja.com/counter/">
 <meta property="og:site_name" content="配信ルーレット">
@@ -28,11 +28,11 @@
 {
   "@context":"https://schema.org",
   "@graph":[
-    {"@type":"WebApplication","@id":"https://roulette.kkpwebninja.com/counter/#app","name":"配信カウンター（配信ルーレット）","url":"https://roulette.kkpwebninja.com/counter/","applicationCategory":"UtilitiesApplication","operatingSystem":"Web","inLanguage":"ja","datePublished":"2026-10-20","dateModified":"2026-10-20","description":"ライブ配信の縛り・NGワードで言ってしまった回数を数え、配信画面に「アウト」の判子と回数を出す無料ツール。2〜6人・数字キー対応・決めた回数で罰ゲームをお題ガチャから引ける。","offers":{"@type":"Offer","price":"0","priceCurrency":"JPY"},"author":{"@type":"Organization","name":"web忍者の砦"},"publisher":{"@type":"Organization","name":"web忍者の砦","url":"https://kkpwebninja.com/"}},
+    {"@type":"WebApplication","@id":"https://roulette.kkpwebninja.com/counter/#app","name":"配信カウンター（配信ルーレット）","url":"https://roulette.kkpwebninja.com/counter/","applicationCategory":"UtilitiesApplication","operatingSystem":"Web","inLanguage":"ja","datePublished":"2026-10-20","dateModified":"2026-10-20","description":"ライブ配信の縛り・NGワードで言ってしまった回数を数え、配信画面に「アウト」の判子と回数を出す無料ツール。1〜9項目・数字キー対応・目標回数で罰ゲームを引ける。","offers":{"@type":"Offer","price":"0","priceCurrency":"JPY"},"author":{"@type":"Organization","name":"web忍者の砦"},"publisher":{"@type":"Organization","name":"web忍者の砦","url":"https://kkpwebninja.com/"}},
     {"@type":"FAQPage","@id":"https://roulette.kkpwebninja.com/counter/#faq","mainEntity":[
       {"@type":"Question","name":"配信画面にはどうやって映しますか","acceptedAnswer":{"@type":"Answer","text":"「表示ページを開く」で開いたウィンドウを、OBSの「ウィンドウキャプチャ」で取り込みます。背景は緑なので、OBSでそのソースにフィルタ「クロマキー」をかけると数だけが重なります。操作画面と同じブラウザで開いてください。"}},
-      {"@type":"Question","name":"キーボードで数えられますか","acceptedAnswer":{"@type":"Answer","text":"数字キーの1〜6でその人に＋1、Shiftを押しながら数字で−1、Zで1つ戻す、Bで罰ゲームを引く、Escで罰ゲームの表示を消します。名前や縛りを入力している間はキーは効きません。"}},
-      {"@type":"Question","name":"罰ゲームはどこから出ますか","acceptedAnswer":{"@type":"Answer","text":"同じサイトのお題ガチャの「罰ゲーム」パックから引きます。誰でもその場で安全にできるものだけで、レア度（N・R・SR・SSR）の割合もお題ガチャと同じです。お題ガチャで「今後出さない」にした罰ゲームは出ません。"}},
+      {"@type":"Question","name":"キーボードで数えられますか","acceptedAnswer":{"@type":"Answer","text":"数字キーの1〜9でその項目に＋1、Shiftを押しながら数字で−1、Zで直前を戻す、Bで罰ゲームを引く、Escで罰ゲームの表示を消します。名前や縛りを入力している間はキーは効きません。"}},
+      {"@type":"Question","name":"罰ゲームはどこから出ますか","acceptedAnswer":{"@type":"Answer","text":"ふだんは同じサイトのお題ガチャの「罰ゲーム」パックから引きます。誰でもその場で安全にできるものだけで、レア度（N・R・SR・SSR）の割合もお題ガチャと同じです。お題ガチャで「今後出さない」にした罰ゲームは出ません。設定の「罰ゲームの中身」を「自分で書く」にすると、書いた罰ゲームから引きます。"}},
       {"@type":"Question","name":"配信や動画で使ってもいいですか","acceptedAnswer":{"@type":"Answer","text":"はい。配信・録画・切り抜き・収益化に使えます。許諾の申請はいりません。使うときはお問い合わせかX（@kkp_webninja）で一言いただけると助かります。ご要望があれば、優先してアップデートします。"}}
     ]}
   ]
@@ -40,7 +40,7 @@
 </script>
 <!-- 共通部品 D4（kkp-kit を kit/ にコピーしたもの。中は手で直さず kkp-kit 側で直して sync.sh） -->
 <!-- k-fonts:start -->
-<link href="https://fonts.googleapis.com/css2?family=Yuji+Syuku&family=RocknRoll+One&display=swap&text=.%2F0123456789BGNORSbew%E2%88%92%E3%80%8C%E3%80%8D%E3%81%82%E3%81%84%E3%81%86%E3%81%88%E3%81%8B%E3%81%8D%E3%81%8F%E3%81%93%E3%81%95%E3%81%98%E3%81%99%E3%81%9F%E3%81%A3%E3%81%A4%E3%81%A6%E3%81%A7%E3%81%A8%E3%81%A9%E3%81%AB%E3%81%AE%E3%81%AF%E3%81%B0%E3%81%BE%E3%82%81%E3%82%82%E3%82%83%E3%82%84%E3%82%88%E3%82%89%E3%82%8A%E3%82%8B%E3%82%8C%E3%82%92%E3%82%A2%E3%82%A3%E3%82%A6%E3%82%AB%E3%82%AD%E3%82%AF%E3%82%B0%E3%82%B2%E3%82%B8%E3%82%BB%E3%82%BF%E3%83%81%E3%83%83%E3%83%88%E3%83%89%E3%83%8A%E3%83%90%E3%83%97%E3%83%9A%E3%83%9C%E3%83%A0%E3%83%A3%E3%83%AA%E3%83%AB%E3%83%AC%E3%83%AF%E3%83%B3%E3%83%BB%E3%83%BC%E4%B8%80%E4%B8%8A%E4%B8%8B%E4%BA%BA%E4%BB%A5%E4%BD%BF%E4%BF%A1%E5%80%8B%E5%85%A8%E5%87%BA%E5%8B%95%E5%8F%B3%E5%93%A1%E5%95%8F%E5%9B%9E%E5%A0%B1%E5%A4%96%E5%B0%8F%E5%B0%BE%E5%B1%8A%E5%B8%AF%E5%BA%A6%E5%BC%95%E5%BF%8D%E6%83%85%E6%88%BB%E6%89%B1%E6%8A%BC%E6%95%AC%E6%95%B0%E6%96%B9%E6%98%A0%E6%AD%A2%E6%AE%B5%E6%B1%BA%E6%B6%88%E7%94%BB%E7%9B%B4%E7%A0%A6%E7%A4%BA%E7%A6%81%E7%B8%9B%E7%BD%B0%E8%80%85%E8%8B%B1%E8%A1%A8%E8%AA%9E%E8%B3%AA%E9%80%8F%E9%81%8E%E9%85%8D%E9%96%89%E9%96%8B%E9%9D%A2%EF%BC%88%EF%BC%89%EF%BC%8B" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Yuji+Syuku&family=RocknRoll+One&display=swap&text=-.%2F0123456789%3A%40BCEGLNORSUXZ_abcefghijklmnoprstw%C2%A9%C2%B7%E2%80%A6%E2%86%92%E2%88%92%E3%80%81%E3%80%82%E3%80%8C%E3%80%8D%E3%80%9C%E3%81%82%E3%81%84%E3%81%86%E3%81%88%E3%81%8A%E3%81%8B%E3%81%8C%E3%81%8D%E3%81%8F%E3%81%90%E3%81%91%E3%81%93%E3%81%94%E3%81%95%E3%81%97%E3%81%98%E3%81%99%E3%81%9B%E3%81%9D%E3%81%9F%E3%81%A0%E3%81%A1%E3%81%A3%E3%81%A4%E3%81%A6%E3%81%A7%E3%81%A8%E3%81%A9%E3%81%AA%E3%81%AB%E3%81%AE%E3%81%AF%E3%81%B0%E3%81%B3%E3%81%B6%E3%81%B8%E3%81%BB%E3%81%BE%E3%81%BF%E3%82%81%E3%82%82%E3%82%83%E3%82%84%E3%82%88%E3%82%89%E3%82%8A%E3%82%8B%E3%82%8C%E3%82%8F%E3%82%92%E3%82%93%E3%82%A2%E3%82%A3%E3%82%A4%E3%82%A6%E3%82%AB%E3%82%AC%E3%82%AD%E3%82%AF%E3%82%B0%E3%82%B2%E3%82%B3%E3%82%B5%E3%82%B6%E3%82%B7%E3%82%B8%E3%82%B9%E3%82%BB%E3%82%BD%E3%82%BF%E3%83%81%E3%83%83%E3%83%86%E3%83%87%E3%83%88%E3%83%89%E3%83%8A%E3%83%90%E3%83%91%E3%83%94%E3%83%95%E3%83%96%E3%83%97%E3%83%9A%E3%83%9C%E3%83%9D%E3%83%9E%E3%83%A0%E3%83%A3%E3%83%A9%E3%83%AA%E3%83%AB%E3%83%AC%E3%83%AD%E3%83%AF%E3%83%B3%E3%83%BB%E3%83%BC%E4%B8%80%E4%B8%8A%E4%B8%8B%E4%B8%8D%E4%B8%AD%E4%B8%B8%E4%B9%97%E4%BA%BA%E4%BB%8A%E4%BB%98%E4%BB%A5%E4%BB%B6%E4%BD%95%E4%BD%9C%E4%BD%BF%E4%BE%8B%E4%BF%9D%E4%BF%A1%E5%80%8B%E5%84%AA%E5%85%88%E5%85%A5%E5%85%A8%E5%85%B7%E5%87%BA%E5%88%86%E5%88%87%E5%88%A4%E5%88%A5%E5%88%A9%E5%89%8D%E5%89%B2%E5%8A%9B%E5%8A%A0%E5%8A%A9%E5%8A%B9%E5%8B%95%E5%8B%9D%E5%8C%96%E5%8F%82%E5%8F%8E%E5%8F%B3%E5%90%88%E5%90%8C%E5%90%8D%E5%90%AB%E5%91%8A%E5%93%A1%E5%95%8F%E5%9B%9E%E5%A0%B1%E5%A0%B4%E5%A3%B0%E5%A4%96%E5%A5%BD%E5%AD%90%E5%AD%97%E5%AD%98%E5%AE%89%E5%AE%9A%E5%B0%8F%E5%B0%BE%E5%B1%8A%E5%B7%BB%E5%B8%AF%E5%BA%83%E5%BA%A6%E5%BC%95%E5%BE%8C%E5%BF%8D%E6%83%85%E6%88%BB%E6%89%B1%E6%8A%9C%E6%8A%BC%E6%93%8D%E6%95%AC%E6%95%B0%E6%96%99%E6%96%B9%E6%98%A0%E6%99%AF%E6%9B%B8%E6%9B%BF%E6%9C%9B%E6%9C%AC%E6%9C%AD%E6%9D%A1%E6%9E%9C%E6%A8%99%E6%AC%84%E6%AD%A2%E6%AE%B5%E6%B1%BA%E6%B6%88%E6%B8%AC%E7%84%A1%E7%89%A9%E7%94%A8%E7%94%B3%E7%94%BB%E7%99%BB%E7%9B%8A%E7%9B%AE%E7%9B%B4%E7%A0%A6%E7%A4%BA%E7%A6%81%E7%B4%B0%E7%B5%82%E7%B8%9B%E7%BD%AE%E7%BD%B0%E8%80%85%E8%83%8C%E8%87%AA%E8%8B%B1%E8%91%89%E8%A1%A8%E8%A6%81%E8%A6%8B%E8%A8%80%E8%A8%88%E8%A8%AD%E8%A8%B1%E8%AA%9E%E8%AA%B0%E8%AB%8B%E8%AB%BE%E8%B2%A0%E8%B3%AA%E8%B6%B3%E8%BA%AB%E9%80%81%E9%80%8F%E9%81%8E%E9%81%93%E9%81%95%E9%81%B8%E9%85%8D%E9%87%8D%E9%8C%B2%E9%96%89%E9%96%8B%E9%96%93%E9%9A%85%E9%9D%A2%E9%9F%B3%E9%A0%85%E9%A1%8C%E9%B3%B4%EF%BC%88%EF%BC%89%EF%BC%8B%EF%BC%9F%EF%BD%9C" rel="stylesheet">
 <!-- k-fonts:end -->
 <link rel="stylesheet" href="/kit/kit.css">
 <script src="/kit/kit.js" defer></script>
@@ -93,67 +93,49 @@ kbd{display:inline-block;padding:0 5px;font-family:inherit;font-size:12px;line-h
 </style>
 <link rel="stylesheet" href="/d4.css">
 <style>
-/* ===== 配信カウンター（道具の部分）。PC は固定幅で組んで、画面の幅と高さに合わせて zoom で拡大縮小（スクロールなし） ===== */
-.c-tool{display:grid;gap:16px 20px;margin:0 auto}
-.c-tool[data-lay="wide"]{grid-template-columns:290px minmax(0,1fr) 330px;grid-template-areas:"a b v" "a b z";grid-template-rows:auto 1fr}
-.c-tool[data-lay="mid"]{grid-template-columns:290px minmax(0,1fr);grid-template-areas:"a b" "z v"}
-.c-tool[data-lay="sp"]{grid-template-columns:minmax(0,1fr);grid-template-areas:"b" "z" "a" "v";gap:14px}
-.c-a{grid-area:a;min-width:0}
-.c-b{grid-area:b;min-width:0}
-.c-v{grid-area:v;min-width:0}
-.c-z{grid-area:z;min-width:0}
-.c-tool h2.c-t{display:flex;align-items:baseline;gap:8px;margin:0 0 8px;padding:0;background:none;border:0;transform:none;color:var(--k-sumi);text-shadow:none;font-family:var(--k-bold);font-weight:400;font-size:17px;letter-spacing:.06em;line-height:1.3;font-feature-settings:"palt" 1}
+/* ===== 配信カウンター（道具の部分）
+   上＝配信中に見る・押すものだけ（数・＋1/−1・直前を戻す・罰ゲーム・表示ページ）。下＝設定をひとまとめ（最初は閉じる）。
+   PC は上の部分を固定幅で組んで、画面の幅と高さに合わせて zoom で拡大縮小（スクロールなしで上が全部見える） ===== */
+.c-tool{display:grid;gap:16px 20px;margin:0 auto;align-items:start}
+.c-tool[data-lay="wide"]{grid-template-columns:minmax(0,1fr) 330px}
+.c-tool[data-lay="mid"]{grid-template-columns:minmax(0,1fr) 270px}
+.c-tool[data-lay="sp"]{grid-template-columns:minmax(0,1fr);gap:12px}
+.c-live,.c-side{min-width:0}
+.c-side{display:flex;flex-direction:column;gap:14px}
+.c-tool h2.c-t,.c-set h2.c-t{display:flex;align-items:baseline;gap:8px;margin:0 0 8px;padding:0;background:none;border:0;transform:none;color:var(--k-sumi);text-shadow:none;font-family:var(--k-bold);font-weight:400;font-size:17px;letter-spacing:.06em;line-height:1.3;font-feature-settings:"palt" 1}
 .c-t small{font-family:var(--k-body);font-size:12.5px;letter-spacing:0;color:var(--k-text-2)}
-.c-blk+.c-blk{margin-top:16px}
-.field{display:block;width:100%;min-height:46px;padding:6px 12px;border:var(--k-bw-s) solid var(--k-sumi);border-radius:var(--k-r);background:#fff;font-size:17px;font-weight:700;color:var(--k-sumi)}
-.field:focus,.cnt-name:focus,.pick:focus{outline:4px double var(--k-shu);outline-offset:2px}
-.pick{display:block;width:100%;min-height:44px;margin-top:8px;padding:4px 8px;border:var(--k-bw-s) solid var(--k-sumi);border-radius:var(--k-r);background:var(--k-surface);font-size:14px;color:var(--k-sumi)}
-.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
-.chips button{min-height:40px;padding:0 11px;border:var(--k-bw-s) solid var(--k-sumi);border-radius:var(--k-r-pill);background:var(--k-surface);font-family:var(--k-bold);font-size:14px;color:var(--k-sumi);box-shadow:var(--k-sh-s);font-feature-settings:"palt" 1}
-.chips button[aria-pressed="true"]{background:var(--k-shu);color:#fff;transform:translate(3px,3px);box-shadow:0 0 0 var(--k-sumi)}
-.c-tool .k-tabs{gap:7px}
-.c-tool .k-tabs>button{min-height:42px;padding:0 13px}
-.row2{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px}
-.step{display:inline-flex;align-items:center;gap:6px}
-.step .k-btn-sm{width:44px;padding:0;font-size:20px}
-.step output{min-width:46px;text-align:center;font-family:var(--k-bold);font-size:28px;line-height:1}
-.switch{display:flex;align-items:center;gap:10px;min-height:40px;cursor:pointer;font-weight:700;font-size:15px}
-.switch input{width:22px;height:22px;accent-color:var(--k-shu);flex:none}
+/* 上の帯: 見出し・いまの縛り・キーの小さな案内 */
+.c-band{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 16px;margin:0 0 10px}
+.c-band h2.c-t{margin:0}
+.rule-now{min-width:0;font-size:14px;color:var(--k-text-2)}
+.rule-now b{font-size:16px;color:var(--k-sumi)}
+.keyhint{margin-left:auto;font-size:12.5px;color:var(--k-text-2)}
 
 /* 数える札 */
 .counters{display:grid;gap:14px;grid-template-columns:repeat(var(--cols,3),minmax(0,1fr))}
 .cnt{position:relative;display:flex;flex-direction:column;gap:6px;padding:10px 12px 12px;background:var(--k-surface) url(/kit/img/d4-washi.webp) 0 0/320px auto;border:var(--k-bw) solid var(--k-sumi);border-radius:var(--k-r);box-shadow:var(--k-sh-l);min-width:0}
 .cnt.over{background-color:#fff1ea}
-.cnt-head{display:flex;align-items:center;gap:6px;min-width:0}
+.cnt-head{display:flex;align-items:center;gap:8px;min-width:0}
 .cnt-head .k-seal{width:30px;height:30px;font-size:16px}
-.cnt-name{flex:1;min-width:0;width:100%;min-height:38px;padding:2px 6px;border:0;border-bottom:2px dashed var(--k-line-soft);border-radius:0;background:transparent;font-weight:800;font-size:18px;color:var(--k-sumi)}
-.cnt-name:hover{border-bottom-color:var(--k-sumi)}
+.cnt-name{flex:1;min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;font-weight:800;font-size:18px;line-height:1.3;color:var(--k-sumi)}
 .cnt-num{display:flex;align-items:baseline;justify-content:center;gap:4px;font-family:var(--k-bold);line-height:1}
-.cnt-num b{font-weight:400;font-size:52px;color:var(--k-shu);text-shadow:var(--k-outline);display:inline-block;font-variant-numeric:tabular-nums}
+.cnt-num b{font-weight:400;font-size:56px;color:var(--k-shu);text-shadow:var(--k-outline);display:inline-block;font-variant-numeric:tabular-nums}
 .cnt-num span{font-size:17px;color:var(--k-text-2)}
 .cnt-btns{display:flex;gap:10px;align-items:stretch}
 .cnt-btns .k-btn-main{flex:1;min-width:0;min-height:68px;padding:0 4px;font-size:26px;letter-spacing:.06em}
 .cnt-btns .k-btn-sub{flex:none;width:54px;min-height:auto;padding:0;font-size:17px;box-shadow:var(--k-sh-s)}
-.cnt .batsu-mark{position:absolute;right:8px;top:44px;width:48px;height:48px;font-size:22px;display:none}
+.cnt .batsu-mark{position:absolute;right:8px;top:40px;width:48px;height:48px;font-size:22px;display:none}
 .cnt.over .batsu-mark{display:inline-grid}
-.ops{display:flex;flex-wrap:wrap;align-items:center;gap:10px 12px;margin-top:14px}
-.ops .k-btn-sub{min-height:44px;font-size:15px;padding:0 16px}
-.ops .k-btn-sub.armed{background:var(--k-shu);color:#fff}
-.keyhelp{flex:1 1 300px;margin:0;font-size:12.5px;line-height:1.6;color:var(--k-text-2)}
-.rule-now{display:none;margin:0 0 8px;font-size:14px}
-.rule-now b{font-size:16px}
+/* 7〜9項目は札を少し詰める */
+.counters.dense{gap:10px}
+.counters.dense .cnt{padding:6px 10px 10px;gap:4px}
+.counters.dense .cnt-num b{font-size:44px}
+.counters.dense .cnt-btns .k-btn-main{min-height:54px;font-size:22px}
 
-/* 配信に映す */
-.pv{position:relative;width:100%;aspect-ratio:16/9;overflow:hidden;border:var(--k-bw) solid var(--k-sumi);border-radius:var(--k-r);box-shadow:var(--k-sh-l);background:#2b3138}
-.pv iframe{position:absolute;inset:0;width:100%;height:100%;border:0;pointer-events:none}
-.c-v .lbl{margin:10px 0 5px;font-size:13px;font-weight:700}
-.c-v .k-tabs>button{min-height:38px;padding:0 11px;font-size:14px}
-.open-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:12px}
-.open-row .k-btn-sub{min-height:46px;font-size:15px;padding:0 14px}
-.open-row .switch{font-size:13px;min-height:36px}
-.open-row .switch input{width:18px;height:18px}
-
-/* 罰ゲームの欄 */
+/* 横の列: 直前を戻す・罰ゲーム・表示ページ */
+.c-side .k-btn-sub{min-height:46px;font-size:15px;padding:0 14px}
+.undo-row{display:flex;gap:8px}
+.undo-row .k-btn-sub{flex:1}
 .c-z .k-panel{padding:12px 14px 14px}
 .bz-idle{margin:0;font-size:14px;color:var(--k-text-2)}
 .bz-who{margin:0 0 8px;font-size:15px}
@@ -161,27 +143,60 @@ kbd{display:inline-block;padding:0 5px;font-family:inherit;font-size:12px;line-h
 .bz-draw{width:100%;min-height:62px;font-size:22px;letter-spacing:.1em}
 .bz-res{margin:0 0 10px;font-weight:800;font-size:19px;line-height:1.45}
 .bz-res .rar{display:inline-block;margin-right:6px;padding:0 7px;border:2px solid var(--k-sumi);border-radius:4px;color:#fff;font-family:var(--k-bold);font-weight:400;font-size:13px;line-height:1.6;vertical-align:3px;text-shadow:0 0 2px var(--k-sumi)}
+.bz-res .rar:empty{display:none}
 .bz-btns{display:flex;flex-wrap:wrap;gap:8px}
 .bz-btns .k-btn-sub{flex:1 1 auto;min-height:42px;font-size:14px;padding:0 10px;box-shadow:var(--k-sh-s)}
-.bz-src{margin:8px 0 0;font-size:12px;color:var(--k-text-2)}
+.c-view{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.c-view .k-btn-sub{flex:1 1 auto}
+.c-view .flash{flex:1 1 100%;margin:0;font-size:12.5px;color:var(--k-shu);min-height:1.2em}
 
-/* スマホ: 1人1行（押す所を大きく）。設定は下へ */
-.c-tool[data-lay="sp"] .rule-now{display:block}
-.c-tool[data-lay="sp"] #t-cnt{display:none}
-.c-tool[data-lay="sp"] .c-z .k-panel{padding:8px 10px;box-shadow:var(--k-sh-s)}
-.c-tool[data-lay="sp"] .c-z h2.c-t,.c-tool[data-lay="sp"] .bz-src{display:none}
-.c-tool[data-lay="sp"] #bzReach:not([hidden]){display:flex;align-items:center;gap:8px}
-.c-tool[data-lay="sp"] #bzReach .bz-who{flex:1;min-width:0;margin:0;font-size:13px;line-height:1.35}
-.c-tool[data-lay="sp"] #bzReach .bz-who b{font-size:15px}
-.c-tool[data-lay="sp"] .bz-draw{width:auto;flex:none;min-height:50px;font-size:17px;letter-spacing:.04em;padding:0 8px}
-.c-tool[data-lay="sp"] #bzShow .bz-who{margin:0 0 2px;font-size:13px}
-.c-tool[data-lay="sp"] .bz-res{margin:0 0 6px;font-size:16px}
-.c-tool[data-lay="sp"] .bz-btns .k-btn-sub{min-height:40px;font-size:13px}
+/* 下: 設定（最初は閉じる） */
+.c-set{margin:22px 0 0;border:var(--k-bw) solid var(--k-sumi);border-radius:var(--k-r);background:var(--k-surface);box-shadow:var(--k-sh-l);padding:0}
+details.c-set:last-of-type{border-bottom:var(--k-bw) solid var(--k-sumi)}
+.c-set>summary{display:flex;align-items:center;gap:10px;min-height:52px;padding:6px 16px;font-family:var(--k-bold);font-weight:400;font-size:17px;letter-spacing:.06em;font-feature-settings:"palt" 1}
+.c-set>summary small{font-family:var(--k-body);font-size:12.5px;letter-spacing:0;color:var(--k-text-2)}
+.c-set[open]>summary{border-bottom:2px solid var(--k-line-soft)}
+.set-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px 28px;padding:16px}
+.set-grid section{min-width:0}
+.set-grid .blk+.blk{margin-top:16px}
+.field{display:block;width:100%;min-height:46px;padding:6px 12px;border:var(--k-bw-s) solid var(--k-sumi);border-radius:var(--k-r);background:#fff;font-size:17px;font-weight:700;color:var(--k-sumi)}
+.field:focus,.pick:focus,.it-name:focus,.mytxt:focus{outline:4px double var(--k-shu);outline-offset:2px}
+.pick{display:block;width:100%;min-height:44px;margin-top:8px;padding:4px 8px;border:var(--k-bw-s) solid var(--k-sumi);border-radius:var(--k-r);background:var(--k-surface);font-size:14px;color:var(--k-sumi)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.chips button{min-height:40px;padding:0 11px;border:var(--k-bw-s) solid var(--k-sumi);border-radius:var(--k-r-pill);background:var(--k-surface);font-family:var(--k-bold);font-size:14px;color:var(--k-sumi);box-shadow:var(--k-sh-s);font-feature-settings:"palt" 1}
+.chips button[aria-pressed="true"]{background:var(--k-shu);color:#fff;transform:translate(3px,3px);box-shadow:0 0 0 var(--k-sumi)}
+.items{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.items li{display:flex;align-items:center;gap:8px;margin:0}
+.items .k-seal{width:30px;height:30px;font-size:16px}
+.it-name{flex:1;min-width:0;min-height:44px;padding:4px 10px;border:var(--k-bw-s) solid var(--k-sumi);border-radius:var(--k-r);background:#fff;font-size:16px;font-weight:700;color:var(--k-sumi)}
+.items .k-btn-sub{flex:none;min-height:44px;padding:0 12px;font-size:14px;box-shadow:var(--k-sh-s)}
+.add-row{margin-top:10px}
+.add-row .k-btn-sub{min-height:44px;font-size:15px;padding:0 16px}
+.row2{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px}
+.step{display:inline-flex;align-items:center;gap:6px}
+.step .k-btn-sm{width:44px;padding:0;font-size:20px}
+.step output{min-width:46px;text-align:center;font-family:var(--k-bold);font-size:28px;line-height:1}
+.switch{display:flex;align-items:center;gap:10px;min-height:40px;cursor:pointer;font-weight:700;font-size:15px}
+.switch input{width:22px;height:22px;accent-color:var(--k-shu);flex:none}
+.mytxt{display:block;width:100%;min-height:120px;margin-top:8px;padding:8px 10px;border:var(--k-bw-s) solid var(--k-sumi);border-radius:var(--k-r);background:#fff;font-size:15px;line-height:1.6;resize:vertical}
+.mytxt[hidden]{display:none}
+.lbl{margin:12px 0 5px;font-size:13px;font-weight:700}
+.set-grid .k-tabs>button{min-height:40px;padding:0 12px;font-size:14px}
+.pv{position:relative;width:100%;aspect-ratio:16/9;overflow:hidden;border:var(--k-bw) solid var(--k-sumi);border-radius:var(--k-r);box-shadow:var(--k-sh-s);background:#2b3138}
+.pv iframe{position:absolute;inset:0;width:100%;height:100%;border:0;pointer-events:none}
+.reset-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.reset-row .k-btn-sub{min-height:44px;font-size:15px;padding:0 16px}
+.reset-row .k-btn-sub.armed{background:var(--k-shu);color:#fff}
+.keylist{margin:6px 0 0;padding-left:1.2rem;font-size:14px}
+.keylist li{margin:0 0 2px}
+
+/* スマホ: 1項目1行（押す所を大きく） */
+.c-tool[data-lay="sp"] .keyhint{display:none}
 .c-tool[data-lay="sp"] .counters{grid-template-columns:minmax(0,1fr);gap:8px}
 .c-tool[data-lay="sp"] .cnt{flex-direction:row;align-items:center;gap:8px;padding:4px 8px;box-shadow:var(--k-sh-s)}
 .c-tool[data-lay="sp"] .cnt-head{flex:1;min-width:0}
 .c-tool[data-lay="sp"] .cnt-head .k-seal{width:26px;height:26px;font-size:14px}
-.c-tool[data-lay="sp"] .cnt-name{font-size:15px;min-height:34px;padding:2px 2px}
+.c-tool[data-lay="sp"] .cnt-name{font-size:15px}
 .c-tool[data-lay="sp"] .cnt-num{flex:none;min-width:58px}
 .c-tool[data-lay="sp"] .cnt-num b{font-size:36px}
 .c-tool[data-lay="sp"] .cnt-num span{font-size:13px}
@@ -189,24 +204,29 @@ kbd{display:inline-block;padding:0 5px;font-family:inherit;font-size:12px;line-h
 .c-tool[data-lay="sp"] .cnt-btns .k-btn-main{width:92px;flex:none;min-height:54px;font-size:21px}
 .c-tool[data-lay="sp"] .cnt-btns .k-btn-sub{width:42px}
 .c-tool[data-lay="sp"] .batsu-mark{right:auto;left:-10px;top:-10px;width:34px;height:34px;font-size:15px}
-.c-tool[data-lay="sp"] .keyhelp,.c-tool[data-lay="sp"] .pv{display:none}
-.c-tool[data-lay="sp"] .ops{margin-top:10px}
-.c-tool[data-lay="sp"] .ops .k-btn-sub{flex:1 1 0}
+.c-tool[data-lay="sp"] .c-z .k-panel{padding:8px 10px;box-shadow:var(--k-sh-s)}
+.c-tool[data-lay="sp"] .c-z h2.c-t{display:none}
+.c-tool[data-lay="sp"] #bzReach:not([hidden]){display:flex;align-items:center;gap:8px}
+.c-tool[data-lay="sp"] #bzReach .bz-who{flex:1;min-width:0;margin:0;font-size:13px;line-height:1.35}
+.c-tool[data-lay="sp"] #bzReach .bz-who b{font-size:15px}
+.c-tool[data-lay="sp"] .bz-draw{width:auto;flex:none;min-height:50px;font-size:17px;letter-spacing:.04em;padding:0 8px}
+.c-tool[data-lay="sp"] #bzShow .bz-who{margin:0 0 2px;font-size:13px}
+.c-tool[data-lay="sp"] .bz-res{margin:0 0 6px;font-size:16px}
+.c-tool[data-lay="sp"] .bz-btns .k-btn-sub{min-height:40px;font-size:13px}
 .c-tool[data-lay="sp"] .c-z.on{position:sticky;bottom:0;z-index:20}
-.c-tool[data-lay="mid"] .pv{display:none}
-.c-tool[data-lay="mid"] .c-v{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;align-content:flex-start}
-.c-tool[data-lay="mid"] .c-v h2.c-t{flex:1 1 100%;margin:0}
-.c-tool[data-lay="mid"] .c-v .lbl{margin:0}
-.c-tool[data-lay="mid"] .c-v .open-row{margin:0}
-.c-tool[data-lay="mid"] .c-v .open-row:last-child{flex:1 1 100%}
+.c-tool[data-lay="sp"] .c-view{display:none}
 @media(max-width:699px){
   h1{font-size:17px;line-height:1.3}.h1s{display:block;font-size:12px;letter-spacing:0;color:var(--k-text-2)}.lead{display:none}
   .site-in{padding:5px 12px}.site-nav{font-size:12.5px}.site-nav a{margin-left:10px}.site-nav .pc{display:none}
   .wrap{padding-top:6px}
+  .set-grid{padding:12px;grid-template-columns:minmax(0,1fr)}
 }
 @media (prefers-reduced-motion:reduce){.bump{animation:none}}
 @keyframes bump{0%{transform:scale(1)}35%{transform:scale(1.4) rotate(-6deg)}70%{transform:scale(.93)}100%{transform:scale(1)}}
 .bump{animation:bump .4s cubic-bezier(.3,1.4,.5,1)}
+.set-grid .stream-sw{flex-wrap:wrap;row-gap:0}
+.set-grid .stream-sw span{flex:1 1 100%;padding-left:28px}
+.bz-src{margin:8px 0 0;font-size:12.5px;line-height:1.55;color:var(--k-text-2)}
 </style>
 <link rel="stylesheet" href="/stream.css">
 </head>
@@ -219,91 +239,119 @@ kbd{display:inline-block;padding:0 5px;font-family:inherit;font-size:12px;line-h
 <header>
   <div class="fromstream" id="fromStream" hidden><p>配信で見たカウンターはこれです。縛りと名前を入れて「＋1」を押すだけ。登録なし・無料で、自分の配信でもそのまま使えます。</p><button class="btn sm" id="fromStreamX" aria-label="閉じる">閉じる</button></div>
   <h1>配信カウンター<span class="h1s">　縛り・NGワードのアウトを数えて配信画面に映す</span></h1>
-  <p class="lead">言ってしまったら、その人の「＋1」。配信画面に「アウト」の判子が出て、決めた回数に届いたら罰ゲームを引けます。映すのは「表示ページを開く」のウィンドウ（OBSのウィンドウキャプチャ）。</p>
+  <p class="lead">言ってしまったら、その項目の「＋1」。配信画面に「アウト」の判子が出て、目標回数に届いたら罰ゲームを引けます。映すのは「表示ページを開く」のウィンドウ（OBSのウィンドウキャプチャ）。</p>
 </header>
 
 <main>
 <div id="tool" class="c-tool" data-lay="wide">
-  <section class="c-a" aria-label="縛りと決まり">
-    <div class="c-blk">
-      <h2 class="c-t" id="t-rule">縛り<small>なにを禁止する？</small></h2>
-      <input class="field" id="rule" maxlength="30" autocomplete="off" aria-labelledby="t-rule" placeholder="例: 敬語禁止">
-      <div class="chips" id="ruleChips" role="group" aria-label="よくある縛り"></div>
-      <select class="pick" id="rulePick" aria-label="お題ガチャの縛りから選ぶ"><option value="">お題ガチャの「縛り」から選ぶ…</option><option value="*">おまかせで1つ引く</option></select>
+  <section class="c-live" aria-labelledby="t-cnt">
+    <div class="c-band">
+      <h2 class="c-t" id="t-cnt">アウトを数える</h2>
+      <span class="rule-now">縛り: <b id="ruleNow"></b></span>
+      <span class="keyhint">キー <kbd>1</kbd>〜<kbd>9</kbd> で＋1</span>
     </div>
-    <div class="c-blk">
-      <h2 class="c-t">人数<small>2〜6人・名前は札の上で直せます</small></h2>
-      <div class="k-tabs" id="nTabs" role="tablist" aria-label="人数"></div>
-    </div>
-    <div class="c-blk">
-      <h2 class="c-t">決まり</h2>
-      <div class="row2">
-        <span>罰ゲームまで</span>
-        <span class="step">
-          <button type="button" class="k-btn k-btn-sm" id="thDown" aria-label="回数を減らす">−</button>
-          <output id="th" class="k-num" aria-live="polite">3</output>
-          <button type="button" class="k-btn k-btn-sm" id="thUp" aria-label="回数を増やす">＋</button>
-        </span>
-        <span>回</span>
-      </div>
-      <label class="switch"><input type="checkbox" id="sound"> 効果音を鳴らす（このパソコンから）</label>
-    </div>
-  </section>
-
-  <section class="c-b" aria-labelledby="t-cnt">
-    <h2 class="c-t" id="t-cnt">アウトを数える<small>数字キー 1〜6 でも</small></h2>
-    <p class="rule-now">縛り: <b id="ruleNow"></b></p>
     <div class="counters" id="counters"></div>
-    <div class="ops">
-      <button type="button" class="k-btn k-btn-sub" id="undo">1つ戻す</button>
-      <button type="button" class="k-btn k-btn-sub" id="reset">リセット</button>
-      <p class="keyhelp"><kbd>1</kbd>〜<kbd>6</kbd> ＋1　<kbd>Shift</kbd>＋数字 −1　<kbd>Z</kbd> 1つ戻す　<kbd>B</kbd> 罰ゲームを引く　<kbd>Esc</kbd> 表示を消す</p>
-    </div>
   </section>
 
-  <section class="c-v" aria-labelledby="t-pv">
-    <h2 class="c-t" id="t-pv">配信に映す</h2>
-    <div class="pv" id="pv"><iframe id="pvFrame" title="配信に映る表示（見本）" tabindex="-1" loading="lazy"></iframe></div>
-    <div class="open-row">
-      <a class="k-btn k-btn-sub" id="openView" href="/counter/view/" target="kkp_counter_view" rel="noopener">表示ページを開く</a>
-      <a class="k-link k-link-inline" href="#obs" style="font-size:13px">OBSへの入れ方</a>
-    </div>
-    <p class="lbl">置き方</p>
-    <div class="k-tabs" id="placeTabs" role="tablist" aria-label="置き方"><button type="button" role="tab" data-v="band">下の帯</button><button type="button" role="tab" data-v="corner">右上に小さく</button></div>
-    <p class="lbl">背景</p>
-    <div class="k-tabs" id="bgTabs" role="tablist" aria-label="背景"><button type="button" role="tab" data-v="green">グリーンバック</button><button type="button" role="tab" data-v="cream">クリーム</button><button type="button" role="tab" data-v="transparent">透過</button></div>
-    <div class="open-row"><label class="switch"><input type="checkbox" id="credit"> 表示の隅にサイト名を小さく出す</label></div>
-    <div data-stream-sw></div>
-  </section>
-
-  <section class="c-z" id="cz" aria-labelledby="t-bz">
-    <div class="k-panel" role="status" aria-live="polite">
-      <h2 class="c-t" id="t-bz">罰ゲーム</h2>
-      <div id="bzIdle"><p class="bz-idle">だれかが決めた回数に届くと、ここで罰ゲームを引けます。</p></div>
-      <div id="bzReach" hidden>
-        <p class="bz-who"><b id="bzWho"></b> が <span id="bzN"></span>回アウト</p>
-        <button type="button" class="k-btn k-btn-main bz-draw" id="drawBatsu">罰ゲームを引く</button>
-      </div>
-      <div id="bzShow" hidden>
-        <p class="bz-who"><b id="bzWho2"></b> の罰ゲーム</p>
-        <p class="bz-res"><span class="rar" id="bzRar"></span><span id="bzTxt"></span></p>
-        <div class="bz-btns">
-          <button type="button" class="k-btn k-btn-sub" id="redraw">引き直す</button>
-          <button type="button" class="k-btn k-btn-sub" id="hideShow">表示を消す</button>
-          <button type="button" class="k-btn k-btn-sub" id="zeroOne">0に戻す</button>
+  <aside class="c-side" aria-label="戻す・罰ゲーム・表示ページ">
+    <div class="undo-row"><button type="button" class="k-btn k-btn-sub" id="undo">直前を戻す</button></div>
+    <section class="c-z" id="cz" aria-labelledby="t-bz">
+      <div class="k-panel" role="status" aria-live="polite">
+        <h2 class="c-t" id="t-bz">罰ゲーム</h2>
+        <div id="bzIdle"><p class="bz-idle">目標回数に届くと、ここで罰ゲームを引けます。</p></div>
+        <div id="bzReach" hidden>
+          <p class="bz-who"><b id="bzWho"></b> が <span id="bzN"></span>回アウト</p>
+          <button type="button" class="k-btn k-btn-main bz-draw" id="drawBatsu">罰ゲームを引く</button>
+        </div>
+        <div id="bzShow" hidden>
+          <p class="bz-who"><b id="bzWho2"></b> の罰ゲーム</p>
+          <p class="bz-res"><span class="rar" id="bzRar"></span><span id="bzTxt"></span></p>
+          <div class="bz-btns">
+            <button type="button" class="k-btn k-btn-sub" id="redraw">引き直す</button>
+            <button type="button" class="k-btn k-btn-sub" id="hideShow">表示を消す</button>
+            <button type="button" class="k-btn k-btn-sub" id="zeroOne">0に戻す</button>
+          </div>
         </div>
       </div>
-      <p class="bz-src">お題ガチャの「罰ゲーム」<span id="bzCount"></span>から引きます（レア度の割合も同じ）。</p>
+    </section>
+    <div class="c-view">
+      <a class="k-btn k-btn-sub" id="openView" href="/counter/view/" target="kkp_counter_view" rel="noopener">表示ページを開く</a>
+      <button type="button" class="k-btn k-btn-sub" id="copyView">URLをコピー</button>
+      <p class="flash" id="viewMsg" aria-live="polite"></p>
     </div>
-  </section>
+  </aside>
 </div>
+
+<details class="c-set" id="settings">
+  <summary>設定<small>項目・縛り・目標回数・罰ゲームの中身・表示の見た目・リセット・使い方</small></summary>
+  <div class="set-grid">
+    <section aria-labelledby="t-items">
+      <h2 class="c-t" id="t-items">項目<small>1〜9個・数える人やもの</small></h2>
+      <ol class="items" id="items"></ol>
+      <div class="add-row"><button type="button" class="k-btn k-btn-sub" id="addItem">項目を足す</button></div>
+    </section>
+
+    <section>
+      <div class="blk">
+        <h2 class="c-t" id="t-rule">縛り<small>なにを禁止する？</small></h2>
+        <input class="field" id="rule" maxlength="30" autocomplete="off" aria-labelledby="t-rule" placeholder="例: 敬語禁止">
+        <div class="chips" id="ruleChips" role="group" aria-label="よくある縛り"></div>
+        <select class="pick" id="rulePick" aria-label="お題ガチャの縛りから選ぶ"><option value="">お題ガチャの「縛り」から選ぶ…</option><option value="*">おまかせで1つ引く</option></select>
+      </div>
+      <div class="blk">
+        <h2 class="c-t">目標回数<small>ここに届くと罰ゲーム</small></h2>
+        <div class="row2">
+          <span class="step">
+            <button type="button" class="k-btn k-btn-sm" id="thDown" aria-label="回数を減らす">−</button>
+            <output id="th" class="k-num" aria-live="polite">3</output>
+            <button type="button" class="k-btn k-btn-sm" id="thUp" aria-label="回数を増やす">＋</button>
+          </span>
+          <span>回</span>
+        </div>
+      </div>
+      <div class="blk">
+        <h2 class="c-t">罰ゲームの中身</h2>
+        <div class="k-tabs" id="bzTabs" role="tablist" aria-label="罰ゲームの中身"><button type="button" role="tab" data-v="gacha">お題ガチャから</button><button type="button" role="tab" data-v="my">自分で書く</button></div>
+        <p class="bz-src" id="bzSrc"></p>
+        <textarea class="mytxt" id="myBatsu" spellcheck="false" aria-label="自分の罰ゲーム（1行に1つ）" placeholder="1行に1つ
+例: 語尾に「ござる」を3分
+例: 好きな食べ物を熱く語る" hidden></textarea>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="c-t" id="t-pv">表示の見た目<small>表示ページ（配信に映す画面）</small></h2>
+      <div class="pv" id="pv"><iframe id="pvFrame" title="配信に映る表示（見本）" tabindex="-1" loading="lazy"></iframe></div>
+      <p class="lbl">置き方</p>
+      <div class="k-tabs" id="placeTabs" role="tablist" aria-label="置き方"><button type="button" role="tab" data-v="band">下の帯</button><button type="button" role="tab" data-v="corner">右上に小さく</button></div>
+      <p class="lbl">背景</p>
+      <div class="k-tabs" id="bgTabs" role="tablist" aria-label="背景"><button type="button" role="tab" data-v="green">グリーンバック</button><button type="button" role="tab" data-v="cream">クリーム</button><button type="button" role="tab" data-v="transparent">透過</button></div>
+      <label class="switch" style="margin-top:10px"><input type="checkbox" id="credit"> 表示の隅にサイト名を小さく出す</label>
+      <label class="switch"><input type="checkbox" id="sound"> 効果音を鳴らす（このパソコンから）</label>
+      <div data-stream-sw></div>
+    </section>
+
+    <section>
+      <h2 class="c-t">リセット</h2>
+      <div class="reset-row"><button type="button" class="k-btn k-btn-sub" id="reset">全員の回数を0にする</button></div>
+      <h2 class="c-t" style="margin-top:20px">使い方</h2>
+      <ul class="keylist">
+        <li>言ってしまったら、その項目の「＋1」。キー <kbd>1</kbd>〜<kbd>9</kbd> でも＋1、<kbd>Shift</kbd>＋数字で −1</li>
+        <li>押し間違えたら「直前を戻す」（<kbd>Z</kbd>）</li>
+        <li>目標回数に届いたら「罰ゲームを引く」（<kbd>B</kbd>）。終わったら「表示を消す」（<kbd>Esc</kbd>）</li>
+        <li>名前や縛りを入力している間は、キーは効きません</li>
+      </ul>
+      <p class="note"><a href="#howto">くわしい使い方</a>・<a href="#obs">OBSへの入れ方</a></p>
+    </section>
+  </div>
+</details>
 
 <div class="narrow">
 <h2 id="howto">使い方（3段）</h2>
 <ol class="steps">
-  <li><b>1. 決める</b><span>縛り（例: 敬語禁止・「やばい」禁止）を入れて、人数を選び、札の上で名前を直します。罰ゲームまでの回数は1〜20回。</span></li>
-  <li><b>2. 数える</b><span>言ってしまった人の「＋1」を押します。パソコンなら数字キーの 1〜6 でも。配信画面に「アウト」の判子と回数が出ます。押し間違えたら「1つ戻す」（<kbd>Z</kbd>）。</span></li>
-  <li><b>3. 罰ゲーム</b><span>決めた回数に届くと、配信画面に「罰ゲーム」の巻物が出ます。「罰ゲームを引く」（<kbd>B</kbd>）で、お題ガチャの罰ゲームから1つ引いて配信画面に出します。終わったら「表示を消す」（<kbd>Esc</kbd>）。</span></li>
+  <li><b>1. 決める</b><span>下の「設定」を開いて、縛り（例: 敬語禁止・「やばい」禁止）、項目（1〜9個。人の名前や数えるもの）、目標回数（1〜20回）を決めます。決めたら設定は閉じてかまいません。</span></li>
+  <li><b>2. 数える</b><span>言ってしまった人の「＋1」を押します。パソコンなら数字キーの 1〜9 でも。配信画面に「アウト」の判子と回数が出ます。押し間違えたら「直前を戻す」（<kbd>Z</kbd>）。</span></li>
+  <li><b>3. 罰ゲーム</b><span>目標回数に届くと、配信画面に「罰ゲーム」の巻物が出ます。「罰ゲームを引く」（<kbd>B</kbd>）で、お題ガチャの罰ゲーム（設定で「自分で書く」にすると書いたもの）から1つ引いて配信画面に出します。終わったら「表示を消す」（<kbd>Esc</kbd>）。</span></li>
 </ol>
 <p class="note">配信・動画で使うときは、<a href="https://kkpwebninja.com/otoiawase" target="_blank" rel="noopener">お問い合わせ</a>か X（<a href="https://x.com/kkp_webninja" target="_blank" rel="noopener">@kkp_webninja</a>）で一言いただけると助かります。ご要望があれば、優先してアップデートします。</p>
 
@@ -311,15 +359,15 @@ kbd{display:inline-block;padding:0 5px;font-family:inherit;font-size:12px;line-h
 <ol>
   <li>「表示ページを開く」で、このページと同じブラウザに表示ページのウィンドウを開きます（閉じたり、別のブラウザで開いたりすると届きません）。</li>
   <li>OBSの「ソース」で「＋」→「ウィンドウキャプチャ」を選び、表示ページのウィンドウを選びます。</li>
-  <li>背景は「グリーンバック」のまま、OBSでそのソースにフィルタ「クロマキー」をかけると、数の帯だけがゲーム画面に重なります。置き方（下の帯・右上に小さく）と背景はこのページで切り替えると、表示ページにすぐ届きます。</li>
+  <li>背景は「グリーンバック」のまま、OBSでそのソースにフィルタ「クロマキー」をかけると、数の帯だけがゲーム画面に重なります。置き方（下の帯・右上に小さく）と背景はこのページの「設定」で切り替えると、表示ページにすぐ届きます。</li>
   <li>効果音はこのパソコンから鳴るので、OBSの「デスクトップ音声」で配信に乗ります。</li>
 </ol>
 <p class="note">OBSの「ブラウザ」ソースはChromeなどとは別のブラウザとして動くので、この画面で押した数は届きません。ウィンドウキャプチャを使ってください。表示ページには操作ボタンも広告も出ません。</p>
 
 <h2 id="faq">よくある質問</h2>
-<details><summary>キーボードで数えられますか</summary><p>数字キーの <kbd>1</kbd>〜<kbd>6</kbd> でその人に＋1、<kbd>Shift</kbd> を押しながら数字で −1、<kbd>Z</kbd> で1つ戻す、<kbd>B</kbd> で罰ゲームを引く、<kbd>Esc</kbd> で罰ゲームの表示を消します。名前や縛りを入力している間はキーは効きません（入力欄の外をクリックすると戻ります）。</p></details>
+<details><summary>キーボードで数えられますか</summary><p>数字キーの <kbd>1</kbd>〜<kbd>9</kbd> でその項目に＋1、<kbd>Shift</kbd> を押しながら数字で −1、<kbd>Z</kbd> で直前を戻す、<kbd>B</kbd> で罰ゲームを引く、<kbd>Esc</kbd> で罰ゲームの表示を消します。名前や縛りを入力している間はキーは効きません（入力欄の外をクリックすると戻ります）。</p></details>
 <details><summary>罰ゲームはどこから出ますか</summary><p>同じサイトの <a href="/odai-gacha/">お題ガチャ</a> の「罰ゲーム」パックから引きます。誰でもその場で安全にできるものだけで、レア度（N・R・SR・SSR）の割合もお題ガチャと同じです。お題ガチャで「今後出さない」にした罰ゲームは出ません。</p></details>
-<details><summary>回数に届いたあとも数えられますか</summary><p>数えられます。届いた人の札には「罰」の判子が付きます。罰ゲームが終わったら「0に戻す」でその人だけ0にできます。全員を0にするときは「リセット」を2回押します。</p></details>
+<details><summary>回数に届いたあとも数えられますか</summary><p>数えられます。届いた人の札には「罰」の判子が付きます。罰ゲームが終わったら「0に戻す」でその人だけ0にできます。全員を0にするときは、設定の「全員の回数を0にする」を2回押します。</p></details>
 <details><summary>縛り以外にも使えますか</summary><p>使えます。NGワード、ゲームのデス数、「えー」と言った回数、勝ち負けの数など、人ごとに数えて画面に出したいものなら何でも。縛りの欄に好きな言葉を入れてください。</p></details>
 <details><summary>配信や動画で使ってもいいですか</summary><p>はい。配信・録画・切り抜き・収益化に使えます。許諾の申請はいりません。使うときは、<a href="https://kkpwebninja.com/otoiawase" target="_blank" rel="noopener">お問い合わせ</a>か X（<a href="https://x.com/kkp_webninja" target="_blank" rel="noopener">@kkp_webninja</a>）で一言いただけると助かります。ご要望があれば、優先してアップデートします。細かい条件は <a href="https://kkpwebninja.com/guidelines" target="_blank" rel="noopener">配信・動画でのご利用について</a> にまとめています。</p></details>
 
@@ -349,22 +397,26 @@ kbd{display:inline-block;padding:0 5px;font-family:inherit;font-size:12px;line-h
   'use strict';
   var G = window.KkpGacha, PACKS = window.KKP_ODAI_PACKS || [];
   var $ = function (id) { return document.getElementById(id); };
+  var ORIGIN = 'https://roulette.kkpwebninja.com';
+  var MAX = 9;
   var LS = { set: 'kkp_counter_settings', state: 'kkp_counter_state', msg: 'kkp_counter_msg', seen: 'kkp_counter_batsu_seen', off: 'kkp_odai_off' };
   function load(k, d) { try { var v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } }
   function store(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { /* 保存できなくても動く */ } }
   var reduce = false; try { reduce = matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
 
   var RULES = ['敬語禁止', '英語禁止', 'カタカナ語禁止', '「やばい」禁止', '「えー」禁止', '語尾「にゃ」'];
-  var S = { rule: '敬語禁止', n: 3, names: ['', '', '', '', '', ''], counts: [0, 0, 0, 0, 0, 0], th: 3, sound: true, place: 'band', bg: 'green', credit: true, reach: -1, show: null };
+  var S = { rule: '敬語禁止', n: 3, names: [], counts: [], th: 3, sound: true, place: 'band', bg: 'green', credit: true, reach: -1, show: null, bz: 'gacha', myBatsu: '' };
   var o = load(LS.set, null);
   if (o && typeof o === 'object') for (var k in S) if (o[k] !== undefined) S[k] = o[k];
-  S.n = Math.min(6, Math.max(2, S.n | 0)); S.th = Math.min(20, Math.max(1, S.th | 0));
+  S.n = Math.min(MAX, Math.max(1, S.n | 0)); S.th = Math.min(20, Math.max(1, S.th | 0));
   if (!Array.isArray(S.names)) S.names = []; if (!Array.isArray(S.counts)) S.counts = [];
-  for (var z = 0; z < 6; z++) { S.names[z] = String(S.names[z] || '').slice(0, 12); S.counts[z] = Math.max(0, S.counts[z] | 0); }
+  for (var z = 0; z < MAX; z++) { S.names[z] = String(S.names[z] || '').slice(0, 12); S.counts[z] = Math.max(0, S.counts[z] | 0); }
+  S.names.length = MAX; S.counts.length = MAX;
+  if (S.bz !== 'my') S.bz = 'gacha'; S.myBatsu = String(S.myBatsu || '').slice(0, 3000);
   var hist = [];
   function nm(i) { return String(S.names[i] || '').trim() || ('参加者' + (i + 1)); }
 
-  /* ---- 表示ページへ送る（同じブラウザの別ウィンドウ・中の見本） ---- */
+  /* ---- 表示ページへ送る（同じブラウザの別ウィンドウ・設定の中の見本） ---- */
   var chan = null; try { chan = new BroadcastChannel('kkp-counter'); } catch (e) {}
   function stateObj() { return { rule: S.rule, n: S.n, names: S.names, counts: S.counts, th: S.th, place: S.place, bg: S.bg, credit: S.credit, show: S.show }; }
   function send(fx) {
@@ -382,7 +434,7 @@ kbd{display:inline-block;padding:0 5px;font-family:inherit;font-size:12px;line-h
     try { var a = SND[name] || (SND[name] = new Audio('/counter/sound/' + name + '.mp3')); a.currentTime = 0; a.volume = 0.8; var p = a.play(); if (p && p.catch) p.catch(function () {}); } catch (e) {}
   }
 
-  /* ---- 縛り ---- */
+  /* ---- 縛り（設定） ---- */
   var ruleIn = $('rule'), chips = $('ruleChips');
   ruleIn.value = S.rule;
   RULES.forEach(function (r) { var b = document.createElement('button'); b.type = 'button'; b.textContent = r; b.onclick = function () { setRule(r); }; chips.appendChild(b); });
@@ -393,7 +445,7 @@ kbd{display:inline-block;padding:0 5px;font-family:inherit;font-size:12px;line-h
     if (v === '*') v = shibari[Math.floor(Math.random() * shibari.length)] || '';
     this.value = ''; if (v) setRule(v);
   };
-  function setRule(r) { S.rule = String(r).slice(0, 30); ruleIn.value = S.rule; renderRule(); send(); }
+  function setRule(r) { S.rule = String(r).slice(0, 30); ruleIn.value = S.rule; renderRule(); send(); fit(); }
   var ruleT = 0;
   ruleIn.addEventListener('input', function () { S.rule = ruleIn.value; renderRule(); clearTimeout(ruleT); ruleT = setTimeout(send, 250); });
   function renderRule() {
@@ -401,34 +453,73 @@ kbd{display:inline-block;padding:0 5px;font-family:inherit;font-size:12px;line-h
     $('ruleNow').textContent = String(S.rule || '').trim() || '縛り';
   }
 
-  /* ---- 人数 ---- */
-  var nTabs = $('nTabs');
-  for (var n = 2; n <= 6; n++) (function (n) { var b = document.createElement('button'); b.type = 'button'; b.setAttribute('role', 'tab'); b.textContent = n + '人'; b.onclick = function () { S.n = n; if (S.reach >= n) S.reach = -1; if (S.show && S.show.i >= n) S.show = null; renderAll(); send(); }; nTabs.appendChild(b); })(n);
+  /* ---- 項目（設定）: 名前を直す・足す・消す ---- */
+  function renderItems() {
+    var box = $('items'); box.innerHTML = '';
+    for (var i = 0; i < S.n; i++) (function (i) {
+      var li = document.createElement('li');
+      li.innerHTML = '<span class="k-seal">' + (i + 1) + '</span><input class="it-name" maxlength="12" autocomplete="off"><button type="button" class="k-btn k-btn-sub">消す</button>';
+      var inp = li.querySelector('input'), del = li.querySelector('button');
+      inp.value = S.names[i] || ''; inp.placeholder = '参加者' + (i + 1); inp.setAttribute('aria-label', (i + 1) + '番目の項目の名前');
+      var t = 0;
+      inp.addEventListener('input', function () { S.names[i] = inp.value; renderNames(); renderBatsu(); clearTimeout(t); t = setTimeout(send, 250); });
+      inp.addEventListener('keydown', function (e) { if (e.key === 'Enter') inp.blur(); });
+      del.setAttribute('aria-label', (i + 1) + '番目の項目を消す');
+      del.disabled = S.n <= 1;
+      del.onclick = function () { removeItem(i); };
+      box.appendChild(li);
+    })(i);
+    $('addItem').disabled = S.n >= MAX;
+    $('addItem').textContent = S.n >= MAX ? '9個まで' : '項目を足す';
+  }
+  function removeItem(i) {
+    if (S.n <= 1) return;
+    S.names.splice(i, 1); S.counts.splice(i, 1); S.names.push(''); S.counts.push(0);
+    S.n--;
+    hist = hist.filter(function (h) { return h.i !== i; }).map(function (h) { return { i: h.i > i ? h.i - 1 : h.i, d: h.d }; });
+    if (S.reach === i) S.reach = -1; else if (S.reach > i) S.reach--;
+    if (S.show) { if (S.show.i === i) S.show = null; else if (S.show.i > i) S.show.i--; }
+    renderAll(); send();
+  }
+  $('addItem').onclick = function () {
+    if (S.n >= MAX) return;
+    S.names[S.n] = ''; S.counts[S.n] = 0; S.n++;
+    renderAll(); send();
+    var ins = $('items').querySelectorAll('input'); if (ins.length) ins[ins.length - 1].focus();
+  };
 
-  /* ---- 数える札 ---- */
+  /* ---- 数える札（上） ---- */
+  function cols() {
+    var n = S.n, lay = tool.dataset.lay;
+    if (lay === 'sp') return 1;
+    if (lay === 'wide') return n <= 4 ? n : 3;
+    return n <= 3 ? n : n === 4 ? 2 : 3;
+  }
   function renderCounters() {
     var box = $('counters'); box.innerHTML = '';
-    box.style.setProperty('--cols', S.n === 4 ? 2 : Math.min(S.n, 3));
+    box.style.setProperty('--cols', cols());
+    box.classList.toggle('dense', S.n >= 7);
     for (var i = 0; i < S.n; i++) (function (i) {
       var d = document.createElement('div'); d.className = 'cnt'; d.dataset.i = i;
-      d.innerHTML = '<div class="cnt-head"><span class="k-seal" title="' + (i + 1) + 'キーで＋1">' + (i + 1) + '</span><input class="cnt-name" maxlength="12" autocomplete="off"></div>' +
+      d.innerHTML = '<div class="cnt-head"><span class="k-seal" title="' + (i + 1) + 'キーで＋1">' + (i + 1) + '</span><span class="cnt-name"></span></div>' +
         '<div class="cnt-num"><b class="k-num" data-c></b><span class="k-num" data-th></span></div>' +
         '<span class="k-stamp batsu-mark" aria-hidden="true">罰</span>' +
         '<div class="cnt-btns"><button type="button" class="k-btn k-btn-main" data-plus>＋1</button><button type="button" class="k-btn k-btn-sub" data-minus>−1</button></div>';
-      var inp = d.querySelector('.cnt-name');
-      inp.value = S.names[i] || ''; nameSize(inp); inp.placeholder = '参加者' + (i + 1); inp.setAttribute('aria-label', (i + 1) + '人目の名前');
-      var t = 0;
-      inp.addEventListener('input', function () { S.names[i] = inp.value; nameSize(inp); labelBtns(d, i); renderBatsu(); clearTimeout(t); t = setTimeout(send, 250); });
-      inp.addEventListener('keydown', function (e) { if (e.key === 'Enter') inp.blur(); });
       d.querySelector('[data-plus]').onclick = function () { add(i, 1, 'tap'); };
       d.querySelector('[data-minus]').onclick = function () { add(i, -1, 'tap'); };
-      labelBtns(d, i);
       box.appendChild(d);
     })(i);
-    renderNums();
+    renderNames(); renderNums();
   }
-  function nameSize(inp) { var l = inp.value.length; inp.style.fontSize = l > 9 ? '14px' : l > 6 ? '16px' : ''; }
-  function labelBtns(d, i) { d.querySelector('[data-plus]').setAttribute('aria-label', nm(i) + 'に＋1'); d.querySelector('[data-minus]').setAttribute('aria-label', nm(i) + 'から−1'); }
+  function renderNames() {
+    [].forEach.call($('counters').children, function (d) {
+      var i = +d.dataset.i, el = d.querySelector('.cnt-name'), l = nm(i).length;
+      el.textContent = nm(i); el.title = nm(i);
+      el.style.fontSize = l > 9 ? '14px' : l > 6 ? '16px' : '';
+      d.querySelector('[data-plus]').setAttribute('aria-label', nm(i) + 'に＋1');
+      d.querySelector('[data-minus]').setAttribute('aria-label', nm(i) + 'から−1');
+    });
+  }
   function renderNums() {
     [].forEach.call($('counters').children, function (d) {
       var i = +d.dataset.i;
@@ -443,7 +534,6 @@ kbd{display:inline-block;padding:0 5px;font-family:inherit;font-size:12px;line-h
     el.classList.remove('bump'); void el.offsetWidth; el.classList.add('bump');
   }
 
-  var plusN = 0;
   function add(i, d, how, fromUndo) {
     if (i >= S.n) return;
     var before = S.counts[i], after = Math.max(0, before + d);
@@ -454,24 +544,32 @@ kbd{display:inline-block;padding:0 5px;font-family:inherit;font-size:12px;line-h
     if (d > 0 && !fromUndo) {
       if (after === S.th) { S.reach = i; fx = { k: 'reach', i: i }; snd('batsu'); kkpEvent('counter_batsu', { mode: 'reach' }); }
       else { fx = { k: 'out', i: i }; snd('out'); }
-      plusN++; kkpEvent('counter_plus', { mode: how || 'tap' });
+      kkpEvent('counter_plus', { mode: how || 'tap' });
     }
     if (after < S.th && S.reach === i) S.reach = -1;
     renderNums(); bump(i); renderBatsu(); send(fx);
   }
 
-  /* ---- 罰ゲーム（お題ガチャの罰ゲームパックから引く） ---- */
+  /* ---- 罰ゲーム: お題ガチャの罰ゲームパックから／自分で書いたものから ---- */
   var pool = G ? G.buildPool(PACKS, ['batsu'], '', load(LS.off, [])) : [];
   var seen = load(LS.seen, []); if (!Array.isArray(seen)) seen = [];
-  $('bzCount').textContent = pool.length + '個';
+  function myList() { return S.myBatsu.split(/\r?\n/).map(function (s) { return s.trim().slice(0, 80); }).filter(Boolean); }
+  var lastMy = '';
   function drawBatsu(i) {
-    if (!G || !pool.length) return;
-    var dd = G.draw(pool, seen); if (!dd) return;
-    if (dd.resetR) seen = G.clearRarity(pool, seen, dd.resetR);
-    seen.push(dd.item.id); store(LS.seen, seen);
-    S.show = { i: i, text: dd.item.text, r: dd.item.r, id: Date.now() };
+    var text = '', r = '';
+    if (S.bz === 'my' && myList().length) {
+      var L = myList(), c = L.filter(function (t) { return t !== lastMy; }); if (!c.length) c = L;
+      text = c[Math.floor(Math.random() * c.length)]; lastMy = text;
+    } else {
+      if (!G || !pool.length) return;
+      var dd = G.draw(pool, seen); if (!dd) return;
+      if (dd.resetR) seen = G.clearRarity(pool, seen, dd.resetR);
+      seen.push(dd.item.id); store(LS.seen, seen);
+      text = dd.item.text; r = dd.item.r;
+    }
+    S.show = { i: i, text: text, r: r, id: Date.now() };
     S.reach = -1;
-    snd('draw'); kkpEvent('counter_batsu', { mode: 'draw', rarity: dd.item.r });
+    snd('draw'); kkpEvent('counter_batsu', { mode: 'draw', rarity: r || 'my' });
     renderBatsu(); send({ k: 'batsu', i: i });
   }
   $('drawBatsu').onclick = function () { if (S.reach >= 0) drawBatsu(S.reach); };
@@ -490,26 +588,41 @@ kbd{display:inline-block;padding:0 5px;font-family:inherit;font-size:12px;line-h
     if (r) { $('bzWho').textContent = nm(S.reach); $('bzN').textContent = S.counts[S.reach]; }
     if (s) {
       $('bzWho2').textContent = nm(s.i); $('bzTxt').textContent = s.text;
-      var rr = $('bzRar'); rr.textContent = s.r; rr.style.background = (G && G.COLOR[s.r]) || '#b9783f';
+      var rr = $('bzRar'); rr.textContent = s.r || ''; rr.style.background = (s.r && G && G.COLOR[s.r]) || '#b9783f';
       $('zeroOne').textContent = nm(s.i) + 'を0に戻す';
     }
   }
+  // 罰ゲームの中身（設定）
+  var bzTabs = $('bzTabs'), myIn = $('myBatsu');
+  myIn.value = S.myBatsu;
+  function renderBz() {
+    [].forEach.call(bzTabs.children, function (b) { b.setAttribute('aria-selected', b.dataset.v === S.bz ? 'true' : 'false'); });
+    myIn.hidden = S.bz !== 'my';
+    var n = myList().length;
+    $('bzSrc').textContent = S.bz === 'my'
+      ? (n ? '書いた ' + n + '個から引きます（同じものが2回続けては出ません）。' : '1行に1つ書いてください。書くまでは、お題ガチャの罰ゲームから引きます。')
+      : 'お題ガチャの「罰ゲーム」' + pool.length + '個から引きます（レア度の割合も同じ。誰でもその場で安全にできるものだけ）。';
+  }
+  [].forEach.call(bzTabs.children, function (b) { b.onclick = function () { S.bz = b.dataset.v; renderBz(); store(LS.set, S); if (S.bz === 'my') myIn.focus(); }; });
+  var myT = 0;
+  myIn.addEventListener('input', function () { S.myBatsu = myIn.value.slice(0, 3000); clearTimeout(myT); myT = setTimeout(function () { store(LS.set, S); renderBz(); }, 300); });
 
-  /* ---- 1つ戻す・リセット ---- */
+  /* ---- 直前を戻す・リセット ---- */
   function undo() { var h = hist.pop(); if (!h) return; add(h.i, -h.d, 'undo', true); }
   $('undo').onclick = undo;
   var armT = 0, rs = $('reset');
   rs.onclick = function () {
     if (rs.classList.contains('armed')) {
-      clearTimeout(armT); rs.classList.remove('armed'); rs.textContent = 'リセット';
-      S.counts = [0, 0, 0, 0, 0, 0]; hist = []; S.reach = -1; S.show = null;
+      clearTimeout(armT); rs.classList.remove('armed'); rs.textContent = '全員の回数を0にする';
+      for (var j = 0; j < MAX; j++) S.counts[j] = 0;
+      hist = []; S.reach = -1; S.show = null;
       renderNums(); renderBatsu(); send({ k: 'hide' }); return;
     }
     rs.classList.add('armed'); rs.textContent = 'もう一度押すと全員0に';
-    armT = setTimeout(function () { rs.classList.remove('armed'); rs.textContent = 'リセット'; }, 3000);
+    armT = setTimeout(function () { rs.classList.remove('armed'); rs.textContent = '全員の回数を0にする'; }, 3000);
   };
 
-  /* ---- 決まり ---- */
+  /* ---- 目標回数・音・表記 ---- */
   $('thDown').onclick = function () { S.th = Math.max(1, S.th - 1); afterTh(); };
   $('thUp').onclick = function () { S.th = Math.min(20, S.th + 1); afterTh(); };
   function afterTh() { $('th').textContent = S.th; if (S.reach >= 0 && S.counts[S.reach] < S.th) S.reach = -1; renderNums(); renderBatsu(); send(); }
@@ -525,29 +638,36 @@ kbd{display:inline-block;padding:0 5px;font-family:inherit;font-size:12px;line-h
   }
   tabs('placeTabs', 'place'); tabs('bgTabs', 'bg');
 
-  /* ---- キー操作 ---- */
+  /* ---- キー操作: 1〜9 で＋1・Shift＋数字で−1・Z で直前を戻す（入力欄にいる間は効かない） ---- */
   document.addEventListener('keydown', function (e) {
     var t = e.target; if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.tagName === 'SELECT' || t.isContentEditable)) return;
     if (e.ctrlKey || e.metaKey || e.altKey) return;
-    var m = /^(Digit|Numpad)([1-6])$/.exec(e.code || '');
+    var m = /^(Digit|Numpad)([1-9])$/.exec(e.code || '');
     if (m) { e.preventDefault(); add(parseInt(m[2], 10) - 1, e.shiftKey ? -1 : 1, 'key'); return; }
     if (e.code === 'KeyZ') { e.preventDefault(); undo(); }
     else if (e.code === 'KeyB') { e.preventDefault(); if (S.reach >= 0) drawBatsu(S.reach); else if (S.show) drawBatsu(S.show.i); }
     else if (e.key === 'Escape') hideShow();
   });
 
-  /* ---- 表示ページを別ウィンドウで（OBS のウィンドウキャプチャ用） ---- */
+  /* ---- 表示ページを別ウィンドウで（OBS のウィンドウキャプチャ用）・URLをコピー ---- */
   $('openView').addEventListener('click', function (e) {
     kkpEvent('view_open_click', { from: 'counter' });
     try { var w = window.open('/counter/view/', 'kkp_counter_view', 'popup=yes,width=1280,height=720'); if (w) { e.preventDefault(); w.focus(); } } catch (err) {}
   });
+  $('copyView').addEventListener('click', function () {
+    var url = ORIGIN + '/counter/view/', btn = this;
+    var done = function () { $('viewMsg').textContent = 'コピーしました（表示ページは同じブラウザで開いてください）'; btn.textContent = 'コピーしました'; setTimeout(function () { btn.textContent = 'URLをコピー'; $('viewMsg').textContent = ''; }, 2400); };
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(url).then(done, done);
+    else { var ta = document.createElement('textarea'); ta.value = url; document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); } catch (er) {} document.body.removeChild(ta); done(); }
+    kkpEvent('obs_url_copy', { from: 'counter' });
+  });
 
-  /* ---- 画面に合わせる: PC は固定幅で組んで zoom（スクロールなしで全部見える）。スマホは1人1行 ---- */
+  /* ---- 画面に合わせる: PC は上の部分を固定幅で組んで zoom（スクロールなしで上が全部見える）。スマホは1項目1行 ---- */
   var tool = $('tool');
   function fit() {
     var vw = document.documentElement.clientWidth, vh = window.innerHeight;
     var lay = vw >= 1100 ? 'wide' : vw >= 700 ? 'mid' : 'sp';
-    tool.dataset.lay = lay;
+    if (tool.dataset.lay !== lay) { tool.dataset.lay = lay; $('counters').style.setProperty('--cols', cols()); }
     if (lay === 'sp') { tool.style.zoom = ''; tool.style.width = ''; return; }
     var W = lay === 'wide' ? 1400 : 980;
     tool.style.zoom = 1; tool.style.width = W + 'px';
@@ -555,20 +675,20 @@ kbd{display:inline-block;padding:0 5px;font-family:inherit;font-size:12px;line-h
     var H = tool.offsetHeight;
     var pw = tool.parentElement.clientWidth || (vw - 32);
     var s = Math.min(pw / W, (vh - top - 14) / H, 1.35);
-    tool.style.zoom = Math.max(0.5, s).toFixed(3);
+    tool.style.zoom = Math.max(0.45, s).toFixed(3);
   }
   var fitT = 0; window.addEventListener('resize', function () { clearTimeout(fitT); fitT = setTimeout(fit, 60); });
 
   function renderAll() {
     renderRule();
-    [].forEach.call(nTabs.children, function (b, i) { b.setAttribute('aria-selected', i + 2 === S.n ? 'true' : 'false'); });
     $('th').textContent = S.th;
-    renderCounters(); renderBatsu(); fit();
+    renderItems(); renderCounters(); renderBatsu(); renderBz(); fit();
   }
   renderAll();
   send();
-  // 見本（表示ページを小さく埋め込む）。読み込みは状態を送ったあと
-  $('pvFrame').src = '/counter/view/?pv=1';
+  // 見本（表示ページを小さく埋め込む）。設定を開いたときに読み込む
+  var pvLoaded = false;
+  $('settings').addEventListener('toggle', function () { if (this.open && !pvLoaded) { pvLoaded = true; $('pvFrame').src = '/counter/view/?pv=1'; } });
   try { document.fonts.ready.then(fit); } catch (e) {}
   kkpEvent('counter_open', { from: 'page' });
 

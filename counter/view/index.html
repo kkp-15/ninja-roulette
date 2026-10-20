@@ -87,11 +87,24 @@ body[data-bg="cream"]{background:var(--k-kinari) url(/kit/img/d4-washi.webp) 0 0
 .fx-batsu.drawn .nm{font-size:76px}
 .fx-batsu .rar{display:none;position:absolute;right:-20px;top:-26px;padding:4px 18px;border:4px solid var(--k-sumi);border-radius:8px;font-family:var(--k-bold);font-size:40px;color:#fff;text-shadow:var(--k-outline);transform:rotate(6deg)}
 .fx-batsu.drawn .rar{display:block}
+.fx-batsu.drawn .rar[hidden]{display:none}
+/* 7〜9項目 */
+.stage[data-many="1"] .tl-band .head{width:400px}
+.stage[data-many="1"] .tl-band .seal{width:90px;height:90px;font-size:46px}
+.stage[data-many="1"] .tl-band .rule{width:306px;padding:14px 24px 16px 40px}
+.stage[data-many="1"] .tl-band .ppl{gap:4px}
+.stage[data-many="1"] .tl-band .p{padding:0 4px}
+.stage[data-many="1"] .tl-band .p .of{font-size:28px}
+.stage[data-many="1"] .tl-band .p .bm{width:76px;height:76px;font-size:36px;top:-56px}
+.stage[data-many="1"] .tl-corner .p{height:70px}
+.stage[data-many="1"] .tl-corner .p .big-out{font-size:62px}
 .fx-batsu .kin{position:absolute;width:240px;pointer-events:none}
 .fx-batsu .k1{left:-80px;top:-90px}
 .fx-batsu .k2{right:-90px;bottom:-80px;width:200px;transform:rotate(160deg)}
 .fx-batsu.show .scr{animation:k-unroll .6s cubic-bezier(.2,.8,.2,1) both}
-.stage[data-place="corner"] .fx-batsu{top:58%}
+/* 右上に小さく: 数の表（最大9行）と重ならないよう、罰ゲームとアウトの判子は左に寄せる */
+.stage[data-place="corner"] .fx-batsu{top:52%;left:50px;margin-left:0;width:1200px}
+.stage[data-place="corner"] .fx-out{left:calc(50% - 230px)}
 
 .credit{position:absolute;right:28px;top:14px;font-size:24px;font-weight:800;color:#fff;text-shadow:0 0 3px var(--k-sumi),2px 2px 0 var(--k-sumi),-2px -2px 0 var(--k-sumi),2px -2px 0 var(--k-sumi),-2px 2px 0 var(--k-sumi);pointer-events:none}
 .stage[data-place="corner"] .credit{top:auto;bottom:16px}
@@ -164,7 +177,8 @@ body[data-bg="cream"]{background:var(--k-kinari) url(/kit/img/d4-washi.webp) 0 0
     document.body.dataset.bg = pv && bg === 'transparent' ? 'cream' : bg;
     var cr = opt('credit', true); $('credit').hidden = cr === false || cr === '0' || cr === 0;
     var rule = String(S.rule || '').trim() || '縛り';
-    var n = Math.min(6, Math.max(2, S.n | 0)), th = Math.min(20, Math.max(1, S.th | 0));
+    var n = Math.min(9, Math.max(1, S.n | 0)), th = Math.min(20, Math.max(1, S.th | 0));
+    stage.dataset.many = n >= 7 ? '1' : '';   // 7〜9項目は帯の左（縛り）を細くし、数と名前を少し小さく
     document.querySelectorAll('[data-rule]').forEach(function (el) {
       el.innerHTML = '<span></span>'; el.firstChild.textContent = rule;
       if (el.closest('.tl-band')) ruleSize(el, 54, 26); else ruleSize(el, 44, 22);
@@ -181,11 +195,11 @@ body[data-bg="cream"]{background:var(--k-kinari) url(/kit/img/d4-washi.webp) 0 0
       }
     });
     if (place === 'band') {
-      var big = n <= 3 ? 52 : n <= 4 ? 46 : 40;
-      stage.querySelectorAll('.tl-band .nm').forEach(function (el) { shrink(el, big, 34, 32); });
-      stage.querySelectorAll('.tl-band .big-out').forEach(function (el) { el.style.fontSize = (n <= 4 ? 120 : 104) + 'px'; });
+      var big = n <= 3 ? 52 : n <= 4 ? 46 : n <= 6 ? 40 : 32;
+      stage.querySelectorAll('.tl-band .nm').forEach(function (el) { shrink(el, big, n >= 7 ? 24 : 34, n >= 7 ? 24 : 32); });
+      stage.querySelectorAll('.tl-band .big-out').forEach(function (el) { el.style.fontSize = (n <= 4 ? 120 : n <= 6 ? 104 : 88) + 'px'; });
     } else {
-      stage.querySelectorAll('.tl-corner .nm').forEach(function (el) { shrink(el, 42, 30, 30); });
+      stage.querySelectorAll('.tl-corner .nm').forEach(function (el) { shrink(el, n >= 7 ? 36 : 42, 26, 26); });
     }
     showPersist();
   }
@@ -219,7 +233,7 @@ body[data-bg="cream"]{background:var(--k-kinari) url(/kit/img/d4-washi.webp) 0 0
     $('bWho').textContent = nm(s.i);
     $('bSub').textContent = '';
     $('bItem').textContent = s.text || '';
-    var r = $('bRar'); r.textContent = s.r || ''; r.style.background = COLOR[s.r] || COLOR.N;
+    var r = $('bRar'); r.textContent = s.r || ''; r.style.background = COLOR[s.r] || COLOR.N; r.hidden = !s.r;
     fx.classList.add('drawn');
     clearTimeout(batsuT);
     if (key !== shownKey) { shownKey = key; fx.classList.remove('show', 'fadeout'); void fx.offsetWidth; }
@@ -249,7 +263,7 @@ body[data-bg="cream"]{background:var(--k-kinari) url(/kit/img/d4-washi.webp) 0 0
   window.addEventListener('resize', fit); fit();
 
   try { var st = JSON.parse(localStorage.getItem('kkp_counter_state') || 'null'); if (st) handle({ s: st }); else $('wait').hidden = pv; } catch (e) { $('wait').hidden = pv; }
-  if (!S) { S = { rule: '敬語禁止', n: 3, names: [], counts: [0, 0, 0, 0, 0, 0], th: 3 }; render(); }
+  if (!S) { S = { rule: '敬語禁止', n: 3, names: [], counts: [0, 0, 0, 0, 0, 0, 0, 0, 0], th: 3 }; render(); }
   try { var ch = new BroadcastChannel('kkp-counter'); ch.onmessage = function (e) { handle(e.data); }; } catch (e) { /* storage イベントで受ける */ }
   window.addEventListener('storage', function (e) {
     if (e.key === 'kkp_counter_msg' && e.newValue) { try { handle(JSON.parse(e.newValue)); } catch (err) {} }

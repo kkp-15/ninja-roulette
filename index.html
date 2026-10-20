@@ -95,7 +95,6 @@ textarea#items{width:100%;min-height:260px;padding:10px;border:1px solid var(--l
 .fromstream p{margin:0;flex:1 1 16em}
 .stage{position:relative;width:100%;display:flex;justify-content:center}
 #wheel{display:block;max-width:100%}
-#confetti{position:absolute;inset:0;pointer-events:none;width:100%;height:100%}
 .spin{margin:14px 0 0;width:100%;max-width:560px;background:var(--accent);color:#fff;border:2px solid #2b2b2b;box-shadow:0 4px 0 #2b2b2b;padding:12px 24px;font-size:24px;font-weight:800;letter-spacing:.06em;min-height:64px}
 .spin:active{transform:translateY(3px);box-shadow:0 1px 0 #2b2b2b}
 .spin{font-family:"M PLUS Rounded 1c","Hiragino Maru Gothic ProN",sans-serif;font-weight:900;letter-spacing:.1em;transition:transform .08s ease,box-shadow .08s ease,background-color .12s}
@@ -167,7 +166,7 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
 <header>
   <h1>配信ルーレット　お題・企画・視聴者名を貼って回す（OBS表示つき）</h1>
   <p class="lead">1行に1つ項目を貼る → 回す → 配信に映すなら <a href="#obs">OBS表示ページ</a> のウィンドウをOBSの「ウィンドウキャプチャ」で取り込みます。</p>
-  <p class="meta">更新日 2026年10月19日　項目はこの端末にだけ残ります（送信しません）。ログイン不要・無料。</p>
+  <p class="meta">更新日 2026年10月20日　項目はこの端末にだけ残ります（送信しません）。ログイン不要・無料。</p>
 </header>
 
 <main>
@@ -191,7 +190,7 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
     <p class="gacha-link">お題を考えるのが大変なら <a href="/odai-gacha/">お題ガチャ</a>（雑談・二択・罰ゲーム・縛りの330個をレア度つきで引く）</p>
   </div>
   <div class="col-wheel">
-    <div class="stage"><canvas id="wheel" width="10" height="10" aria-label="ルーレット"></canvas><canvas id="confetti"></canvas></div>
+    <div class="stage"><canvas id="wheel" width="10" height="10" aria-label="ルーレット"></canvas></div>
     <button class="spin k-btn k-btn-main k-btn-big" id="spin" disabled>回す</button>
     <p class="keys"><kbd>Space</kbd>か<kbd>Enter</kbd>で回す　OBSに映すなら <a href="#obs">表示ページのURL</a></p>
     <div data-stream-sw></div>
@@ -214,7 +213,7 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
 <h2 id="howto">使い方（3段）</h2>
 <ol class="steps">
   <li><b>1. 項目を貼る</b><span>雑談のお題・企画名・視聴者名などを1行に1つ。メモ帳やコメント欄からまとめて貼り付けできます。「*3」のように付けると当たりやすさを変えられます。</span></li>
-  <li><b>2. 回す</b><span>「回す」ボタンかスペースキー。5秒ほどで止まって結果が大きく出ます。「当たった項目を次から外す」にチェックすると、同じ項目が続けて出ません。</span></li>
+  <li><b>2. 回す</b><span>「回す」ボタンかスペースキー。5秒ほどで止まり、止まる瞬間に手裏剣が当たったマスに刺さって、結果が大きく出ます（長さは設定の「演出の長さ」で短く・長くできます）。「当たった項目を次から外す」にチェックすると、同じ項目が続けて出ません。</span></li>
   <li><b>3. 配信に映す</b><span>下の「表示ページを開く」で開いたウィンドウを、OBSの「ウィンドウキャプチャ」で取り込みます。この画面で回した結果が、配信画面にも同じ動きで出ます（操作ボタンや広告は映りません）。</span></li>
 </ol>
 
@@ -253,6 +252,12 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
 <tr><th>盤の光り方</th><td>
   <label><input type="radio" name="wfx" value="full" checked> 派手（電球が追いかけて光る・止まると点滅）</label>
   <label><input type="radio" name="wfx" value="lite"> 控えめ（電球は点いたまま・残像なし）</label>
+</td></tr>
+<tr><th>演出の長さ</th><td>
+  <label><input type="radio" name="speed" value="short"> 短い（3秒ほど）</label>
+  <label><input type="radio" name="speed" value="normal" checked> ふつう（5秒ほど）</label>
+  <label><input type="radio" name="speed" value="long"> 長い（7秒ほど）</label>
+  <div class="note">止まる瞬間に手裏剣が飛んできて、当たったマスに刺さります。動きを減らす設定のパソコンでは、すぐ結果が出ます。</div>
 </td></tr>
 <tr><th>出すもの</th><td>
   <label><input type="radio" name="layout" value="both" checked> 盤面と結果</label>
@@ -325,7 +330,7 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
   function load(k, d) { try { var v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } }
   function save(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { /* 保存できなくても動く */ } }
 
-  var settings = Object.assign({ bg: 'transparent', bgColor: '#fff6ea', layout: 'both', place: 'full', wfx: 'full', size: 2, ink: 'dark', credit: true, sound: false, viewSound: false, exclude: false }, load(LS.set, {}));
+  var settings = Object.assign({ bg: 'transparent', bgColor: '#fff6ea', layout: 'both', place: 'full', wfx: 'full', speed: 'normal', size: 2, ink: 'dark', credit: true, sound: false, viewSound: false, exclude: false }, load(LS.set, {}));
   var excluded = load(LS.ex, []);
   var history = load(LS.hist, []);
   var items = [], pool = [];
@@ -340,7 +345,7 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
     save(LS.msg, msg);  // 別タブへの保険（storage イベント）
   }
   function viewSettings() {
-    return { bg: settings.bg === 'custom' ? settings.bgColor : settings.bg, layout: settings.layout, place: settings.place, wfx: settings.wfx, size: settings.size, ink: settings.ink, credit: settings.credit, sound: settings.viewSound };
+    return { bg: settings.bg === 'custom' ? settings.bgColor : settings.bg, layout: settings.layout, place: settings.place, wfx: settings.wfx, speed: settings.speed, size: settings.size, ink: settings.ink, credit: settings.credit, sound: settings.viewSound };
   }
   function pushState(result) {
     var st = { t: 'state', items: pool, settings: viewSettings(), result: result === undefined ? null : result };
@@ -363,7 +368,7 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
   function remoteQuery() {
     var vs = viewSettings();
     var q = ['items=' + encodeURIComponent(pool.map(function (i) { return i.weight === 1 ? i.label : i.label + '*' + i.weight; }).join('\n'))];
-    q.push('bg=' + encodeURIComponent(vs.bg), 'layout=' + vs.layout, 'place=' + vs.place, 'wfx=' + vs.wfx, 'size=' + vs.size, 'ink=' + vs.ink, 'credit=' + (vs.credit ? 1 : 0), 'sound=' + (vs.sound ? 1 : 0));
+    q.push('bg=' + encodeURIComponent(vs.bg), 'layout=' + vs.layout, 'place=' + vs.place, 'wfx=' + vs.wfx, 'speed=' + vs.speed, 'size=' + vs.size, 'ink=' + vs.ink, 'credit=' + (vs.credit ? 1 : 0), 'sound=' + (vs.sound ? 1 : 0));
     return q.join('&');
   }
   var saveTimer = null;
@@ -388,8 +393,9 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
   wheel.onTick = function () { if (settings.sound) K.sound('tick'); };
   function spin() {
     if (wheel.spinning || pool.length < 2) return;
-    var from = wheel.angle, final = wheel.pickFinal(5 + Math.floor(Math.random() * 2)), dur = 4600 + Math.random() * 600;
+    var from = wheel.angle, final = wheel.pickFinal(5 + Math.floor(Math.random() * 2)), dur = K.spinDur(settings.speed);
     var id = Date.now();
+    wheel.throwStar($('wheel').parentNode, final, dur, settings.speed, settings.sound ? K.sound : null);
     $('spin').disabled = true;
     $('rtxt').className = 'r-txt wait'; $('rtxt').textContent = '回っています…';
     send({ t: 'spin', items: pool, from: from, final: final, dur: dur, id: id, settings: viewSettings() });
@@ -398,7 +404,6 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
       var label = pool[idx] ? pool[idx].label : '';
       $('rtxt').className = 'r-txt'; $('rtxt').textContent = label;
       if (settings.sound) K.sound('done');
-      K.confetti($('confetti'));
       history.unshift({ l: label, t: Date.now() });
       history = history.slice(0, 20); save(LS.hist, history); renderHist();
       kkpEvent('result');
@@ -452,6 +457,7 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
     document.querySelector('input[name=layout][value="' + settings.layout + '"]').checked = true;
     var pl = document.querySelector('input[name=place][value="' + settings.place + '"]'); if (pl) pl.checked = true;
     var wf = document.querySelector('input[name=wfx][value="' + settings.wfx + '"]'); if (wf) wf.checked = true; wheel.fx = settings.wfx;
+    var spd = document.querySelector('input[name=speed][value="' + settings.speed + '"]'); if (spd) spd.checked = true;
     document.querySelector('input[name=size][value="' + settings.size + '"]').checked = true;
     document.querySelector('input[name=ink][value="' + settings.ink + '"]').checked = true;
     $('credit').checked = !!settings.credit; $('sound').checked = !!settings.sound; $('viewSound').checked = !!settings.viewSound; $('exclude').checked = !!settings.exclude;
@@ -462,6 +468,7 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
     settings.layout = document.querySelector('input[name=layout]:checked').value;
     settings.place = document.querySelector('input[name=place]:checked').value;
     settings.wfx = document.querySelector('input[name=wfx]:checked').value; wheel.fx = settings.wfx;
+    settings.speed = document.querySelector('input[name=speed]:checked').value;
     settings.size = parseInt(document.querySelector('input[name=size]:checked').value, 10);
     settings.ink = document.querySelector('input[name=ink]:checked').value;
     settings.credit = $('credit').checked; settings.sound = $('sound').checked; settings.viewSound = $('viewSound').checked;

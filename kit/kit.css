@@ -163,3 +163,27 @@ a.k-card:hover h3,a.k-card:focus-visible h3{text-decoration:underline;text-decor
   .k-ink{display:none}
   .k-par{transform:none!important}
 }
+
+/* ---------- 演出の部品（KKit.fx.slash / KKit.fx.shuriken で呼ぶ・kit.js） ----------
+   清潔に: 色は墨・生成り・朱だけ。光の粒は撒かない。文字の上に重ねない（結果は斬れた後に呼び出し側が出す）。
+   絵（刀・手裏剣）は img/fx-katana.webp・img/fx-shuriken.webp。動きは kit.js が Web Animations で付ける。 */
+.k-fx{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:6}
+/* 札（斬られる前の紙の札）。--k-fx-c は印の色（レア度などで変える） */
+.k-fx-fuda{position:absolute;left:50%;top:50%;width:var(--k-fx-w,200px);aspect-ratio:2/3;transform:translate(-50%,-50%)}
+.k-fx-half{position:absolute;inset:0}
+.k-fx-half.a{clip-path:polygon(0 0,100% 0,100% 65.5%,0 34.5%)}
+.k-fx-half.b{clip-path:polygon(0 34.5%,100% 65.5%,100% 100%,0 100%)}
+.k-fx-face{position:absolute;inset:0;box-sizing:border-box;border:calc(var(--k-fx-w,200px)*.03) solid var(--k-sumi);border-radius:calc(var(--k-fx-w,200px)*.04);background:var(--k-kinari) url(img/d4-washi.webp) 0 0/160% auto;box-shadow:calc(var(--k-fx-w,200px)*.035) calc(var(--k-fx-w,200px)*.035) 0 var(--k-sumi)}
+.k-fx-face::before{content:"";position:absolute;left:12%;right:12%;top:8%;bottom:8%;border:calc(var(--k-fx-w,200px)*.012) solid var(--k-fx-c,var(--k-shu));border-radius:2px;opacity:.85;transition:border-color .25s}
+.k-fx-seal{position:absolute;left:50%;top:50%;width:46%;aspect-ratio:1;transform:translate(-50%,-50%) rotate(-6deg);border-radius:12%;background:var(--k-fx-g,var(--k-fx-c,var(--k-shu)));box-shadow:0 0 0 calc(var(--k-fx-w,200px)*.018) var(--k-sumi);transition:background .25s}
+.k-fx-seal::after{content:"";position:absolute;inset:22%;border:calc(var(--k-fx-w,200px)*.016) solid rgba(255,255,255,.85);border-radius:8%}
+/* 刀が通る道（札の中心を通る斜めの線）。刀と光の筋はこの中を左から右へ */
+.k-fx-track{position:absolute;left:50%;top:50%;width:var(--k-fx-len,900px);height:0;transform:translate(-50%,-50%) rotate(var(--k-fx-ang,25deg))}
+.k-fx-blade{position:absolute;left:0;top:0;width:var(--k-fx-bw,360px);aspect-ratio:900/112;transform:translate(-100%,-50%);background:url(img/fx-katana.webp) center/100% 100% no-repeat;opacity:0}
+.k-fx-line{position:absolute;left:50%;top:0;width:var(--k-fx-ll,400px);margin-left:calc(var(--k-fx-ll,400px)/-2);height:var(--k-fx-lh,6px);transform:translateY(-50%) scaleX(0);transform-origin:0 50%;border-radius:999px;background:#fff;box-shadow:0 0 0 2px var(--k-sumi);opacity:0}
+/* 印の色が上がったときの輪（1回だけ・細く） */
+.k-fx-ring{position:absolute;left:50%;top:50%;width:var(--k-fx-w,200px);aspect-ratio:1;border:4px solid var(--k-fx-c,var(--k-shu));border-radius:50%;transform:translate(-50%,-50%);opacity:0}
+/* 手裏剣（刺さったまま残す。次に投げるとき・KKit.fx.clear で消える） */
+.k-fx-star{position:absolute;left:0;top:0;width:var(--k-fx-s,80px);aspect-ratio:1;margin:calc(var(--k-fx-s,80px)/-2) 0 0 calc(var(--k-fx-s,80px)/-2);background:url(img/fx-shuriken.webp) center/100% 100% no-repeat;filter:drop-shadow(3px 3px 0 rgba(31,26,23,.55));z-index:2}
+.k-fx-hit{position:absolute;left:0;top:0;width:var(--k-fx-s,80px);aspect-ratio:1;margin:calc(var(--k-fx-s,80px)/-2) 0 0 calc(var(--k-fx-s,80px)/-2);border:3px solid var(--k-sumi);border-radius:50%;box-sizing:border-box;opacity:0;z-index:1}
+@media (prefers-reduced-motion:reduce){.k-fx{display:none}}

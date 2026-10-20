@@ -11,6 +11,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@800;900&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&display=swap&text=NRS%E7%B5%90%E6%9E%9C%E6%AE%8B%E3%82%8A0123456789%2F" rel="stylesheet">
+<link rel="stylesheet" href="/kit/kit.css">
+<script src="/kit/kit.js" defer></script>
 <script src="/ga.js"></script>
 <style>
 /* OBS のウィンドウキャプチャで取り込む表示ページ（別端末用のURLはブラウザソースでも動く）: 背景は透過（既定）。操作ボタン・広告・説明文は映さない
@@ -25,7 +27,6 @@ body{background:transparent;font-family:"M PLUS Rounded 1c","Hiragino Maru Gothi
 .layout-wheel .resbox{display:none}
 .wheelbox{position:relative;flex:0 0 auto}
 #wheel{display:block}
-#confetti{position:absolute;inset:0;pointer-events:none;width:100%;height:100%}
 .resbox{flex:1 1 auto;min-width:0;display:flex;align-items:center}
 .place-corner .resbox{flex:0 0 auto;width:100%}
 .gstage{position:fixed}
@@ -49,7 +50,7 @@ body{background:transparent;font-family:"M PLUS Rounded 1c","Hiragino Maru Gothi
 </head>
 <body>
 <div class="stage place-full layout-both" id="stage">
-  <div class="wheelbox"><canvas id="wheel" width="10" height="10"></canvas><canvas id="confetti"></canvas></div>
+  <div class="wheelbox"><canvas id="wheel" width="10" height="10"></canvas></div>
   <div class="resbox" id="resbox"></div>
 </div>
 <div class="gstage g-full" id="gstage" hidden></div>
@@ -68,7 +69,7 @@ body{background:transparent;font-family:"M PLUS Rounded 1c","Hiragino Maru Gothi
   var q = new URLSearchParams(location.search);
   var remote = q.has('items');   // 別端末モード: 項目はURLから。回す操作はこのページで
   var gremote = q.has('gacha');  // 別端末のお題ガチャ: パックはURLから。このページで引く
-  var settings = { bg: 'transparent', layout: 'both', place: 'full', size: 2, ink: 'dark', credit: true, sound: false };
+  var settings = { bg: 'transparent', layout: 'both', place: 'full', speed: 'normal', size: 2, ink: 'dark', credit: true, sound: false };
   var items = [], lastId = 0, gctl = null, lastResult = '';
 
   function load(k) { try { var v = localStorage.getItem(k); return v === null ? null : JSON.parse(v); } catch (e) { return null; } }
@@ -99,13 +100,14 @@ body{background:transparent;font-family:"M PLUS Rounded 1c","Hiragino Maru Gothi
   // お題ガチャ（置き方に合わせた範囲で演出）
   function showGacha(on) {
     $('gstage').hidden = !on; $('stage').style.visibility = on ? 'hidden' : '';
+    if (on) wheel.clearStar($('wheel').parentNode);
     if (!on && $('gstage')._kg) $('gstage')._kg.destroy();
   }
   function runGacha(msg, quiet) {
     if (!quiet) { if (msg.id && msg.id === lastId) return; lastId = msg.id || 0; }
     if (msg.settings) applySettings(msg.settings);
     showGacha(true);
-    var o = { rarity: msg.rarity, text: msg.text, packName: msg.packName, scale: scale(), place: place(), band: band() };
+    var o = { rarity: msg.rarity, text: msg.text, packName: msg.packName, scale: scale(), place: place(), band: band(), speed: msg.speed || settings.speed };
     gctl = quiet ? G.show($('gstage'), o) : G.play($('gstage'), Object.assign(o, { fx: msg.fx || 'full', sound: !!settings.sound }));
   }
   function runSpin(msg) {
@@ -115,12 +117,13 @@ body{background:transparent;font-family:"M PLUS Rounded 1c","Hiragino Maru Gothi
     if (msg.items) setItems(msg.items);
     if (msg.settings) applySettings(msg.settings);
     showResult('', false);
-    wheel.spin(msg.from, msg.final, msg.dur, function (idx) {
+    var dur = K.reduce ? 1 : msg.dur;
+    wheel.throwStar($('wheel').parentNode, msg.final, dur, settings.speed, settings.sound ? K.sound : null);
+    wheel.spin(msg.from, msg.final, dur, function (idx) {
       var rv = msg.reveal && msg.reveal[idx];
       if (rv) { lastResult = ''; var box = $('resbox'); box.innerHTML = ''; G.telop(box, { rarity: rv.r, text: rv.text, packName: rv.packName, band: band() }).classList.add('in'); }
       else showResult(items[idx] ? items[idx].label : '', true);
       if (settings.sound) K.sound('done');
-      K.confetti($('confetti'));
     });
   }
   wheel.onTick = function () { if (settings.sound) K.sound('tick'); };
@@ -140,7 +143,7 @@ body{background:transparent;font-family:"M PLUS Rounded 1c","Hiragino Maru Gothi
   }
 
   function look() {
-    return { bg: q.get('bg') || 'transparent', layout: q.get('layout') || 'both', place: q.get('place') || 'full', wfx: q.get('wfx') || 'full', size: parseInt(q.get('size') || '2', 10), ink: q.get('ink') || 'dark', credit: q.get('credit') !== '0', sound: q.get('sound') === '1' };
+    return { bg: q.get('bg') || 'transparent', layout: q.get('layout') || 'both', place: q.get('place') || 'full', wfx: q.get('wfx') || 'full', speed: q.get('speed') || 'normal', size: parseInt(q.get('size') || '2', 10), ink: q.get('ink') || 'dark', credit: q.get('credit') !== '0', sound: q.get('sound') === '1' };
   }
   if (gremote) {
     // 別端末: このページでお題ガチャを引く（クリック・スペース。演出中ならスキップ）
@@ -160,7 +163,7 @@ body{background:transparent;font-family:"M PLUS Rounded 1c","Hiragino Maru Gothi
       gseen.push(d.item.id); try { localStorage.setItem(gseenKey, JSON.stringify(gseen)); } catch (e) {}
       $('hint').hidden = true;
       kkpEvent('gacha_draw', { rarity: d.item.r, mode: 'remote', fx: gFx });
-      runGacha({ id: Date.now(), rarity: d.item.r, text: d.item.text, packName: gnames[d.item.pack] || '', fx: gFx });
+      runGacha({ id: Date.now(), rarity: d.item.r, text: d.item.text, packName: gnames[d.item.pack] || '', fx: gFx, speed: settings.speed });
     };
     document.addEventListener('click', gHere);
     document.addEventListener('keydown', function (e) { if (e.code === 'Space' || e.key === 'Enter') { e.preventDefault(); gHere(); } });
@@ -172,7 +175,7 @@ body{background:transparent;font-family:"M PLUS Rounded 1c","Hiragino Maru Gothi
       if (wheel.spinning || items.length < 2) return;
       $('hint').hidden = true;
       kkpEvent('spin', { from: 'remote' });
-      runSpin({ from: wheel.angle, final: wheel.pickFinal(5 + Math.floor(Math.random() * 2)), dur: 4600 + Math.random() * 600, id: Date.now() });
+      runSpin({ from: wheel.angle, final: wheel.pickFinal(5 + Math.floor(Math.random() * 2)), dur: K.spinDur(settings.speed), id: Date.now() });
     };
     document.addEventListener('click', spinHere);
     document.addEventListener('keydown', function (e) { if (e.code === 'Space' || e.key === 'Enter') { e.preventDefault(); spinHere(); } });
