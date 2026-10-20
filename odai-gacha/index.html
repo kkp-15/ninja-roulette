@@ -207,7 +207,7 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
 <header>
   <div class="fromstream" id="fromStream" hidden><p>配信で見たお題ガチャはこれです。パックを選んで「ガチャを回す」だけ。登録なし・無料で、自分の配信でもそのまま使えます。</p><button class="btn sm" id="fromStreamX" aria-label="閉じる">閉じる</button></div>
   <h1>お題ガチャ　雑談・二択・罰ゲーム・縛りをレア度つきで引く</h1>
-  <p class="lead">パックを選ぶ → ガチャを回す → 配信に映すなら <a href="#obs">OBS表示ページ</a> をブラウザソースに。お題は330個、すべてこのサイトのオリジナルです。</p>
+  <p class="lead">パックを選ぶ → ガチャを回す → 配信に映すなら <a href="#obs">OBS表示ページ</a> のウィンドウをOBSの「ウィンドウキャプチャ」で取り込みます。お題は330個、すべてこのサイトのオリジナルです。</p>
   <p class="meta">更新日 2026年10月19日　選んだパック・自分のお題はこの端末にだけ残ります（送信しません）。</p>
 </header>
 
@@ -261,17 +261,18 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
 <ol class="steps">
   <li><b>1. 選ぶ</b><span>パックのボタンを押す（数字キー 1〜9 でも）。雑談なら「自分の話」「もしも」「二択」「リスナーに聞く」、ゲーム実況なら「縛り」、負けたら「罰ゲーム」。いくつでも混ぜられます。</span></li>
   <li><b>2. 回す</b><span>「ガチャを回す」かスペースキー。カプセルの色が N（灰）→ R（青）→ SR（金）→ SSR（虹）と上がっていき、割れてお題が出ます。演出中にもう一度押すとスキップ。</span></li>
-  <li><b>3. 映す</b><span>下の「OBSに映す」のURLをブラウザソースに入れると、同じ演出が配信画面に出ます（操作ボタンや広告は映りません）。</span></li>
+  <li><b>3. 映す</b><span>下の「表示ページを開く」で開いたウィンドウを、OBSの「ウィンドウキャプチャ」で取り込むと、同じ演出が配信画面に出ます（操作ボタンや広告は映りません）。</span></li>
 </ol>
 
-<h2 id="obs">OBSに映す（ブラウザソース）</h2>
-<p>ルーレットと同じ表示ページを使います。同じPCのOBSなら、このURLをブラウザソースに入れるだけで、この画面で回したガチャがそのまま出ます。</p>
+<h2 id="obs">OBSに映す（ウィンドウキャプチャ）</h2>
+<p>ルーレットと同じ表示ページを使います。このページと同じブラウザで表示ページを開き、そのウィンドウをOBSで取り込むと、この画面で回したガチャがそのまま出ます。</p>
 <div class="urlrow"><input type="text" id="viewUrl" readonly value="https://roulette.kkpwebninja.com/view/"><button class="btn" id="copyView">URLをコピー</button><a class="btn" id="openView" href="/view/" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;text-decoration:none;color:inherit">表示ページを開く</a></div>
 <ol>
-  <li>OBSの「ソース」で「＋」→「ブラウザ」。URLに上のアドレス、幅 <b>1920</b>・高さ <b>1080</b>。「カスタムCSS」は空のまま。</li>
-  <li>効果音を配信に乗せるなら、ソースの「音声をOBSで制御する」をオンにして、上の「効果音：OBS側」にチェック。</li>
-  <li>背景（透過・クリーム・緑など）、置き方（全画面・下の帯・右下に小さく）、文字の大きさは <a href="/#settings">ルーレットの設定</a> と共通です。</li>
+  <li>上の「表示ページを開く」で、このページと同じブラウザに表示ページを開きます（閉じたり、別のブラウザで開いたりすると届きません）。</li>
+  <li>OBSの「ソース」で「＋」→「ウィンドウキャプチャ」を選び、表示ページのウィンドウを選びます。効果音は、PCから出た音がOBSの「デスクトップ音声」として配信に乗ります。</li>
+  <li>ウィンドウキャプチャでは背景が透けないので、背景を抜くなら背景を「緑（クロマキー）」にして、OBSでそのソースにフィルタ「クロマキー」をかけます。背景・置き方（全画面・下の帯・右下に小さく）・文字の大きさは <a href="/#settings">ルーレットの設定</a> と共通です。</li>
 </ol>
+<p class="note">OBSの「ブラウザ」ソースはChromeなどとは別のブラウザとして動くので、この画面で回したガチャは届きません。下の「配信用のPCと操作する端末が別のとき」のURLなら表示ページだけで引けるので、ブラウザソースでも使えます。</p>
 <h3>配信用のPCと操作する端末が別のとき</h3>
 <p class="note">このURLを配信用PCで開くと、そのページ自体がガチャになります（クリックかスペースキーで回す・選んだパックはURLに入っています）。パックを変えたら作り直してください。</p>
 <div class="urlrow"><input type="text" id="remoteUrl" readonly><button class="btn" id="copyRemote">URLをコピー</button></div>

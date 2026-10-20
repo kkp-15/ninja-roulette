@@ -31,7 +31,7 @@
   "@graph":[
     {"@type":"WebApplication","@id":"https://roulette.kkpwebninja.com/#app","name":"配信ルーレット","url":"https://roulette.kkpwebninja.com/","applicationCategory":"UtilitiesApplication","operatingSystem":"Web","inLanguage":"ja","datePublished":"2026-10-15","dateModified":"2026-10-19","description":"ライブ配信の雑談のお題・企画・視聴者名を貼って回す無料のルーレット。OBSのブラウザソースで透過表示できる専用ページつき。項目は端末内にだけ保存、ログイン不要。","offers":{"@type":"Offer","price":"0","priceCurrency":"JPY"},"author":{"@type":"Organization","name":"web忍者の砦"},"publisher":{"@type":"Organization","name":"web忍者の砦","url":"https://kkpwebninja.com/"}},
     {"@type":"FAQPage","@id":"https://roulette.kkpwebninja.com/#faq","mainEntity":[
-      {"@type":"Question","name":"OBSで背景が透明になりません","acceptedAnswer":{"@type":"Answer","text":"OBS表示ページ（/view/）はページ側で背景を透過にしています。ブラウザソースの「カスタムCSS」に body の背景色を指定する行が残っていると透過になりません。カスタムCSSを空にするか、設定の背景を「透過」に戻してください。"}},
+      {"@type":"Question","name":"OBSで背景が透明になりません","acceptedAnswer":{"@type":"Answer","text":"ウィンドウキャプチャはウィンドウをそのまま映すので、背景は透けません。設定の背景を「緑（クロマキー）」にして、OBSでそのソースにフィルタ「クロマキー」をかけてください。別端末用のURLをブラウザソースに入れているときは、ページ側で背景を透過にしています。そのときは、ブラウザソースの「カスタムCSS」に body の背景色を指定する行が残っていると透過になりません。カスタムCSSを空にするか、設定の背景を「透過」に戻してください。"}},
       {"@type":"Question","name":"配信用のPCと操作用のスマホが別の端末でも使えますか","acceptedAnswer":{"@type":"Answer","text":"同じ端末では自動で同期します。別の端末のときは、設定の「別端末用のURL」を使ってください。項目をURLに載せた表示ページを開けます（回す操作は表示ページ側で行います）。"}},
       {"@type":"Question","name":"入力した視聴者名やお題はどこかに送られますか","acceptedAnswer":{"@type":"Answer","text":"送られません。項目はこのブラウザの中（localStorage）にだけ残り、「消す」で消せます。計測は回した回数など回数だけで、項目の中身は送りません。"}},
       {"@type":"Question","name":"スマホでも使えますか","acceptedAnswer":{"@type":"Answer","text":"使えます。画面が縦に並ぶだけで、回す・除外・履歴は同じです。OBSで映す配信はPCが前提なので、PCの横画面に合わせて作っています。"}}
@@ -161,7 +161,7 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
 <div class="wrap">
 <header>
   <h1>配信ルーレット　お題・企画・視聴者名を貼って回す（OBS表示つき）</h1>
-  <p class="lead">1行に1つ項目を貼る → 回す → 配信に映すなら <a href="#obs">OBS表示ページ</a> をブラウザソースに。</p>
+  <p class="lead">1行に1つ項目を貼る → 回す → 配信に映すなら <a href="#obs">OBS表示ページ</a> のウィンドウをOBSの「ウィンドウキャプチャ」で取り込みます。</p>
   <p class="meta">更新日 2026年10月19日　項目はこの端末にだけ残ります（送信しません）。ログイン不要・無料。</p>
 </header>
 
@@ -208,18 +208,19 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
 <ol class="steps">
   <li><b>1. 項目を貼る</b><span>雑談のお題・企画名・視聴者名などを1行に1つ。メモ帳やコメント欄からまとめて貼り付けできます。「*3」のように付けると当たりやすさを変えられます。</span></li>
   <li><b>2. 回す</b><span>「回す」ボタンかスペースキー。5秒ほどで止まって結果が大きく出ます。「当たった項目を次から外す」にチェックすると、同じ項目が続けて出ません。</span></li>
-  <li><b>3. 配信に映す</b><span>下の「OBSに映す」のURLをブラウザソースに入れると、この画面で回した結果が配信画面にも同じ動きで出ます（操作ボタンや広告は映りません）。</span></li>
+  <li><b>3. 配信に映す</b><span>下の「表示ページを開く」で開いたウィンドウを、OBSの「ウィンドウキャプチャ」で取り込みます。この画面で回した結果が、配信画面にも同じ動きで出ます（操作ボタンや広告は映りません）。</span></li>
 </ol>
 
-<h2 id="obs">OBSに映す（ブラウザソース）</h2>
-<p>同じPCでOBSを動かしているなら、このURLをそのまま使えます。回す操作はこの画面で行い、表示ページには結果だけが出ます。</p>
+<h2 id="obs">OBSに映す（ウィンドウキャプチャ）</h2>
+<p>このページと同じブラウザで表示ページを開き、そのウィンドウをOBSで取り込みます。回す操作はこの画面で行い、表示ページには結果だけが出ます。</p>
 <div class="urlrow"><input type="text" id="viewUrl" readonly value="https://roulette.kkpwebninja.com/view/"><button class="btn" id="copyView">URLをコピー</button><a class="btn" id="openView" href="/view/" target="_blank" rel="noopener">表示ページを開く</a><span class="flash" id="copyMsg"></span></div>
 <ol>
-  <li>OBSの「ソース」で「＋」→「ブラウザ」を選び、新規作成。</li>
-  <li>URLに上のアドレスを貼り、幅 <b>1920</b>・高さ <b>1080</b>（配信の解像度に合わせる）。「カスタムCSS」は空のままにします。</li>
-  <li>OKを押すと透過の背景にルーレットが出ます。位置と大きさはOBS側で調整してください。</li>
+  <li>上の「表示ページを開く」で、このページと同じブラウザに表示ページを開きます（閉じたり、別のブラウザで開いたりすると届きません）。</li>
+  <li>OBSの「ソース」で「＋」→「ウィンドウキャプチャ」を選び、表示ページのウィンドウを選びます。</li>
+  <li>ウィンドウキャプチャでは背景が透けないので、下の「設定」で背景を「緑（クロマキー）」にして、OBSでそのソースにフィルタ「クロマキー」をかけると背景を抜けます。そのままクリームなどの単色で映してもかまいません。位置と大きさはOBS側で調整してください。</li>
 </ol>
-<p class="note">背景を透過でなく単色にしたいとき、文字の大きさ、盤面と結果のどちらを出すかは下の「設定」で変えられます。変更はすぐ表示ページに反映されます。</p>
+<p class="note">OBSの「ブラウザ」ソースにこのURLを入れる方法もありますが、OBSのブラウザソースはChromeなどとは別のブラウザとして動くので、この画面で回した結果は届きません。項目を載せた「別端末用のURL」（下の設定）なら表示ページだけで回せるので、ブラウザソースでも使えます。</p>
+<p class="note">背景の色、文字の大きさ、盤面と結果のどちらを出すかは下の「設定」で変えられます。変更はすぐ表示ページに反映されます。</p>
 
 <div class="kkp-ad" id="adHowto">
   <div class="kkp-ad-label">広告</div>
@@ -229,7 +230,7 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
 <h2 id="settings">設定（表示ページの見た目）</h2>
 <table class="set">
 <tr><th>背景</th><td>
-  <label><input type="radio" name="bg" value="transparent" checked> 透過（OBS向け）</label>
+  <label><input type="radio" name="bg" value="transparent" checked> 透過（ブラウザソースのとき）</label>
   <label><input type="radio" name="bg" value="#ffffff"> 白</label>
   <label><input type="radio" name="bg" value="#fff6ea"> クリーム</label>
   <label><input type="radio" name="bg" value="#00b140"> 緑（クロマキー）</label>
@@ -267,7 +268,7 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
   <div class="note">どちらも最初はオフ。音はブラウザで合成しているので音源ファイルの読み込みはありません。</div>
 </td></tr>
 <tr><th>別端末用のURL</th><td>
-  <div class="note">配信用PCと操作する端末が別のときは、項目を載せたこのURLを配信用PCで開いてください（表示ページ側でスペースキーかクリックで回せます）。項目を変えたらURLを作り直します。</div>
+  <div class="note">配信用PCと操作する端末が別のときは、項目を載せたこのURLを配信用PCで開いてください（表示ページ側でスペースキーかクリックで回せます）。項目を変えたらURLを作り直します。このURLは表示ページだけで動くので、OBSの「ブラウザ」ソースに入れても使えます。</div>
   <div class="urlrow"><input type="text" id="remoteUrl" readonly><button class="btn" id="copyRemote">URLをコピー</button></div>
 </td></tr>
 </table>
@@ -275,7 +276,7 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
 <details id="trouble"><summary>配信が重い・止まるときに見るところ</summary>
 <p>ルーレット自体は軽い（画像も音源ファイルも読み込まない）ので、配信が止まるときはたいてい別の原因です。順に確かめてください。</p>
 <ol>
-  <li><b>OBSのブラウザソースを何枚も重ねていないか。</b>使っていないブラウザソースは非表示でなく削除するか、「表示されていないときにソースをシャットダウン」をオンにします。</li>
+  <li><b>OBSのソースを何枚も重ねていないか。</b>使っていないソースは非表示でなく削除します。ブラウザソースなら「表示されていないときにソースをシャットダウン」をオンにします。</li>
   <li><b>上り（アップロード）の回線速度が配信のビットレートに足りているか。</b>目安は各サービスの公式ページにあります：<a href="https://support.google.com/youtube/answer/2853702" target="_blank" rel="noopener">YouTube ライブ配信のエンコーダ設定</a>／<a href="https://help.twitch.tv/s/article/broadcasting-guidelines" target="_blank" rel="noopener">Twitch の配信ガイドライン</a>。Wi-Fiなら有線に替えるだけで安定することが多いです。</li>
   <li><b>PCの負荷。</b>OBSの統計（表示→統計）で「レンダリングラグ」「エンコードラグ」が出ていればPC側の限界です。配信の解像度かフレームレートを一段下げます。</li>
 </ol>
@@ -283,11 +284,11 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
 <div id="affBox" hidden></div>
 
 <h2 id="faq">よくある質問</h2>
-<details><summary>OBSで背景が透明になりません</summary><p>表示ページはページ側で背景を透過にしています。ブラウザソースの「カスタムCSS」に <code>body { background-color: ... }</code> が残っていると透過になりません。カスタムCSSを空にするか、上の設定で背景を「透過」に戻してください。</p></details>
-<details><summary>配信用のPCと操作するスマホが別でも使えますか</summary><p>同じ端末・同じブラウザなら自動で同期します（タブをまたいで通信するだけで、サーバーは通りません）。別の端末のときは設定の「別端末用のURL」を配信用PCで開いてください。項目がURLに入っているので、そのページ側でスペースキーかクリックで回せます。</p></details>
+<details><summary>OBSで背景が透明になりません</summary><p>ウィンドウキャプチャはウィンドウをそのまま映すので、背景は透けません。設定の背景を「緑（クロマキー）」にして、OBSでそのソースにフィルタ「クロマキー」をかけてください。別端末用のURLをブラウザソースに入れているときは、ページ側で背景を透過にしています。そのときは、ブラウザソースの「カスタムCSS」に <code>body { background-color: ... }</code> が残っていると透過になりません。カスタムCSSを空にするか、設定の背景を「透過」に戻してください。</p></details>
+<details><summary>配信用のPCと操作するスマホが別でも使えますか</summary><p>同じ端末・同じブラウザなら自動で同期します（タブをまたいで通信するだけで、サーバーは通りません）。OBSの「ブラウザ」ソースは別のブラウザなので、同じPCでも同期しません。別の端末のときは設定の「別端末用のURL」を配信用PCで開いてください。項目がURLに入っているので、そのページ側でスペースキーかクリックで回せます。</p></details>
 <details><summary>入力した視聴者名やお題はどこかに送られますか</summary><p>送られません。項目はこのブラウザの中（localStorage）にだけ残り、「全部消す」で消せます。計測は「回した回数」のような回数だけで、項目の中身は送りません。</p></details>
 <details><summary>同じ項目ばかり出ます</summary><p>「当たった項目を次から外す」にチェックを入れると、出た項目は候補から外れます。全部出し切ったら「外した項目を戻す」で最初からにできます。</p></details>
-<details><summary>音が出ません</summary><p>最初はオフです。設定の「効果音」を入れてください。OBSのブラウザソースで音を配信に乗せるには、ソースの「音声をコントロール」をオンにし、「表示ページ（OBS側）で鳴らす」にもチェックを入れます。ブラウザの決まりで、ページを一度クリックするまで音が鳴らないことがあります。</p></details>
+<details><summary>音が出ません</summary><p>最初はオフです。設定の「効果音」を入れてください。ウィンドウキャプチャで映すときは、PCから出た音がOBSの「デスクトップ音声」として配信に乗ります。別端末用のURLをブラウザソースに入れているときは、ソースの「音声をOBSで制御する」をオンにし、「表示ページ（OBS側）で鳴らす」にもチェックを入れます。ブラウザの決まりで、ページを一度クリックするまで音が鳴らないことがあります。</p></details>
 <details><summary>スマホでも使えますか</summary><p>使えます。画面が縦に並ぶだけで、回す・除外・履歴は同じです。配信に映す使い方はPCが前提なので、PCの横画面に合わせて作っています。</p></details>
 <details><summary>配信や動画で使ってもいいですか</summary><p>はい。個人・法人を問わず、配信・録画・切り抜き・収益化に使えます。使うときは、<a href="https://kkpwebninja.com/otoiawase" target="_blank" rel="noopener">お問い合わせ</a>か X（<a href="https://x.com/kkp_webninja" target="_blank" rel="noopener">@kkp_webninja</a>）で一言いただけると助かります。ご要望があれば、優先してアップデートします。細かい条件は <a href="https://kkpwebninja.com/guidelines" target="_blank" rel="noopener">配信・動画でのご利用について</a> にまとめています。</p></details>
 
