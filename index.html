@@ -89,6 +89,9 @@ textarea#items{width:100%;min-height:260px;padding:10px;border:1px solid var(--l
 .count{font-size:13px;color:var(--sub);margin:6px 0 0}
 .gacha-link{font-size:14px;margin:10px 0 0;padding:8px 0 0;border-top:1px solid var(--line-l);line-height:1.6}
 .col-wheel{display:flex;flex-direction:column;align-items:center}
+.fromstream{border:2px solid var(--accent);background:var(--head);padding:8px 12px;margin:0 0 10px;font-size:14.5px;display:flex;gap:8px 10px;align-items:flex-start;flex-wrap:wrap}
+.fromstream[hidden]{display:none}
+.fromstream p{margin:0;flex:1 1 16em}
 .stage{position:relative;width:100%;display:flex;justify-content:center}
 #wheel{display:block;max-width:100%}
 #confetti{position:absolute;inset:0;pointer-events:none;width:100%;height:100%}
@@ -166,6 +169,7 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
 </header>
 
 <main>
+<div class="fromstream" id="fromStream" hidden><p>配信で見たルーレットはこれです。項目を1行に1つ入れて「回す」だけ。登録なし・無料で、自分の配信でもそのまま使えます。</p><button class="btn sm" id="fromStreamTry">例で回してみる</button><button class="btn sm" id="fromStreamX" aria-label="閉じる">閉じる</button></div>
 <div class="tool">
   <div class="col-in">
     <label class="lab" for="items">項目（1行に1つ。貼り付けOK。「名前*3」で当たりやすさ3倍）</label>
@@ -493,6 +497,21 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
   window.addEventListener('resize', fit);
   // 丸ゴシックの読み込みが終わったら盤面を描き直す（先に描くと細い代わりの字になる）
   try { document.fonts.ready.then(function () { wheel.draw(); }); } catch (e) {}
+
+  // 配信から来た人への一言（お題ガチャと同じ条件）。「例で回してみる」で、空なら例を入れてそのまま回す
+  (function () {
+    var ref = ''; try { ref = new URL(document.referrer).hostname; } catch (e) {}
+    var hit = /(^|\.)(youtube\.com|youtu\.be|twitch\.tv|tiktok\.com|x\.com|t\.co|twitter\.com|nicovideo\.jp|twitcasting\.tv)$/.test(ref) || /[?&]from=stream\b/.test(location.search);
+    if (!hit) return;
+    try { if (sessionStorage.getItem('kkp-roulette-fs-x')) return; } catch (e) {}
+    $('fromStream').hidden = false; kkpEvent('roulette_from_stream', { from: ref || 'param' });
+    $('fromStreamX').addEventListener('click', function () { $('fromStream').hidden = true; try { sessionStorage.setItem('kkp-roulette-fs-x', '1'); } catch (e) {} });
+    $('fromStreamTry').addEventListener('click', function () {
+      if ($('spin').disabled) $('sample').click();
+      $('spin').scrollIntoView({ block: 'center', behavior: 'smooth' });
+      setTimeout(function () { if (!$('spin').disabled) $('spin').click(); }, 450);
+    });
+  })();
 
   // 初期化
   var saved = load(LS.text, null);
