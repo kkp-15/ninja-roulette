@@ -146,6 +146,10 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
 .uf-name{font-weight:800;color:#8b6b3d;font-size:.85rem;margin-bottom:.4rem}
 .uf a{color:#8b6b3d;text-decoration:none;margin:0 .5rem}
 .uf-c{margin-top:.5rem;color:#bfa97a}
+
+/* 2026-10-20 配信で映しても読めるように：大きい画面では道具の欄を広く・直前の結果を大きく（PC・2列のときだけ） */
+@media(min-width:1500px){.wrap{max-width:1560px}.site-in{max-width:1560px}}
+@media(min-width:861px){.result{max-width:none}.result .r-txt{font-size:clamp(28px,2.6vw,52px);line-height:1.25;word-break:auto-phrase;text-wrap:balance}.spin{max-width:none}}
 </style>
 <link rel="stylesheet" href="/d4.css">
 </head>
@@ -471,11 +475,19 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
   $('openView').addEventListener('click', function () { kkpEvent('view_open_click'); });
 
   // 盤面の大きさ（PCは高さに合わせる）
+  // 2026-10-20 PC（2列）のときは「回す」と「直前の結果」までスクロールなしで1画面に入る大きさにする。大きい画面では盤も大きく
   function fit() {
     var col = document.querySelector('.col-wheel');
-    var w = Math.min(col.clientWidth, 560);
+    var w = Math.min(col.clientWidth, window.innerWidth > 1500 ? 860 : 560);
     var h = Math.max(240, window.innerHeight - 330);
-    wheel.resize(Math.max(220, Math.floor(Math.min(w, h))));
+    if (window.innerWidth > 860) {
+      var st = col.querySelector('.stage'), res = col.querySelector('.result'), keys = col.querySelector('.keys');
+      var top = st.getBoundingClientRect().top + window.scrollY;
+      var rl = Math.min(52, Math.max(28, window.innerWidth * 0.026)) * 1.25;   // 結果の文字（回す前の小さい字ではなく、結果が出たときの大きさ）
+      var below = $('spin').offsetHeight + 14 + (keys ? keys.offsetHeight + 12 : 0) + Math.max(res.offsetHeight, rl * 2 + 64) + 24;
+      h = Math.max(200, window.innerHeight - top - below);
+    }
+    wheel.resize(Math.max(200, Math.floor(Math.min(w, h))));
   }
   window.addEventListener('resize', fit);
   // 丸ゴシックの読み込みが終わったら盤面を描き直す（先に描くと細い代わりの字になる）

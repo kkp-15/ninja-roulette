@@ -195,7 +195,7 @@ body{background:transparent;font-family:"M PLUS Rounded 1c","Hiragino Maru Gothi
     else if (p === 'corner') { var cw = W * (port ? 0.7 : 0.44), chh = H * (port ? 0.44 : 0.56); s = Math.min(cw, chh) * 0.66; th = Math.min(cw * 0.075, chh * 0.11); if (layout === 'wheel') s = Math.min(cw, chh) * 0.95; }
     else if (layout === 'wheel') { s = Math.min(W, H) * 0.9; th = 0; }
     else if (port) { s = Math.min(W * 0.9, H * 0.52); th = Math.min(W * 0.07, H * 0.05); }
-    else { s = Math.min(W * 0.46, H * 0.9); th = layout === 'result' ? Math.min(W * 0.05, H * 0.095) : Math.min(W * 0.036, H * 0.075); }
+    else { s = Math.min(W * 0.46, H * 0.9); th = layout === 'result' ? Math.min(W * 0.05, H * 0.095) : Math.min(W * 0.04, H * 0.08); }
     wheel.resize(Math.max(120, Math.floor(s)));
     $('resbox').style.setProperty('--th', Math.max(16, th * scale()) + 'px');
   }

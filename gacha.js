@@ -169,7 +169,7 @@
     '.tl.dark .tl-band:before{background:#e2600f}',
     '.tl.SSR .tl-band:before{height:.14em;background:linear-gradient(90deg,#ff4d4d,#ff9f1a,#ffe14d,#3ddc84,#3d9bff,#a45bff)}',
     '.tl.SSR .tl-tag{background:linear-gradient(90deg,#ff4d4d,#ff9f1a,#e8c200,#2cc46f,#3d9bff,#a45bff,#ff4d4d);background-size:300% 100%;animation:kgRb 1.6s linear infinite}',
-    '.tl-txt{display:block;color:#fff;font-weight:900;line-height:1.26;letter-spacing:.02em;font-feature-settings:"palt";text-shadow:' + OL + ';word-break:break-word;overflow-wrap:anywhere}',
+    '.tl-txt{display:block;color:#fff;font-weight:900;line-height:1.26;letter-spacing:.02em;font-feature-settings:"palt";text-shadow:' + OL + ';word-break:break-word;word-break:auto-phrase;text-wrap:balance;overflow-wrap:anywhere}',
     '.tl.m .tl-txt{font-size:.82em}.tl.l .tl-txt{font-size:.68em}',
     '.tl.in .tl-band{animation:tlIn .38s cubic-bezier(.2,.9,.3,1.15) both}',
     '.tl.in .tl-head{animation:tlTag .38s .12s cubic-bezier(.2,.9,.3,1.4) both}',
