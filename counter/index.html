@@ -23,6 +23,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://roulette.kkpwebninja.com/ogp.png?d=20261015">
 <script src="/ga.js"></script>
+<script src="/stream.js"></script>
 <script type="application/ld+json">
 {
   "@context":"https://schema.org",
@@ -207,6 +208,7 @@ kbd{display:inline-block;padding:0 5px;font-family:inherit;font-size:12px;line-h
 @keyframes bump{0%{transform:scale(1)}35%{transform:scale(1.4) rotate(-6deg)}70%{transform:scale(.93)}100%{transform:scale(1)}}
 .bump{animation:bump .4s cubic-bezier(.3,1.4,.5,1)}
 </style>
+<link rel="stylesheet" href="/stream.css">
 </head>
 <body class="k-page">
 <div class="site"><div class="k-bg" aria-hidden="true"><img class="k-deco k-ninja" src="/kit/img/d4-ninja.webp" alt=""><img class="k-deco k-season k-season-momiji" src="/kit/img/d4-momiji.webp" alt=""></div><div class="site-in">
@@ -271,6 +273,7 @@ kbd{display:inline-block;padding:0 5px;font-family:inherit;font-size:12px;line-h
     <p class="lbl">背景</p>
     <div class="k-tabs" id="bgTabs" role="tablist" aria-label="背景"><button type="button" role="tab" data-v="green">グリーンバック</button><button type="button" role="tab" data-v="cream">クリーム</button><button type="button" role="tab" data-v="transparent">透過</button></div>
     <div class="open-row"><label class="switch"><input type="checkbox" id="credit"> 表示の隅にサイト名を小さく出す</label></div>
+    <div data-stream-sw></div>
   </section>
 
   <section class="c-z" id="cz" aria-labelledby="t-bz">
@@ -338,7 +341,7 @@ kbd{display:inline-block;padding:0 5px;font-family:inherit;font-size:12px;line-h
   <div><a href="https://kkpwebninja.com/" target="_blank" rel="noopener">本丸トップ</a>·<a href="https://privacypolicy.kkpwebninja.com/" target="_blank" rel="noopener">プライバシーポリシー</a>·<a href="https://kkpwebninja.com/otoiawase" target="_blank" rel="noopener">お問い合わせ</a>·<a href="https://x.com/kkp_webninja" target="_blank" rel="noopener">@kkp_webninja</a></div>
   <div class="uf-c">© 2025-2026 web忍者の砦</div>
 </footer>
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1298304917726270" crossorigin="anonymous"></script>
+<script>kkpLoadAds();</script>
 <script src="/gacha.js"></script>
 <script src="/odai-gacha/packs.js"></script>
 <script>
@@ -571,7 +574,7 @@ kbd{display:inline-block;padding:0 5px;font-family:inherit;font-size:12px;line-h
 
   // 広告（一番下・見えてから1回だけ push）
   (function (box) {
-    if (window.__kkpTest) return;
+    if (window.__kkpTest || window.__kkpStream) return;
     var ins = box.querySelector('ins'); if (!ins || ins.dataset.pushed) return;
     function fire() { if (ins.dataset.pushed) return; ins.dataset.pushed = '1'; requestAnimationFrame(function () { ins.className = 'adsbygoogle'; try { (window.adsbygoogle = window.adsbygoogle || []).push({}); } catch (e) {} }); }
     if (!('IntersectionObserver' in window)) { fire(); return; }
