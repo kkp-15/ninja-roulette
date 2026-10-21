@@ -205,6 +205,8 @@ body{background:transparent;font-family:"M PLUS Rounded 1c","Hiragino Maru Gothi
     else if (layout === 'wheel') { s = Math.min(W, H) * 0.9; th = 0; }
     else if (port) { s = Math.min(W * 0.9, H * 0.52); th = Math.min(W * 0.07, H * 0.05); }
     else { s = Math.min(W * 0.46, H * 0.9); th = layout === 'result' ? Math.min(W * 0.05, H * 0.095) : Math.min(W * 0.04, H * 0.08); }
+    // 盤の字は、1920x1080 を1/3に縮めて置いても14px相当（実寸42px）を下回らない（入らない字は省く・細いマスは字なし）
+    wheel.minEff = Math.max(14, 42 * Math.min(W / 1920, H / 1080));
     wheel.resize(Math.max(120, Math.floor(s)));
     $('resbox').style.setProperty('--th', Math.max(16, th * scale()) + 'px');
   }

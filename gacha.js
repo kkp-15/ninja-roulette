@@ -122,8 +122,8 @@
     /* 結果テロップ（番組のテロップ・ゲームの結果画面の型）: 斜めの帯・極太・太い縁取り・硬い影 */
     '.tl{font-family:' + MARU + ';font-size:var(--th,48px);width:100%;max-width:100%;filter:drop-shadow(.09em .11em 0 #2b2b2b);text-align:left}',
     '.tl-head{display:flex;align-items:flex-end;gap:.25em;margin:0 0 -.04em .35em;position:relative;z-index:1}',
-    '.tl-tag{display:inline-block;font-family:' + DISP + ';font-size:.62em;font-weight:400;line-height:1;padding:.16em .6em .14em;background:var(--g,var(--c));color:#fff;border:.08em solid #2b2b2b;transform:skewX(-12deg);text-shadow:' + OL_S + ';letter-spacing:.04em}',
-    '.tl-sub{display:inline-block;font-size:.34em;font-weight:900;line-height:1;padding:.32em .8em;background:#fff6ea;color:#2b2b2b;border:.12em solid #2b2b2b;transform:skewX(-12deg)}',
+    '.tl-tag{display:inline-block;font-family:' + DISP + ';font-size:max(.62em,14px);font-weight:400;line-height:1;padding:.16em .6em .14em;background:var(--g,var(--c));color:#fff;border:.08em solid #2b2b2b;transform:skewX(-12deg);text-shadow:' + OL_S + ';letter-spacing:.04em}',
+    '.tl-sub{display:inline-block;font-size:max(.34em,14px);font-weight:900;line-height:1;padding:.32em .8em;background:#fff6ea;color:#2b2b2b;border:.12em solid #2b2b2b;transform:skewX(-12deg)}',
     '.tl-band{position:relative;background:linear-gradient(180deg,#f47b20 0%,#e2600f 55%,#c94f07 100%);border:.07em solid #2b2b2b;padding:.2em 1.1em .26em .6em;clip-path:polygon(0 0,100% 0,calc(100% - .7em) 100%,0 100%)}',
     '.tl-band:before{content:"";position:absolute;left:0;right:0;top:0;height:.1em;background:#ffd9a8}',
     '.tl-band:after{content:"";position:absolute;top:0;bottom:0;left:-40%;width:30%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.55),transparent);transform:skewX(-18deg);opacity:0}',

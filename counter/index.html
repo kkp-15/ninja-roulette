@@ -146,6 +146,11 @@ kbd{display:inline-block;padding:0 5px;font-family:inherit;font-size:14px;line-h
 .bz-res .rar:empty{display:none}
 .bz-btns{display:flex;flex-wrap:wrap;gap:8px}
 .bz-btns .k-btn-sub{flex:1 1 auto;min-height:42px;font-size:14px;padding:0 10px;box-shadow:var(--k-sh-s)}
+/* 2026-10-21 PC は zoom で縮める（--z）。小さい字は縮めても14px以上 */
+.rule-now,.keyhint,.bz-res .rar,.bz-btns .k-btn-sub{font-size:max(14px,calc(14.2px / var(--z,1)))}
+.keyhint kbd{font-size:inherit}
+/* レア度の札：色は意味なので変えず、白字に墨のふちを付けて読めるように */
+.bz-res .rar{text-shadow:var(--k-outline)}
 .c-view{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
 .c-view .k-btn-sub{flex:1 1 auto}
 .c-view .flash{flex:1 1 100%;margin:0;font-size:14px;color:var(--k-shu);min-height:1.2em}
@@ -668,7 +673,7 @@ details.c-set:last-of-type{border-bottom:var(--k-bw) solid var(--k-sumi)}
     var vw = document.documentElement.clientWidth, vh = window.innerHeight;
     var lay = vw >= 1100 ? 'wide' : vw >= 700 ? 'mid' : 'sp';
     if (tool.dataset.lay !== lay) { tool.dataset.lay = lay; $('counters').style.setProperty('--cols', cols()); }
-    if (lay === 'sp') { tool.style.zoom = ''; tool.style.width = ''; return; }
+    if (lay === 'sp') { tool.style.zoom = ''; tool.style.width = ''; tool.style.removeProperty('--z'); return; }
     var W = lay === 'wide' ? 1400 : 980;
     tool.style.zoom = 1; tool.style.width = W + 'px';
     var top = tool.getBoundingClientRect().top + window.scrollY;
@@ -676,6 +681,7 @@ details.c-set:last-of-type{border-bottom:var(--k-bw) solid var(--k-sumi)}
     var pw = tool.parentElement.clientWidth || (vw - 32);
     var s = Math.min(pw / W, (vh - top - 14) / H, 1.35);
     tool.style.zoom = Math.max(0.45, s).toFixed(3);
+    tool.style.setProperty('--z', tool.style.zoom);   // 縮めたときに小さい字を14px以上に保つ（下の CSS）
   }
   var fitT = 0; window.addEventListener('resize', function () { clearTimeout(fitT); fitT = setTimeout(fit, 60); });
 

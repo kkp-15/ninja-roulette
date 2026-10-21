@@ -45,17 +45,20 @@
   function ease(t) { if (t <= 0) return 0; if (t >= 1) return 1; var f = t * (EASE.length - 1), i = Math.floor(f); return EASE[i] + (EASE[i + 1] - EASE[i]) * (f - i); }
 
   // 1行で入らなければ縮め、それでも入らなければ2行に、最後は末尾を省く
-  function fitLines(ctx, text, max, base, twoOk) {
-    var k, set = function (px) { ctx.font = '900 ' + px.toFixed(1) + 'px ' + FONT; };
-    for (k = 1; k >= 0.72; k -= 0.07) { set(base * k); if (ctx.measureText(text).width <= max) return { lines: [text], px: base * k }; }
+  // min: これより小さくしない（画面で14px相当。2026-10-21 読みやすさ）。省いても2文字残らないときは null（字を描かない）
+  function fitLines(ctx, text, max, base, twoOk, min) {
+    min = min || 0;
+    var k, px, set = function (px) { ctx.font = '900 ' + px.toFixed(1) + 'px ' + FONT; };
+    for (k = 1; k >= 0.72; k -= 0.07) { px = Math.max(base * k, min); set(px); if (ctx.measureText(text).width <= max) return { lines: [text], px: px }; if (px === min) break; }
     if (twoOk && text.length >= 4) {
       var mid = Math.ceil(text.length / 2), a = text.slice(0, mid), b = text.slice(mid);
-      for (k = 0.9; k >= 0.55; k -= 0.07) { set(base * k); if (Math.max(ctx.measureText(a).width, ctx.measureText(b).width) <= max) return { lines: [a, b], px: base * k }; }
+      for (k = 0.9; k >= 0.55; k -= 0.07) { px = Math.max(base * k, min); set(px); if (Math.max(ctx.measureText(a).width, ctx.measureText(b).width) <= max) return { lines: [a, b], px: px }; if (px === min) break; }
     }
-    set(base * 0.72);
+    px = Math.max(base * 0.72, min); set(px);
     var s = text;
     while (s.length > 1 && ctx.measureText(s + '…').width > max) s = s.slice(0, -1);
-    return { lines: [s + '…'], px: base * 0.72 };
+    if (min && s.length < 2 && s !== text) return null;
+    return { lines: [s === text ? s : s + '…'], px: px };
   }
 
   function Wheel(canvas) {
@@ -67,6 +70,7 @@
     this.fx = 'full';             // full / lite（電球の点滅なし・残像なし）/ off
     this.art = {};                // 生成画像（rim / hub / pointer / stage）
     this.win = -1; this.winT = 0;
+    this.minEff = 14;            // 盤の字の下限（画面の px）。表示ページは 1/3 に縮めても14px相当になるよう大きくする
     this.vel = 0; this.flap = 0; this.flapV = 0;
     this.face = null; this.raf = 0; this.t0 = 0;
   }
@@ -144,13 +148,20 @@
     }
     // 文字（極太・縁取り）。長い項目は縮小→2行
     var base = Math.max(11, Math.min(R * 0.15, R * 2.6 / Math.max(n, 1) * 0.55));
+    // 盤の字の下限（画面で minEff px 相当）。canvas が CSS で縮められて表示されていても、見えている大きさで決める
+    var shown = this.canvas.getBoundingClientRect().width, zs = shown > 0 && this.size ? shown / this.size : 1;
+    var minPx = this.minEff ? this.minEff / zs : 0;
     ctx.textBaseline = 'middle'; ctx.lineJoin = 'round';
     for (i = 0; i < n; i++) {
       var sgm = this.segs[i], mid = (sgm.start + sgm.end) / 2, arc = (sgm.end - sgm.start);
       var chord = arc * R * 0.62;                       // 文字の位置での区画の高さ
       if (chord < 10) continue;
-      var px0 = Math.min(base, chord * 0.8);
-      var fit = fitLines(ctx, sgm.label, R * 0.66, px0, chord > px0 * 2.2);
+      var px0 = Math.max(Math.min(base, chord * 0.8), minPx);
+      // 字が隣のマスにかからない幅：中心に近いほどマスは細いので、字の高さが入る半径より外だけを使う
+      var maxW = minPx ? R * 0.9 - Math.max(R * 0.24, px0 * 1.1 / arc) : R * 0.66;
+      if (minPx && maxW < px0 * 1.9) continue;   // 14px相当の字が2文字も入らない細いマスは字を描かない（当たりはテロップで出る）
+      var fit = fitLines(ctx, sgm.label, maxW, px0, chord > px0 * 2.2, minPx);
+      if (!fit) continue;
       var dark = DARKC[cols[i]];
       ctx.save(); ctx.rotate(mid);
       ctx.lineWidth = Math.max(2, fit.px * 0.24);
