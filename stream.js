@@ -6,7 +6,8 @@
    - つながりの札 = .k-live（ページが KKit.live を作ったときだけ「つながっています」になる）
    - オン中は AdSense のスクリプト自体を読まない（自動広告・アンカー広告も出ない）。スマホでは ?mode=stream も効かない。?kkptest=1 のときは幅を見ない（確認用）
    - 見た目は html.stream の下に stream.css で書く（説明・広告・フッターを畳み、大事な所を大きく）
-   背景は5択（クリーム／緑／透過／白／黒）のまま。kit の背景3択（.k-view-open）には白・黒がないので、ページの window.kkpStreamBg を使う */
+   背景: ページの window.kkpStreamBg（ルーレット・お題ガチャは kit の KKit.viewBg。値は cream / green / clear / white / black / #rrggbb）。
+   2026-10-22 ルーレットの「表示ページを開く」は kit の .k-view-open になった（#openView がないページは .k-view-open[data-k-view] を使う） */
 (function () {
   'use strict';
   var on = KKit.stream.init({ key: 'kkp-roulette-stream' });
@@ -30,9 +31,11 @@
   }
   window.kkpSetStream = set;
 
-  // 表示ページを別窓で開く（ページの #openView の href と data-ch を使う）
+  // 表示ページを別窓で開く（ページの #openView の href・data-ch か、.k-view-open の data-k-view・data-k-ch を使う）
+  function at(ov, a) { return ov.getAttribute(a) || ov.getAttribute(a.replace('data-', 'data-k-')) || ''; }
+  function findOv() { return document.getElementById('openView') || document.querySelector('.k-view-open[data-k-view]'); }
   function openViewWin(ov, msg) {
-    var ok = KKit.openView({ url: ov.getAttribute('href') || '/view/', ch: ov.getAttribute('data-ch') || '', name: ov.getAttribute('data-name') || 'kkp_roulette_view' });
+    var ok = KKit.openView({ url: ov.getAttribute('href') || ov.getAttribute('data-k-view') || '/view/', ch: at(ov, 'data-ch'), name: at(ov, 'data-name') || 'kkp_roulette_view', def: at(ov, 'data-def') || undefined });
     if (msg) msg.textContent = ok ? '' : 'ポップアップが止められました。許可してもう一度押してください';
     return ok;
   }
@@ -52,6 +55,7 @@
     // ページの「表示ページを開く」も別窓（開けないときは知らせるだけ。計測はページ側）
     var ov = document.getElementById('openView');
     if (ov) ov.addEventListener('click', function (e) { e.preventDefault(); openViewWin(ov, document.getElementById('openViewMsg')); });
+    ov = ov || findOv();
     if (on) {
       var bar = document.querySelector('.site-in');
       viewRow(bar);
@@ -65,12 +69,12 @@
   }
   // 配信モードでは「OBSに映す」の段（.narrow）を畳むので、ページの #openView が見えないときだけ、
   // 上の帯（「配信モードを終える」の左）に「表示ページを開く」・つながりの札・背景（ページが window.kkpStreamBg を用意したとき）を出す
-  var BGS = [['#fff6ea', 'クリーム'], ['#00b140', '緑（抜く用）'], ['transparent', '透過'], ['#ffffff', '白'], ['#000000', '黒']];
+  var BGS = [['cream', 'クリーム'], ['green', '緑（抜く用）'], ['clear', '透過'], ['white', '白'], ['black', '黒']];
   function viewRow(bar) {
-    var ov = document.getElementById('openView');
+    var ov = findOv();
     var box = bar || document.querySelector('[data-stream-sw]');
     if (!ov || !box || ov.offsetParent !== null) return;
-    var ch = ov.getAttribute('data-ch') || '';
+    var ch = at(ov, 'data-ch');
     var row = document.createElement('div');
     row.className = 'stream-view';
     row.innerHTML = (ch ? '<span class="k-live" data-k-live="' + ch + '">表示ページ：つながっていません</span>' : '')

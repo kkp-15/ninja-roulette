@@ -15,53 +15,43 @@
 <script src="/kit/kit.js"></script>
 <script src="/ga.js"></script>
 <style>
-/* OBS のウィンドウキャプチャで取り込む表示ページ（別端末用のURLはブラウザソースでも動く）: 背景は透過（既定）。操作ボタン・広告・説明文は映さない
-   置き方: full（全画面）/ band（下の帯）/ corner（右下に小さく）。縦長の画面では縦に並べる */
-html,body{margin:0;height:100%;overflow:hidden}
-body{background:transparent;font-family:"M PLUS Rounded 1c","Hiragino Maru Gothic ProN","Hiragino Sans","Noto Sans JP",sans-serif;color:#2b2b2b}
-.stage{position:fixed;display:flex;align-items:center;justify-content:center;gap:3vw}
-.place-full{inset:0;padding:3vh 3vw}
-.place-band{left:0;right:0;bottom:0;height:36vh;padding:1.5vh 2vw;justify-content:flex-start;gap:2vw}
-.place-corner{right:2vw;bottom:3vh;width:44vw;height:56vh;flex-direction:column;align-items:flex-end;justify-content:flex-end;gap:1.5vh}
+/* OBS のウィンドウキャプチャで取り込む表示ページ（別端末用のURLはブラウザソースでも動く）。操作ボタン・広告・説明文は映さない。
+   2026-10-22 枠は kit の重ね表示型 k-view-ov（.k-ov[data-k-place] full／band 下の帯／corner 右下に小さく・縦長の窓と ?layout=v は縦に並ぶ）。
+   背景は kit の KKit.view（?bg= ＞ 操作画面の選択〈k-view-bg:kkp-roulette〉＞ 透過）。盤は kit の KKit.wheel（wheel.js の make） */
+/* kit b0046ef の足りない所の回避（kit を直したら消す）: k-view-ov の body{background:transparent} が緑・白・黒・色の背景と同じ強さで後にあり、透過になってしまう */
+[data-k-bg="green"] body.k-view.k-view-ov{background:#00b140}
+[data-k-bg="white"] body.k-view.k-view-ov{background:#fff}
+[data-k-bg="black"] body.k-view.k-view-ov{background:#000}
+[data-k-bg="color"] body.k-view.k-view-ov{background:var(--k-view-bg,#fbf3e4)}
+.k-ov{gap:3vw}
+.k-ov[data-k-place="band"]{gap:2vw}
+.k-ov[data-k-place="corner"]{gap:1.5vh}
 .layout-result .wheelbox{display:none}
 .layout-wheel .resbox{display:none}
 .wheelbox{position:relative;flex:0 0 auto}
-#wheel{display:block}
 .resbox{flex:1 1 auto;min-width:0;display:flex;align-items:center}
-.place-corner .resbox{flex:0 0 auto;width:100%}
-.gstage{position:fixed}
-.gstage[hidden]{display:none}
-.g-full{inset:0}
-.g-band{left:0;right:0;bottom:0;height:36vh}
-.g-corner{right:2vw;bottom:3vh;width:44vw;height:56vh}
-.credit,.hint{position:fixed;font-size:max(15px,2.19vw);font-weight:800;color:#fff;text-shadow:0 0 3px #2b2b2b,2px 2px 0 #2b2b2b,-2px -2px 0 #2b2b2b,2px -2px 0 #2b2b2b,-2px 2px 0 #2b2b2b;pointer-events:none}
-.credit{right:12px;bottom:8px;opacity:.9}
-.credit.top{bottom:auto;top:8px}
-.credit[hidden],.hint[hidden]{display:none}
-.hint{left:12px;bottom:8px}
+.k-ov[data-k-place="corner"] .resbox{flex:0 0 auto;width:100%}
+/* 盤の字（k-wheel）。既定の字より太く・映像の上でも読めるように */
+#wheel .k-wheel-t text{font-weight:900}
+.hint{position:fixed;left:max(8px,.8vw);bottom:max(6px,.6vw);z-index:30;font-size:var(--k-ov-min);font-weight:800;line-height:1.2;pointer-events:none}
+.hint[hidden]{display:none}
 /* 1920x1080 を1/3に縮めて置いても読める下限（42px＝2.19vw）。gacha.js が後から足す CSS より強くするため id で書く */
-#gstage .tl-tag,#resbox .tl-tag{font-size:max(.62em,2.19vw)}
-#gstage .tl-sub,#resbox .tl-sub{font-size:max(.34em,2.19vw)}
-#gstage .tl .tl-txt,#resbox .tl .tl-txt{font-size:max(1em,2.19vw)}
-#gstage .tl.m .tl-txt,#resbox .tl.m .tl-txt{font-size:max(.82em,2.19vw)}
-#gstage .tl.l .tl-txt,#resbox .tl.l .tl-txt{font-size:max(.68em,2.19vw)}
-@media(max-aspect-ratio:1/1){
-  .place-full{flex-direction:column}
-  .place-band{height:30vh}
-  .place-corner{width:70vw;height:44vh}
-  .g-band{height:30vh}
-  .g-corner{width:70vw;height:44vh}
-}
+#gstage .tl-tag,#resbox .tl-tag{font-size:max(.62em,var(--k-ov-min))}
+#gstage .tl-sub,#resbox .tl-sub{font-size:max(.34em,var(--k-ov-min))}
+#gstage .tl .tl-txt,#resbox .tl .tl-txt{font-size:max(1em,var(--k-ov-min))}
+#gstage .tl.m .tl-txt,#resbox .tl.m .tl-txt{font-size:max(.82em,var(--k-ov-min))}
+#gstage .tl.l .tl-txt,#resbox .tl.l .tl-txt{font-size:max(.68em,var(--k-ov-min))}
 </style>
 </head>
-<body>
-<div class="stage place-full layout-both" id="stage">
-  <div class="wheelbox"><canvas id="wheel" width="10" height="10"></canvas></div>
+<body class="k-view k-view-ov">
+<div class="k-ov layout-both" id="stage" data-k-place="full">
+  <div class="wheelbox"><div id="wheel" role="img" aria-label="ルーレット"></div></div>
   <div class="resbox" id="resbox"></div>
 </div>
-<div class="gstage g-full" id="gstage" hidden></div>
-<div class="hint" id="hint" hidden>クリックかスペースキーで回す</div>
-<div class="credit" id="credit">roulette.kkpwebninja.com</div>
+<div class="k-ov" id="gstage" data-k-place="full" hidden></div>
+<div class="k-view-idle k-ov-idle" hidden><b>配信ルーレット</b><p>まもなく始まります</p><small>操作ページで回すと、ここに出ます</small></div>
+<div class="hint k-ov-ink" id="hint" hidden>クリックかスペースキーで回す</div>
+<div class="k-ov-credit" id="credit">roulette.kkpwebninja.com</div>
 <script src="/wheel.js"></script>
 <script src="/gacha.js"></script>
 <script src="/odai-gacha/packs.js"></script>
@@ -70,13 +60,17 @@ body{background:transparent;font-family:"M PLUS Rounded 1c","Hiragino Maru Gothi
   'use strict';
   var K = window.KkpWheel, G = window.KkpGacha;
   var $ = function (id) { return document.getElementById(id); };
-  var wheel = new K.Wheel($('wheel'));
-  if (!location.search || !new URLSearchParams(location.search).has('items')) wheel.emptyText = ['操作ページで', '回すと出ます'];   // 項目が届く前の盤に薄く出す
-  wheel.setArt(K.ART);
   var q = new URLSearchParams(location.search);
   var remote = q.has('items');   // 別端末モード: 項目はURLから。回す操作はこのページで
   var gremote = q.has('gacha');  // 別端末のお題ガチャ: パックはURLから。このページで引く
-  var settings = { bg: 'transparent', layout: 'both', place: 'full', speed: 'normal', size: 2, ink: 'dark', credit: true, sound: false };
+  // 操作画面の「表示ページを開く」で開いた窓（名前で分かる）は、URL に ?bg= が付いていても操作画面の背景の切り替えに付いていく
+  // （kit の openView は既定と違う背景を ?bg= に載せる。?bg= があると KKit.view は背景を固定するので、ここで外す）
+  if (q.has('bg') && !remote && !gremote && window.name === 'kkp_roulette_view') {
+    q.delete('bg'); try { history.replaceState(null, '', location.pathname + (q.toString() ? '?' + q : '')); } catch (e) {}
+  }
+  var V = KKit.view({ ch: 'kkp-roulette', def: 'clear', stage: 'body' });
+  var wheel = K.make($('wheel'), { empty: remote ? '' : '操作ページで回すと出ます' });
+  var settings = { layout: 'both', place: 'full', speed: 'normal', size: 2, ink: 'dark', credit: true, sound: false };
   var items = [], lastId = 0, gctl = null, lastResult = '';
 
   function load(k) { try { var v = localStorage.getItem(k); return v === null ? null : JSON.parse(v); } catch (e) { return null; } }
@@ -87,12 +81,12 @@ body{background:transparent;font-family:"M PLUS Rounded 1c","Hiragino Maru Gothi
   function applySettings(s) {
     if (!s) return;
     settings = Object.assign(settings, s);
-    wheel.fx = settings.wfx === 'lite' || settings.wfx === 'off' ? settings.wfx : 'full';
-    document.body.style.background = settings.bg === 'transparent' ? 'transparent' : settings.bg;
-    $('stage').className = 'stage place-' + place() + ' layout-' + (settings.layout || 'both');
-    $('gstage').className = 'gstage g-' + place();
+    wheel.fx = settings.wfx;
+    $('stage').className = 'k-ov layout-' + (settings.layout || 'both');
+    $('stage').setAttribute('data-k-place', place());
+    $('gstage').setAttribute('data-k-place', place());
     $('credit').hidden = settings.credit === false || settings.credit === 0;
-    $('credit').className = 'credit' + (place() === 'full' ? '' : ' top');
+    $('credit').classList.toggle('k-top', place() !== 'full');
     fit();
     if (lastResult && !wheel.spinning) showResult(lastResult, false);
   }
@@ -117,7 +111,7 @@ body{background:transparent;font-family:"M PLUS Rounded 1c","Hiragino Maru Gothi
     var o = { rarity: msg.rarity, text: msg.text, packName: msg.packName, scale: scale(), place: place(), band: band(), speed: msg.speed || settings.speed };
     gctl = quiet ? G.show($('gstage'), o) : G.play($('gstage'), Object.assign(o, { fx: msg.fx || 'full', sound: !!settings.sound }));
   }
-  // quiet: 開き直したときの最後の画面（回す演出・手裏剣・音なしで止まった所だけ出す）
+  // quiet: 開き直したときの最後の画面（回す演出・手裏剣・音なしで止まった所だけ出す）。角度は度（前の版の知らせはラジアンなので直す）
   function runSpin(msg, quiet) {
     if (msg.id && msg.id === lastId) return;
     lastId = msg.id || 0;
@@ -125,14 +119,14 @@ body{background:transparent;font-family:"M PLUS Rounded 1c","Hiragino Maru Gothi
     if (msg.items) setItems(msg.items);
     if (msg.settings) applySettings(msg.settings);
     showResult('', false);
-    var dur = K.reduce || quiet ? 1 : msg.dur;
-    if (!quiet) wheel.throwStar($('wheel').parentNode, msg.final, dur, settings.speed, settings.sound ? K.sound : null);
-    wheel.spin(msg.from, msg.final, dur, function (idx) {
+    var from = K.deg(msg, msg.from), final = K.deg(msg, msg.final);
+    var dur = K.reduce || quiet ? 0 : msg.dur;
+    wheel.spin(from, final, dur, function (idx) {
       var rv = msg.reveal && msg.reveal[idx];
       if (rv) { lastResult = ''; var box = $('resbox'); box.innerHTML = ''; var t = G.telop(box, { rarity: rv.r, text: rv.text, packName: rv.packName, band: band() }); if (!quiet) t.classList.add('in'); }
       else showResult(items[idx] ? items[idx].label : '', !quiet);
       if (settings.sound && !quiet) K.sound('done');
-    });
+    }, { host: $('wheel').parentNode, speed: settings.speed, sound: settings.sound ? K.sound : null });
   }
   wheel.onTick = function () { if (settings.sound) K.sound('tick'); };
 
@@ -152,7 +146,7 @@ body{background:transparent;font-family:"M PLUS Rounded 1c","Hiragino Maru Gothi
   }
 
   function look() {
-    return { bg: q.get('bg') || 'transparent', layout: q.get('layout') || 'both', place: q.get('place') || 'full', wfx: q.get('wfx') || 'full', speed: q.get('speed') || 'normal', size: parseInt(q.get('size') || '2', 10), ink: q.get('ink') || 'dark', credit: q.get('credit') !== '0', sound: q.get('sound') === '1' };
+    return { layout: q.get('layout') || 'both', place: q.get('place') || 'full', wfx: q.get('wfx') || 'full', speed: q.get('speed') || 'normal', size: parseInt(q.get('size') || '2', 10), ink: q.get('ink') || 'dark', credit: q.get('credit') !== '0', sound: q.get('sound') === '1' };
   }
   if (gremote) {
     // 別端末: このページでお題ガチャを引く（クリック・スペース。演出中ならスキップ）
@@ -184,16 +178,18 @@ body{background:transparent;font-family:"M PLUS Rounded 1c","Hiragino Maru Gothi
       if (wheel.spinning || items.length < 2) return;
       $('hint').hidden = true;
       kkpEvent('spin', { from: 'remote' });
-      runSpin({ from: wheel.angle, final: wheel.pickFinal(5 + Math.floor(Math.random() * 2)), dur: K.spinDur(settings.speed), id: Date.now() });
+      runSpin({ u: 'deg', from: wheel.angle, final: wheel.pick(5 + Math.floor(Math.random() * 2)), dur: K.spinDur(settings.speed), id: Date.now() });
     };
     document.addEventListener('click', spinHere);
     document.addEventListener('keydown', function (e) { if (e.code === 'Space' || e.key === 'Enter') { e.preventDefault(); spinHere(); } });
   } else {
     // 同じブラウザの操作ページ（ルーレット・お題ガチャ）から kit の KKit.live で受け取る（3秒ごとに hello＝操作ページの「つながっています」）。
-    // 開いたときの最初の1つは、演出を動かさずに最後の画面だけ出す（回す→止まった所・ガチャ→結果・スキップ／背景→直前の結果）
+    // 開いたときの最初の1つは、演出を動かさずに最後の画面だけ出す（回す→止まった所・ガチャ→結果・スキップ／設定→直前の結果）。
+    // まだ何も届いていなければ待ち画面（kit の k-ov-idle）
     var first = true;
     KKit.live({ ch: 'kkp-roulette', role: 'view', onState: function (m) {
-      if (!m) { first = false; return; }
+      if (!m) { first = false; V.idle(true, '配信ルーレット'); return; }
+      V.idle(false);
       if (!first) { handle(m); return; }
       first = false;
       if (m.t === 'spin') runSpin(m, true);
@@ -205,21 +201,20 @@ body{background:transparent;font-family:"M PLUS Rounded 1c","Hiragino Maru Gothi
 
   // 盤面とテロップの大きさ（置き方ごと）
   function fit() {
-    var W = window.innerWidth, H = window.innerHeight, s, th, layout = settings.layout || 'both', p = place(), port = H > W;
+    var W = window.innerWidth, H = window.innerHeight, s, th, layout = settings.layout || 'both', p = place(), port = H > W || V.vert();
     if (p === 'band') { var bh = H * (port ? 0.3 : 0.36); s = bh * 0.94; th = Math.min(W * (port ? 0.05 : 0.034), bh * 0.2); }
     else if (p === 'corner') { var cw = W * (port ? 0.7 : 0.44), chh = H * (port ? 0.44 : 0.56); s = Math.min(cw, chh) * 0.66; th = Math.min(cw * 0.075, chh * 0.11); if (layout === 'wheel') s = Math.min(cw, chh) * 0.95; }
     else if (layout === 'wheel') { s = Math.min(W, H) * 0.9; th = 0; }
     else if (port) { s = Math.min(W * 0.9, H * 0.52); th = Math.min(W * 0.07, H * 0.05); }
     else { s = Math.min(W * 0.46, H * 0.9); th = layout === 'result' ? Math.min(W * 0.05, H * 0.095) : Math.min(W * 0.04, H * 0.08); }
-    // 盤の字は、1920x1080 を1/3に縮めて置いても14px相当（実寸42px）を下回らない（入らない字は省く・細いマスは字なし）
-    wheel.minEff = Math.max(14, 42 * Math.min(W / 1920, H / 1080));
+    // 盤の字は、1920x1080 を1/3に縮めて置いても14px相当（実寸42px）を下回らない（入らない字は「…」で省く・細いマスは字なし）。縦型は 1080x1920 が基準
+    wheel.minPx(Math.max(14, 42 * (port ? Math.min(W / 1080, H / 1920) : Math.min(W / 1920, H / 1080))));
     wheel.resize(Math.max(120, Math.floor(s)));
     $('resbox').style.setProperty('--th', Math.max(16, th * scale()) + 'px');
   }
-  window.addEventListener('resize', fit);
   fit();
-  // 丸ゴシックの読み込みが終わったら盤面を描き直す（先に描くと細い代わりの字になる）
-  try { document.fonts.ready.then(function () { wheel.buildFace(); wheel.draw(); }); } catch (e) {}
+  // 字のデータが後から届いた・窓の大きさが変わった（kit の KKit.view.refit）
+  KKit.view.refit(function () { fit(); if (lastResult && !wheel.spinning) showResult(lastResult, false); });
   kkpEvent('view_obs_open', { from: gremote ? 'gacha_remote' : remote ? 'remote' : 'local' });
 })();
 </script>

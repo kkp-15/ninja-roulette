@@ -223,7 +223,7 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
   <div class="col-stage">
     <div class="gstage" id="gstage">
       <div class="gidle" id="gidle"><div class="k-stage-empty"><p class="k-stage-empty-t">ここにお題が出ます</p><p class="k-stage-empty-d">「ガチャを回す」で1つ引きます</p></div></div>
-      <div class="gwheel" id="gwheel" hidden><canvas id="wheel" width="10" height="10" aria-label="ルーレット"></canvas></div>
+      <div class="gwheel" id="gwheel" hidden><div id="wheel" role="img" aria-label="ルーレット"></div></div>
     </div>
     <div class="res" id="res" hidden aria-live="polite">
       <span class="rl">直前</span><span class="tag" id="resTag">N</span><span class="rt" id="resTxt"></span>
@@ -276,7 +276,7 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
 
 <h2 id="obs" class="k-h2">OBSに映す（ウィンドウキャプチャ）</h2>
 <p>ルーレットと同じ表示ページです。この画面で回したガチャがそのまま出ます（操作ボタンや広告は映りません）。</p>
-<div class="urlrow"><input type="text" id="viewUrl" readonly value="https://roulette.kkpwebninja.com/view/"><button class="btn" id="copyView">URLをコピー</button><a class="btn" id="openView" href="/view/" data-ch="kkp-roulette" data-name="kkp_roulette_view" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;text-decoration:none;color:inherit">表示ページを開く</a></div>
+<div class="urlrow"><input type="text" id="viewUrl" readonly value="https://roulette.kkpwebninja.com/view/"><button class="btn" id="copyView">URLをコピー</button><a class="btn" id="openView" href="/view/" data-ch="kkp-roulette" data-name="kkp_roulette_view" data-def="clear" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;text-decoration:none;color:inherit">表示ページを開く</a></div>
 <p class="vlive"><span class="k-live" data-k-live="kkp-roulette">表示ページ：つながっていません</span><span class="flash" id="openViewMsg" aria-live="polite"></span></p>
 <ol>
   <li>「表示ページを開く」で、同じブラウザに別ウィンドウで開きます（閉じると届きません）。</li>
@@ -348,9 +348,20 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
   // 最後に送ったものが、表示ページを開き直したときの画面になる（演出は動かさず結果だけ出す＝表示ページ側）
   var LIVE = KKit.live({ ch: 'kkp-roulette', role: 'op' });
   function send(msg) { msg.ts = Date.now(); LIVE.send(msg); }
+  // 背景はルーレットと共通の kit の背景の選択（KKit.viewBg・k-view-bg:kkp-roulette）。前の版の設定（ルーレットの settings.bg）は最初の1回だけ移す
+  var BGCH = 'kkp-roulette';
+  (function () {
+    var had = null; try { had = localStorage.getItem('k-view-bg:' + BGCH); } catch (e) {}
+    var r = load(LS.rset, {});
+    if (had === null && r && r.bg) {
+      var v = String(r.bg === 'custom' ? r.bgColor || '' : r.bg).toLowerCase();
+      KKit.viewBg.set(BGCH, { transparent: 'clear', '#ffffff': 'white', '#fff6ea': 'cream', '#00b140': 'green', '#000000': 'black' }[v] || v);
+    }
+  })();
+  function bgNow() { return KKit.viewBg.get(BGCH, 'clear'); }
   function viewSettings() {
-    var r = Object.assign({ bg: 'transparent', bgColor: '#fff6ea', layout: 'both', size: 2, ink: 'dark', credit: true }, load(LS.rset, {}));
-    return { bg: r.bg === 'custom' ? r.bgColor : r.bg, layout: r.layout, place: r.place || 'full', speed: S.speed, size: r.size, ink: r.ink, credit: r.credit, sound: S.vsnd };
+    var r = Object.assign({ layout: 'both', size: 2, ink: 'dark', credit: true }, load(LS.rset, {}));
+    return { layout: r.layout, place: r.place || 'full', speed: S.speed, size: r.size, ink: r.ink, credit: r.credit, sound: S.vsnd };
   }
   function saveS() { save(LS.set, S); }
 
@@ -383,7 +394,7 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
     $('remoteUrl').value = ORIGIN + '/view/?gacha=' + encodeURIComponent(S.packs.filter(function (x) { return x !== 'my'; }).join(',')) + '&fx=' + S.fx + '&speed=' + S.speed + '&sound=' + (S.vsnd ? 1 : 0) + remoteLook();
     var o = off.length; $('offN').textContent = o ? '（' + o + '個を外しています）' : '';
   }
-  function remoteLook() { var v = viewSettings(); return '&bg=' + encodeURIComponent(v.bg) + '&place=' + v.place + '&size=' + v.size + '&ink=' + v.ink + '&credit=' + (v.credit ? 1 : 0); }
+  function remoteLook() { var v = viewSettings(), b = bgNow(); return '&bg=' + encodeURIComponent(b.charAt(0) === '#' ? b.slice(1) : b) + '&place=' + v.place + '&size=' + v.size + '&ink=' + v.ink + '&credit=' + (v.credit ? 1 : 0); }
 
   // お題の一覧（チェックを外すと出ない）
   function renderLists() {
@@ -439,8 +450,7 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
   function setBusy(b) { busy = b; $('skip').hidden = !b; $('go').disabled = b || pool.length < 1; }
 
   // ガチャ
-  var wheel = new K.Wheel($('wheel')), wheelItems = [];
-  wheel.setArt(K.ART);
+  var wheel = K.make($('wheel'), { minPx: 14 }), wheelItems = [];   // 盤は kit の KKit.wheel（wheel.js の make）
   function go() {
     if (busy) { skip(); return; }
     if (!pool.length) return;
@@ -474,11 +484,11 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
     var items = cands.map(function (c, k) { return { label: '？？？', weight: 1 }; });
     var reveal = cands.map(function (c) { return { text: c.text, r: c.r, packName: packName[c.pack] || '' }; });
     $('gwheel').hidden = false; fitWheel(); wheel.fx = S.fx; wheel.setItems(items);
-    var from = wheel.angle, final = wheel.pickFinal(5 + Math.floor(Math.random() * 2)), dur = K.spinDur(S.speed);
+    // 角度は度（kit の KKit.wheel）。表示ページへも度で送る（u:'deg'）
+    var from = wheel.angle, final = wheel.pick(5 + Math.floor(Math.random() * 2)), dur = K.spinDur(S.speed);
     setBusy(true); $('skip').hidden = true;
-    wheel.throwStar($('gwheel'), final, dur, S.speed, S.snd ? K.sound : null);
     var vs = viewSettings(); vs.wfx = S.fx;
-    send({ t: 'spin', items: items, reveal: reveal, from: from, final: final, dur: dur, id: Date.now(), settings: vs });
+    send({ t: 'spin', u: 'deg', items: items, reveal: reveal, from: from, final: final, dur: dur, id: Date.now(), settings: vs });
     kkpEvent('gacha_draw', { mode: 'wheel', fx: S.fx });
     wheel.spin(from, final, dur, function (idx) {
       var it = wheelItems[idx]; setBusy(false); if (!it) return;
@@ -486,13 +496,13 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
       G.show($('gstage'), { rarity: it.r, text: it.text, packName: packName[it.pack] || '', place: 'full', band: viewSettings().ink === 'light' ? 'dark' : 'orange' });
       if (S.snd) G.sfx('reveal', it.r);
       kkpEvent('gacha_result', { rarity: it.r, mode: 'wheel' });
-    });
+    }, { host: $('gwheel'), speed: S.speed, sound: S.snd ? K.sound : null });
   }
   wheel.onTick = function () { if (S.snd) K.sound('tick'); };
   function fitWheel() { var h = $('gstage').clientHeight; wheel.resize(Math.max(160, Math.floor(h * 0.94))); }
   window.addEventListener('resize', function () { if (!$('gwheel').hidden) fitWheel(); });
-  // 丸ゴシックの読み込みが終わったら盤面を描き直す（先に描くと細い代わりの字になる）
-  try { document.fonts.ready.then(function () { wheel.draw(); }); } catch (e) {}
+  // 丸ゴシックの読み込みが終わったら盤の字を置き直す
+  try { document.fonts.ready.then(function () { wheel.relayout(); }); } catch (e) {}
 
   $('go').addEventListener('click', go);
   $('skip').addEventListener('click', skip);
@@ -545,14 +555,8 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
   $('copyRemote').addEventListener('click', function () { copy($('remoteUrl').value, this); kkpEvent('obs_url_copy', { from: 'gacha_remote' }); });
   $('openView').addEventListener('click', function () { kkpEvent('view_open_click', { from: 'gacha' }); });   // 開くのは stream.js（KKit.openView・別窓）
   // 2026-10-21 配信モード中の背景の切替（stream.js がスイッチの横に出す）。背景はルーレットの設定と共通
-  window.kkpStreamBg = {
-    get: function () { var r = load(LS.rset, {}); var bg = r.bg || 'transparent'; return bg === 'custom' ? (r.bgColor || '#fff6ea') : bg; },
-    set: function (v) {
-      var r = load(LS.rset, {}); r.bg = v; save(LS.rset, r);
-      var st = load(LS.state, null); if (st && st.kind === 'gacha') { st.settings = viewSettings(); save(LS.state, st); }
-      send({ t: 'cfg', settings: viewSettings(), st: load(LS.state, null) });
-    }
-  };
+  // 背景は kit の KKit.viewBg（表示ページへは localStorage で届く）
+  window.kkpStreamBg = { get: bgNow, set: function (v) { KKit.viewBg.set(BGCH, v); rebuild(); } };
 
   // 広告（表示されてから1回だけ push）
   function pushAdWhenVisible(box) {

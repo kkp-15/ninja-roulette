@@ -152,7 +152,6 @@ kbd{display:inline-block;padding:0 5px;font-family:inherit;font-size:14px;line-h
 .bz-res.k-result{margin:0 0 10px;padding:2px 0 4px}
 .c-live{margin:6px 0 0}
 #resumeBox{margin:0 0 10px}
-#resumeBox[hidden]{display:none}   /* kit の .k-resume は display:flex なので hidden が効かない */
 .bz-res.k-result small{margin:0 0 2px}
 .bz-res.k-result small span{font-weight:800;color:var(--k-sumi)}
 .bz-res.k-result b{font-weight:900}   /* 長い文の段は kit の k-result-long（丸ゴシック20px・折り返し） */
@@ -299,7 +298,7 @@ details.c-set.k-fold:last-of-type{border-bottom:var(--k-bw-s) solid var(--k-sumi
       </div>
     </section>
     <div class="c-view">
-      <a class="k-btn k-btn-sub" id="openView" href="/counter/view/" data-ch="kkp-counter" data-name="kkp_counter_view" target="kkp_counter_view" rel="noopener">表示ページを開く</a>
+      <a class="k-btn k-btn-sub" id="openView" href="/counter/view/" data-ch="kkp-counter" data-name="kkp_counter_view" data-def="green" target="kkp_counter_view" rel="noopener">表示ページを開く</a>
       <button type="button" class="k-btn k-btn-sub" id="copyView">URLをコピー</button>
       <p class="c-live"><span class="k-live" data-k-live="kkp-counter">表示ページ：つながっていません</span></p>
       <p class="flash" id="viewMsg" aria-live="polite"></p><p class="flash" id="openViewMsg" aria-live="polite"></p>
@@ -663,6 +662,10 @@ details.c-set.k-fold:last-of-type{border-bottom:var(--k-bw-s) solid var(--k-sumi
     mark();
   }
   tabs('placeTabs', 'place'); tabs('bgTabs', 'bg');
+  // 背景は kit の背景の選択（KKit.viewBg・k-view-bg:kkp-counter。表示ページの KKit.view が読む）にも入れる。透過は kit では clear
+  function bgSync() { KKit.viewBg.set('kkp-counter', S.bg === 'transparent' ? 'clear' : S.bg); }
+  bgSync();
+  [].forEach.call($('bgTabs').children, function (b) { b.addEventListener('click', bgSync); });
 
   /* ---- キー操作: 1〜9 で＋1・Shift＋数字で−1・Z で直前を戻す（入力欄にいる間は効かない） ---- */
   document.addEventListener('keydown', function (e) {

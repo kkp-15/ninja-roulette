@@ -11,7 +11,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@800;900&display=swap" rel="stylesheet">
 <!-- k-fonts:start -->
-<link href="https://fonts.googleapis.com/css2?family=Yuji+Syuku&family=RocknRoll+One&display=swap&text=%2F0123456789NRS%E3%82%A2%E3%82%A6%E3%82%B2%E3%83%88%E3%83%A0%E3%83%BC%E5%9B%9E%E7%9B%AE%E7%B8%9B%E7%BD%B0" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Yuji+Syuku&family=RocknRoll+One&display=swap&text=.%2F0123456789BNORSabceijklmnoprtuw%E3%80%81%E3%81%8C%E3%81%8F%E3%81%93%E3%81%98%E3%81%99%E3%81%A7%E3%81%A8%E3%81%AA%E3%81%AB%E3%81%BE%E3%82%82%E3%82%8A%E3%82%92%E3%82%A2%E3%82%A6%E3%82%AB%E3%82%B2%E3%82%B6%E3%82%B8%E3%82%BF%E3%83%88%E3%83%96%E3%83%9A%E3%83%A0%E3%83%A9%E3%83%B3%E3%83%BC%E4%BD%9C%E4%BF%A1%E5%87%BA%E5%90%8C%E5%9B%9E%E5%A7%8B%E6%93%8D%E6%95%B0%E7%94%BB%E7%9B%AE%E7%A4%BA%E7%B8%9B%E7%BD%B0%E8%A1%A8%E9%85%8D%E9%96%8B%E9%9D%A2%EF%BC%88%EF%BC%89" rel="stylesheet">
 <!-- k-fonts:end -->
 <link rel="stylesheet" href="/kit/kit.css">
 <script src="/kit/kit.js"></script>
@@ -19,11 +19,14 @@
 <style>
 /* 配信カウンターの OBS 表示ページ（ウィンドウキャプチャで取り込む）。操作ボタン・広告・説明文は映さない。
    中身は 1920x1080 の舞台を作り、ウィンドウの大きさに合わせて縮める（どの大きさでもスクロールしない）。
-   背景: green（既定・OBSのクロマキーで抜く）/ transparent（別ブラウザのブラウザソース用）/ cream */
-html,body{margin:0;height:100%;overflow:hidden}
-body{background:#00b140;font-family:"M PLUS Rounded 1c","Hiragino Maru Gothic ProN","Hiragino Sans",sans-serif;color:var(--k-sumi)}
-body[data-bg="transparent"]{background:transparent}
-body[data-bg="cream"]{background:var(--k-kinari) url(/kit/img/d4-washi.webp) 0 0/480px auto}
+   2026-10-22 枠は kit の重ね表示型 k-view-ov（.k-ov の中に 1920x1080 の舞台。置き方 band／corner は舞台の中で決める）。
+   背景は kit の KKit.view（?bg= ＞ 操作画面の選択〈k-view-bg:kkp-counter〉＞ green）: green（既定・OBSのクロマキーで抜く）/ clear（透過）/ cream。待ち画面は k-ov-idle */
+/* kit b0046ef の足りない所の回避（kit を直したら消す）: k-view-ov の body{background:transparent} が緑・白・黒・色の背景と同じ強さで後にあり、透過になってしまう */
+[data-k-bg="green"] body.k-view.k-view-ov{background:#00b140}
+[data-k-bg="white"] body.k-view.k-view-ov{background:#fff}
+[data-k-bg="black"] body.k-view.k-view-ov{background:#000}
+[data-k-bg="color"] body.k-view.k-view-ov{background:var(--k-view-bg,#fbf3e4)}
+body.k-view{font-family:"M PLUS Rounded 1c","Hiragino Maru Gothic ProN","Hiragino Sans",sans-serif;color:var(--k-sumi)}
 .stage{position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:0 0}
 .tl{position:absolute;font-family:var(--k-bold);color:var(--k-sumi)}
 .seal{display:inline-grid;place-items:center;flex:none;background:url(/kit/img/d4-seal.webp) center/100% 100% no-repeat;color:#fff;font-family:var(--k-head);font-weight:800;line-height:1}
@@ -109,11 +112,6 @@ body[data-bg="cream"]{background:var(--k-kinari) url(/kit/img/d4-washi.webp) 0 0
 .stage[data-place="corner"] .fx-batsu{top:52%;left:50px;margin-left:0;width:1200px}
 .stage[data-place="corner"] .fx-out{left:calc(50% - 230px)}
 
-.credit{position:absolute;right:28px;top:10px;font-size:42px;font-weight:800;color:#fff;text-shadow:0 0 3px var(--k-sumi),2px 2px 0 var(--k-sumi),-2px -2px 0 var(--k-sumi),2px -2px 0 var(--k-sumi),-2px 2px 0 var(--k-sumi);pointer-events:none}
-.stage[data-place="corner"] .credit{top:auto;bottom:16px}
-.credit[hidden]{display:none}
-.wait{position:absolute;left:60px;top:60px;padding:16px 24px;background:rgba(255,255,255,.9);border:4px solid var(--k-sumi);border-radius:10px;font-size:42px;font-weight:800}
-.wait[hidden]{display:none}
 
 @keyframes fade-up{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
 @keyframes bump{0%{transform:scale(1)}35%{transform:scale(1.45) rotate(-6deg)}70%{transform:scale(.92)}100%{transform:scale(1)}}
@@ -122,7 +120,8 @@ body[data-bg="cream"]{background:var(--k-kinari) url(/kit/img/d4-washi.webp) 0 0
 @media (prefers-reduced-motion:reduce){.bump,.fx-out.show .hk,.fx-out.show .who,.fx-batsu.show .scr{animation:none}}
 </style>
 </head>
-<body data-bg="green">
+<body class="k-view k-view-ov">
+<div class="k-ov" data-k-place="full">
 <div class="stage" id="stage" data-place="band">
   <div class="tl tl-band"><div class="head"><span class="seal">縛</span><span class="rule k-hd" data-rule></span></div><div class="ppl" data-ppl></div></div>
   <div class="tl tl-corner"><div class="head"><span class="seal">縛</span><span class="rule k-hd" data-rule></span></div><div data-ppl></div></div>
@@ -136,16 +135,19 @@ body[data-bg="cream"]{background:var(--k-kinari) url(/kit/img/d4-washi.webp) 0 0
       <span class="item" id="bItem"></span>
     </div>
   </div>
-  <div class="credit" id="credit">roulette.kkpwebninja.com/counter</div>
-  <div class="wait" id="wait" hidden>操作画面（配信カウンター）を同じブラウザで開くと、ここに数が出ます</div>
 </div>
+</div>
+<div class="k-view-idle k-ov-idle" hidden><b>配信カウンター</b><p>まもなく始まります</p><small>操作画面（配信カウンター）を同じブラウザで開くと、ここに数が出ます</small></div>
+<div class="k-ov-credit k-top" id="credit">roulette.kkpwebninja.com/counter</div>
 <script>
 (function () {
   'use strict';
   var $ = function (id) { return document.getElementById(id); };
   var q = new URLSearchParams(location.search);
   var pv = q.get('pv') === '1';   // 操作画面の中の小さな見本
-  var lock = { bg: q.get('bg'), place: q.get('place'), credit: q.get('credit') };
+  var lock = { place: q.get('place'), credit: q.get('credit') };
+  // 背景は kit の KKit.view（?bg= の transparent も読める）。操作画面の中の見本では透過をクリームで見せる
+  var V = KKit.view({ ch: 'kkp-counter', def: 'green', stage: 'body', onBg: function (b) { if (pv && b === 'clear') document.documentElement.setAttribute('data-k-bg', 'cream'); } });
   var S = null, lastId = 0, outT = 0, batsuT = 0;
   var COLOR = { N: '#b9783f', R: '#8e9cae', SR: '#e3a400', SSR: '#ff3d7f' };
   var reduce = false; try { reduce = matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
@@ -173,10 +175,9 @@ body[data-bg="cream"]{background:var(--k-kinari) url(/kit/img/d4-washi.webp) 0 0
   function render() {
     if (!S) return;
     var place = /^(band|corner)$/.test(opt('place', 'band')) ? opt('place', 'band') : 'band';
-    var bg = /^(green|transparent|cream)$/.test(opt('bg', 'green')) ? opt('bg', 'green') : 'green';
     stage.dataset.place = place;
-    document.body.dataset.bg = pv && bg === 'transparent' ? 'cream' : bg;
     var cr = opt('credit', true); $('credit').hidden = cr === false || cr === '0' || cr === 0;
+    $('credit').classList.toggle('k-top', place !== 'corner');   // 下の帯なら右上・右上に小さくなら右下
     var rule = String(S.rule || '').trim() || '縛り';
     var n = Math.min(9, Math.max(1, S.n | 0)), th = Math.min(20, Math.max(1, S.th | 0));
     stage.dataset.many = n >= 7 ? '1' : '';   // 7〜9項目は帯の左（縛り）を細くし、数と名前を少し小さく
@@ -254,7 +255,7 @@ body[data-bg="cream"]{background:var(--k-kinari) url(/kit/img/d4-washi.webp) 0 0
     if (!m || !m.s) return;
     if (m.id && m.id === lastId) return;
     lastId = m.id || lastId;
-    S = m.s; $('wait').hidden = true;
+    S = m.s; V.idle(false);
     render();
     var f = m.fx; if (!f) return;
     if (f.k === 'out') { bump(f.i); showOut(f.i); }
@@ -267,23 +268,20 @@ body[data-bg="cream"]{background:var(--k-kinari) url(/kit/img/d4-washi.webp) 0 0
     var W = window.innerWidth, H = window.innerHeight, s = Math.min(W / 1920, H / 1080);
     stage.style.transform = 'translate(' + Math.round((W - 1920 * s) / 2) + 'px,' + Math.round((H - 1080 * s) / 2) + 'px) scale(' + s + ')';
   }
-  window.addEventListener('resize', fit); fit();
+  fit();
 
   // 操作ページ（同じブラウザ）から kit の KKit.live で受け取る（3秒ごとに hello＝操作ページの「つながっています」）。
   // 開いたときの最初の1つは数だけ出す（アウト・罰ゲームの演出は出し直さない）
   var first = true;
   function onState(m) {
-    if (first) { first = false; if (m && m.s) { handle({ s: m.s, id: m.id }); return; } $('wait').hidden = pv; }
+    if (first) { first = false; if (m && m.s) { handle({ s: m.s, id: m.id }); return; } V.idle(!pv, '配信カウンター'); }
     else handle(m);
     if (!S) { S = { rule: '敬語禁止', n: 3, names: [], counts: [0, 0, 0, 0, 0, 0, 0, 0, 0], th: 3 }; render(); }
   }
-  var LV = KKit.live({ ch: 'kkp-counter', role: 'view', onState: function (m) { onState(m); } });
-  if (!pv) LV.start();
-  else {   // 操作画面の中の見本は hello を出さない（「つながっています」を本物の表示ページだけにする）
-    var d0 = null; try { d0 = JSON.parse(localStorage.getItem('k-live:kkp-counter') || 'null'); } catch (e) {}
-    onState(d0 && d0.s);
-  }
-  try { document.fonts.ready.then(render); } catch (e) {}
+  // 操作画面の中の見本（iframe）は kit が受け取るだけ（watch）にする＝「つながっています」を本物の表示ページだけに
+  KKit.live({ ch: 'kkp-counter', role: 'view', onState: function (m) { onState(m); } }).start();
+  // 字のデータが後から届いた・窓の大きさが変わった（kit の KKit.view.refit）
+  KKit.view.refit(function () { fit(); render(); });
   if (!pv) kkpEvent('counter_view_open', { from: 'local' });
 })();
 </script>
