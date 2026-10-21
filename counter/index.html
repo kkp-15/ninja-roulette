@@ -23,6 +23,8 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://roulette.kkpwebninja.com/ogp.png?d=20261015">
 <script src="/ga.js"></script>
+<!-- 共通部品 D4 の kit.js は defer なしで先に読む（配信モードの判定 KKit.stream を stream.js と広告より先に使う） -->
+<script src="/kit/kit.js"></script>
 <script src="/stream.js"></script>
 <script type="application/ld+json">
 {
@@ -40,10 +42,9 @@
 </script>
 <!-- 共通部品 D4（kkp-kit を kit/ にコピーしたもの。中は手で直さず kkp-kit 側で直して sync.sh） -->
 <!-- k-fonts:start -->
-<link href="https://fonts.googleapis.com/css2?family=Yuji+Syuku&family=RocknRoll+One&display=swap&text=-.%2F0123456789%3A%40BCEGLNORSUXZ_abcefghijklmnoprstw%C2%A9%C2%B7%E2%80%A6%E2%86%92%E2%88%92%E3%80%81%E3%80%82%E3%80%8C%E3%80%8D%E3%80%9C%E3%81%82%E3%81%84%E3%81%86%E3%81%88%E3%81%8A%E3%81%8B%E3%81%8C%E3%81%8D%E3%81%8F%E3%81%90%E3%81%91%E3%81%93%E3%81%94%E3%81%95%E3%81%97%E3%81%98%E3%81%99%E3%81%9B%E3%81%9D%E3%81%9F%E3%81%A0%E3%81%A1%E3%81%A3%E3%81%A4%E3%81%A6%E3%81%A7%E3%81%A8%E3%81%A9%E3%81%AA%E3%81%AB%E3%81%AE%E3%81%AF%E3%81%B0%E3%81%B3%E3%81%B6%E3%81%B8%E3%81%BB%E3%81%BE%E3%81%BF%E3%82%81%E3%82%82%E3%82%83%E3%82%84%E3%82%88%E3%82%89%E3%82%8A%E3%82%8B%E3%82%8C%E3%82%8F%E3%82%92%E3%82%93%E3%82%A2%E3%82%A3%E3%82%A4%E3%82%A6%E3%82%AB%E3%82%AC%E3%82%AD%E3%82%AF%E3%82%B0%E3%82%B2%E3%82%B3%E3%82%B5%E3%82%B6%E3%82%B7%E3%82%B8%E3%82%B9%E3%82%BB%E3%82%BD%E3%82%BF%E3%83%81%E3%83%83%E3%83%86%E3%83%87%E3%83%88%E3%83%89%E3%83%8A%E3%83%90%E3%83%91%E3%83%94%E3%83%95%E3%83%96%E3%83%97%E3%83%9A%E3%83%9C%E3%83%9D%E3%83%9E%E3%83%A0%E3%83%A3%E3%83%A9%E3%83%AA%E3%83%AB%E3%83%AC%E3%83%AD%E3%83%AF%E3%83%B3%E3%83%BB%E3%83%BC%E4%B8%80%E4%B8%8A%E4%B8%8B%E4%B8%8D%E4%B8%AD%E4%B8%B8%E4%B9%97%E4%BA%BA%E4%BB%8A%E4%BB%98%E4%BB%A5%E4%BB%B6%E4%BD%95%E4%BD%9C%E4%BD%BF%E4%BE%8B%E4%BF%9D%E4%BF%A1%E5%80%8B%E5%84%AA%E5%85%88%E5%85%A5%E5%85%A8%E5%85%B7%E5%87%BA%E5%88%86%E5%88%87%E5%88%A4%E5%88%A5%E5%88%A9%E5%89%8D%E5%89%B2%E5%8A%9B%E5%8A%A0%E5%8A%A9%E5%8A%B9%E5%8B%95%E5%8B%9D%E5%8C%96%E5%8F%82%E5%8F%8E%E5%8F%B3%E5%90%88%E5%90%8C%E5%90%8D%E5%90%AB%E5%91%8A%E5%93%A1%E5%95%8F%E5%9B%9E%E5%A0%B1%E5%A0%B4%E5%A3%B0%E5%A4%96%E5%A5%BD%E5%AD%90%E5%AD%97%E5%AD%98%E5%AE%89%E5%AE%9A%E5%B0%8F%E5%B0%BE%E5%B1%8A%E5%B7%BB%E5%B8%AF%E5%BA%83%E5%BA%A6%E5%BC%95%E5%BE%8C%E5%BF%8D%E6%83%85%E6%88%BB%E6%89%B1%E6%8A%9C%E6%8A%BC%E6%93%8D%E6%95%AC%E6%95%B0%E6%96%99%E6%96%B9%E6%98%A0%E6%99%AF%E6%9B%B8%E6%9B%BF%E6%9C%9B%E6%9C%AC%E6%9C%AD%E6%9D%A1%E6%9E%9C%E6%A8%99%E6%AC%84%E6%AD%A2%E6%AE%B5%E6%B1%BA%E6%B6%88%E6%B8%AC%E7%84%A1%E7%89%A9%E7%94%A8%E7%94%B3%E7%94%BB%E7%99%BB%E7%9B%8A%E7%9B%AE%E7%9B%B4%E7%A0%A6%E7%A4%BA%E7%A6%81%E7%B4%B0%E7%B5%82%E7%B8%9B%E7%BD%AE%E7%BD%B0%E8%80%85%E8%83%8C%E8%87%AA%E8%8B%B1%E8%91%89%E8%A1%A8%E8%A6%81%E8%A6%8B%E8%A8%80%E8%A8%88%E8%A8%AD%E8%A8%B1%E8%AA%9E%E8%AA%B0%E8%AB%8B%E8%AB%BE%E8%B2%A0%E8%B3%AA%E8%B6%B3%E8%BA%AB%E9%80%81%E9%80%8F%E9%81%8E%E9%81%93%E9%81%95%E9%81%B8%E9%85%8D%E9%87%8D%E9%8C%B2%E9%96%89%E9%96%8B%E9%96%93%E9%9A%85%E9%9D%A2%E9%9F%B3%E9%A0%85%E9%A1%8C%E9%B3%B4%EF%BC%88%EF%BC%89%EF%BC%8B%EF%BC%9F%EF%BD%9C" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Yuji+Syuku&family=RocknRoll+One&display=swap&text=-.%2F0123456789%3A%40BCEGLNORSUXZ_abcefghijklmnoprstw%C2%A9%C2%B7%E2%80%A6%E2%86%92%E2%88%92%E3%80%81%E3%80%82%E3%80%8C%E3%80%8D%E3%80%9C%E3%81%82%E3%81%84%E3%81%86%E3%81%88%E3%81%8A%E3%81%8B%E3%81%8C%E3%81%8D%E3%81%8F%E3%81%90%E3%81%91%E3%81%93%E3%81%94%E3%81%95%E3%81%97%E3%81%98%E3%81%99%E3%81%9B%E3%81%9D%E3%81%9F%E3%81%A0%E3%81%A1%E3%81%A3%E3%81%A4%E3%81%A6%E3%81%A7%E3%81%A8%E3%81%A9%E3%81%AA%E3%81%AB%E3%81%AE%E3%81%AF%E3%81%B0%E3%81%B3%E3%81%B6%E3%81%B8%E3%81%BB%E3%81%BE%E3%81%BF%E3%82%81%E3%82%82%E3%82%83%E3%82%84%E3%82%88%E3%82%89%E3%82%8A%E3%82%8B%E3%82%8C%E3%82%8F%E3%82%92%E3%82%93%E3%82%A2%E3%82%A3%E3%82%A4%E3%82%A6%E3%82%AB%E3%82%AC%E3%82%AD%E3%82%AF%E3%82%B0%E3%82%B2%E3%82%B3%E3%82%B5%E3%82%B6%E3%82%B7%E3%82%B8%E3%82%B9%E3%82%BB%E3%82%BD%E3%82%BF%E3%83%81%E3%83%83%E3%83%86%E3%83%87%E3%83%88%E3%83%89%E3%83%8A%E3%83%90%E3%83%91%E3%83%94%E3%83%95%E3%83%96%E3%83%97%E3%83%9A%E3%83%9C%E3%83%9D%E3%83%9E%E3%83%A0%E3%83%A3%E3%83%A9%E3%83%AA%E3%83%AB%E3%83%AC%E3%83%AD%E3%83%AF%E3%83%B3%E3%83%BB%E3%83%BC%E4%B8%80%E4%B8%8A%E4%B8%8B%E4%B8%8D%E4%B8%AD%E4%B8%B8%E4%B9%97%E4%BA%BA%E4%BB%8A%E4%BB%98%E4%BB%A5%E4%BB%B6%E4%BD%95%E4%BD%9C%E4%BD%BF%E4%BE%8B%E4%BF%9D%E4%BF%A1%E5%80%8B%E5%84%AA%E5%85%88%E5%85%A5%E5%85%A8%E5%85%B7%E5%87%BA%E5%88%86%E5%88%87%E5%88%A4%E5%88%A5%E5%88%A9%E5%89%8D%E5%89%B2%E5%8A%9B%E5%8A%A0%E5%8A%A9%E5%8A%B9%E5%8B%95%E5%8B%9D%E5%8C%96%E5%8F%82%E5%8F%8E%E5%8F%AF%E5%8F%B3%E5%90%88%E5%90%8C%E5%90%8D%E5%90%AB%E5%91%8A%E5%93%A1%E5%95%8F%E5%9B%9E%E5%A0%B1%E5%A0%B4%E5%A3%B0%E5%A4%96%E5%A5%BD%E5%AD%90%E5%AD%97%E5%AD%98%E5%AE%89%E5%AE%9A%E5%B0%8F%E5%B0%BE%E5%B1%8A%E5%B7%BB%E5%B8%AF%E5%BA%83%E5%BA%A6%E5%BC%95%E5%BE%8C%E5%BF%8D%E6%83%85%E6%88%BB%E6%89%B1%E6%8A%9C%E6%8A%BC%E6%93%8D%E6%95%AC%E6%95%B0%E6%96%99%E6%96%B0%E6%96%B9%E6%98%A0%E6%99%82%E6%99%AF%E6%9B%B8%E6%9B%BF%E6%9C%9B%E6%9C%AC%E6%9C%AD%E6%9D%A1%E6%9E%9C%E6%A8%99%E6%AC%84%E6%AD%A2%E6%AE%B5%E6%B1%BA%E6%B6%88%E6%B8%AC%E7%84%A1%E7%89%A9%E7%94%A8%E7%94%B3%E7%94%BB%E7%99%BB%E7%9B%8A%E7%9B%AE%E7%9B%B4%E7%A0%A6%E7%A4%BA%E7%A6%81%E7%B4%B0%E7%B5%82%E7%B6%9A%E7%B8%9B%E7%BD%AE%E7%BD%B0%E8%80%85%E8%83%8C%E8%87%AA%E8%8B%B1%E8%91%89%E8%A1%A8%E8%A6%81%E8%A6%8B%E8%A8%80%E8%A8%88%E8%A8%AD%E8%A8%B1%E8%AA%9E%E8%AA%B0%E8%AB%8B%E8%AB%BE%E8%B2%A0%E8%B3%AA%E8%B6%B3%E8%BA%AB%E9%80%81%E9%80%8F%E9%81%8E%E9%81%93%E9%81%95%E9%81%B8%E9%85%8D%E9%87%8D%E9%8C%B2%E9%96%89%E9%96%8B%E9%96%93%E9%9A%85%E9%9D%A2%E9%9F%B3%E9%A0%85%E9%A1%8C%E9%B3%B4%EF%BC%88%EF%BC%89%EF%BC%8B%EF%BC%9A%EF%BC%9F%EF%BD%9C" rel="stylesheet">
 <!-- k-fonts:end -->
 <link rel="stylesheet" href="/kit/kit.css">
-<script src="/kit/kit.js" defer></script>
 <style>
 :root{--ink:#2b2b2b;--sub:#5f5f5f;--line:#cfc6b8;--line-l:#e8e1d6;--head:#fff6ea;--accent:#e2600f;--link:#0b57a4}
 *{box-sizing:border-box}
@@ -130,7 +131,7 @@ kbd{display:inline-block;padding:0 5px;font-family:inherit;font-size:14px;line-h
 .cnt-btns{display:flex;gap:10px;align-items:stretch}
 .cnt-btns .k-btn-main{flex:1;min-width:0;min-height:68px;padding:0 4px;font-size:26px;letter-spacing:.06em}
 .cnt-btns .k-btn-sub{flex:none;width:54px;min-height:auto;padding:0;font-size:17px;box-shadow:var(--k-sh-s)}
-.cnt .batsu-mark{position:absolute;right:8px;top:40px;width:48px;height:48px;font-size:22px;display:none}
+.cnt .batsu-mark{position:absolute;right:8px;top:40px;font-size:22px;display:none}   /* 大きさは kit の k-stamp-sm（48px）。1文字なので字だけ大きく */
 .cnt.over .batsu-mark{display:inline-grid}
 /* 7〜9項目は札を少し詰める */
 .counters.dense{gap:10px}
@@ -149,15 +150,18 @@ kbd{display:inline-block;padding:0 5px;font-family:inherit;font-size:14px;line-h
 .bz-draw{width:100%;min-height:62px;font-size:22px;letter-spacing:.04em}
 /* 罰ゲームの結果は kit の巻物（k-result）。字は側の列に収まる大きさに */
 .bz-res.k-result{margin:0 0 10px;padding:2px 0 4px}
+.c-live{margin:6px 0 0}
+#resumeBox{margin:0 0 10px}
+#resumeBox[hidden]{display:none}   /* kit の .k-resume は display:flex なので hidden が効かない */
 .bz-res.k-result small{margin:0 0 2px}
 .bz-res.k-result small span{font-weight:800;color:var(--k-sumi)}
-.bz-res.k-result b{font-family:var(--k-body);font-weight:900;font-size:20px;line-height:1.45;letter-spacing:.02em;word-break:auto-phrase;text-wrap:balance}
+.bz-res.k-result b{font-weight:900}   /* 長い文の段は kit の k-result-long（丸ゴシック20px・折り返し） */
 .bz-res .rar{display:inline-block;margin-right:6px;font-variant-numeric:normal;padding:0 7px;border:2px solid var(--k-sumi);border-radius:4px;color:#fff;font-family:var(--k-bold);font-weight:400;font-size:14px;line-height:1.6;vertical-align:3px;text-shadow:0 0 2px var(--k-sumi)}
 .bz-res .rar:empty{display:none}
 .bz-btns{display:flex;flex-wrap:wrap;gap:8px}
 .bz-btns .k-btn-sub{flex:1 1 auto;min-height:42px;font-size:14px;padding:0 10px;box-shadow:var(--k-sh-s)}
 /* 2026-10-21 PC は zoom で縮める（--z）。小さい字は縮めても14px以上 */
-.rule-now,.keyhint,.bz-res .rar,.bz-btns .k-btn-sub,.bz-idle{font-size:max(14px,calc(14.2px / var(--z,1)))}
+.rule-now,.keyhint,.bz-res .rar,.bz-btns .k-btn-sub,.bz-idle,.c-live .k-live,.c-view .flash,.undo-row .k-btn,.c-view .k-btn{font-size:max(14px,calc(14.2px / var(--z,1)))}
 .keyhint kbd{font-size:inherit}
 /* レア度の札：色は意味なので変えず、白字に墨のふちを付けて読めるように */
 .bz-res .rar{text-shadow:var(--k-outline)}
@@ -204,7 +208,7 @@ details.c-set.k-fold:last-of-type{border-bottom:var(--k-bw-s) solid var(--k-sumi
 .pv iframe{position:absolute;inset:0;width:100%;height:100%;border:0;pointer-events:none}
 .reset-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
 .reset-row .k-btn-sub{min-height:44px;font-size:15px;padding:0 16px}
-.reset-row .k-btn-sub.armed{background:var(--k-shu);color:#fff}
+.reset-row .k-btn-sub.k-twice-on{background:var(--k-shu);color:#fff}
 .keylist{margin:6px 0 0;padding-left:1.2rem;font-size:14px}
 .keylist li{margin:0 0 2px}
 
@@ -263,6 +267,7 @@ details.c-set.k-fold:last-of-type{border-bottom:var(--k-bw-s) solid var(--k-sumi
 </header>
 
 <main>
+<div id="resumeBox" hidden></div>
 <div id="tool" class="c-tool" data-lay="wide">
   <section class="c-live" aria-labelledby="t-cnt">
     <div class="c-band">
@@ -284,7 +289,7 @@ details.c-set.k-fold:last-of-type{border-bottom:var(--k-bw-s) solid var(--k-sumi
           <button type="button" class="k-btn k-btn-main bz-draw" id="drawBatsu">罰ゲームを引く</button>
         </div>
         <div id="bzShow" hidden>
-          <div class="k-result bz-res"><small><span id="bzWho2"></span> の罰ゲーム</small><b><span class="rar" id="bzRar"></span><span id="bzTxt"></span></b></div>
+          <div class="k-result k-result-long bz-res"><small><span id="bzWho2"></span> の罰ゲーム</small><b><span class="rar" id="bzRar"></span><span id="bzTxt"></span></b></div>
           <div class="bz-btns">
             <button type="button" class="k-btn k-btn-sub" id="redraw">引き直す</button>
             <button type="button" class="k-btn k-btn-sub" id="hideShow">表示を消す</button>
@@ -294,9 +299,10 @@ details.c-set.k-fold:last-of-type{border-bottom:var(--k-bw-s) solid var(--k-sumi
       </div>
     </section>
     <div class="c-view">
-      <a class="k-btn k-btn-sub" id="openView" href="/counter/view/" target="kkp_counter_view" rel="noopener">表示ページを開く</a>
+      <a class="k-btn k-btn-sub" id="openView" href="/counter/view/" data-ch="kkp-counter" data-name="kkp_counter_view" target="kkp_counter_view" rel="noopener">表示ページを開く</a>
       <button type="button" class="k-btn k-btn-sub" id="copyView">URLをコピー</button>
-      <p class="flash" id="viewMsg" aria-live="polite"></p>
+      <p class="c-live"><span class="k-live" data-k-live="kkp-counter">表示ページ：つながっていません</span></p>
+      <p class="flash" id="viewMsg" aria-live="polite"></p><p class="flash" id="openViewMsg" aria-live="polite"></p>
     </div>
   </aside>
 </div>
@@ -434,16 +440,21 @@ details.c-set.k-fold:last-of-type{border-bottom:var(--k-bw-s) solid var(--k-sumi
   var hist = [];
   function nm(i) { return String(S.names[i] || '').trim() || ('参加者' + (i + 1)); }
 
-  /* ---- 表示ページへ送る（同じブラウザの別ウィンドウ・設定の中の見本） ---- */
-  var chan = null; try { chan = new BroadcastChannel('kkp-counter'); } catch (e) {}
+  /* ---- 表示ページへ送る（同じブラウザの別ウィンドウ・設定の中の見本）: kit の KKit.live（つながりの札 .k-live） ---- */
+  // 前の版は kkp_counter_state に置いていた。最初の1回だけ kit の形に移す（続きからを選ぶまで、表示ページは前の数のまま）
+  try { var oldSt = localStorage.getItem(LS.state); if (oldSt && !localStorage.getItem('k-live:kkp-counter')) localStorage.setItem('k-live:kkp-counter', JSON.stringify({ t: Date.now(), s: { id: 1, s: JSON.parse(oldSt), fx: null } })); localStorage.removeItem(LS.state); localStorage.removeItem(LS.msg); } catch (e) {}
+  var LIVE = KKit.live({ ch: 'kkp-counter', role: 'op' });
+  var RES = { pending: false, save: function () {}, clear: function () {} };
   function stateObj() { return { rule: S.rule, n: S.n, names: S.names, counts: S.counts, th: S.th, place: S.place, bg: S.bg, credit: S.credit, show: S.show }; }
+  function total() { var t = 0; for (var i = 0; i < S.n; i++) t += S.counts[i] | 0; return t; }
   function send(fx) {
     store(LS.set, S);
-    var st = stateObj(); store(LS.state, st);
-    var m = { id: Date.now() + Math.random(), s: st, fx: fx || null };
-    if (chan) try { chan.postMessage(m); } catch (e) {}
-    store(LS.msg, m);
+    LIVE.send({ id: Date.now() + Math.random(), s: stateObj(), fx: fx || null });
+    // 続きから（数が1つでもあれば・罰ゲームを出している間）。選ぶまでは前回の分を消さない
+    if (!RES.pending) { if (total() > 0 || S.show) RES.save({ rule: S.rule, total: total(), n: S.n }); else RES.clear(); }
   }
+  // 続きからを選ばずに数え始めたら、前回の数のまま続ける（表示ページへの送りも止めたままにしない）
+  function takeResume() { if (!RES.pending) return; var g = document.querySelector('#resumeBox [data-k-go]'); if (g) g.click(); }
 
   /* ---- 効果音（効果音ラボの音を同梱。直リンクしない） ---- */
   var SND = {};
@@ -521,7 +532,7 @@ details.c-set.k-fold:last-of-type{border-bottom:var(--k-bw-s) solid var(--k-sumi
       var d = document.createElement('div'); d.className = 'cnt'; d.dataset.i = i;
       d.innerHTML = '<div class="cnt-head"><span class="k-seal" title="' + (i + 1) + 'キーで＋1">' + (i + 1) + '</span><span class="cnt-name"></span></div>' +
         '<div class="cnt-num"><b class="k-num" data-c></b><span class="k-num" data-th></span></div>' +
-        '<span class="k-stamp batsu-mark" aria-hidden="true">罰</span>' +
+        '<span class="k-stamp k-stamp-sm batsu-mark" aria-hidden="true">罰</span>' +
         '<div class="cnt-btns"><button type="button" class="k-btn k-btn-main" data-plus>＋1</button><button type="button" class="k-btn k-btn-sub" data-minus>−1</button></div>';
       d.querySelector('[data-plus]').onclick = function () { add(i, 1, 'tap'); };
       d.querySelector('[data-minus]').onclick = function () { add(i, -1, 'tap'); };
@@ -533,7 +544,7 @@ details.c-set.k-fold:last-of-type{border-bottom:var(--k-bw-s) solid var(--k-sumi
     [].forEach.call($('counters').children, function (d) {
       var i = +d.dataset.i, el = d.querySelector('.cnt-name'), l = nm(i).length;
       el.textContent = nm(i); el.title = nm(i);
-      el.style.fontSize = l > 9 ? '14px' : l > 6 ? '16px' : '';
+      el.style.fontSize = l > 9 ? 'max(14px,calc(14.2px / var(--z,1)))' : l > 6 ? 'max(16px,calc(14.2px / var(--z,1)))' : '';   // 縮めても14px以上
       d.querySelector('[data-plus]').setAttribute('aria-label', nm(i) + 'に＋1');
       d.querySelector('[data-minus]').setAttribute('aria-label', nm(i) + 'から−1');
     });
@@ -554,6 +565,7 @@ details.c-set.k-fold:last-of-type{border-bottom:var(--k-bw-s) solid var(--k-sumi
 
   function add(i, d, how, fromUndo) {
     if (i >= S.n) return;
+    takeResume();
     var before = S.counts[i], after = Math.max(0, before + d);
     if (after === before) return;
     S.counts[i] = after;
@@ -574,6 +586,7 @@ details.c-set.k-fold:last-of-type{border-bottom:var(--k-bw-s) solid var(--k-sumi
   function myList() { return S.myBatsu.split(/\r?\n/).map(function (s) { return s.trim().slice(0, 80); }).filter(Boolean); }
   var lastMy = '';
   function drawBatsu(i) {
+    takeResume();
     var text = '', r = '';
     if (S.bz === 'my' && myList().length) {
       var L = myList(), c = L.filter(function (t) { return t !== lastMy; }); if (!c.length) c = L;
@@ -628,17 +641,12 @@ details.c-set.k-fold:last-of-type{border-bottom:var(--k-bw-s) solid var(--k-sumi
   /* ---- 直前を戻す・リセット ---- */
   function undo() { var h = hist.pop(); if (!h) return; add(h.i, -h.d, 'undo', true); }
   $('undo').onclick = undo;
-  var armT = 0, rs = $('reset');
-  rs.onclick = function () {
-    if (rs.classList.contains('armed')) {
-      clearTimeout(armT); rs.classList.remove('armed'); rs.textContent = '全員の回数を0にする';
-      for (var j = 0; j < MAX; j++) S.counts[j] = 0;
-      hist = []; S.reach = -1; S.show = null;
-      renderNums(); renderBatsu(); send({ k: 'hide' }); return;
-    }
-    rs.classList.add('armed'); rs.textContent = 'もう一度押すと全員0に';
-    armT = setTimeout(function () { rs.classList.remove('armed'); rs.textContent = '全員の回数を0にする'; }, 3000);
-  };
+  // 全員0は2回押し（kit の KKit.twice。1回目で「もう一度押すと全員0に」・3秒で戻る）
+  KKit.twice('#reset', { text: 'もう一度押すと全員0に', ok: function () {
+    for (var j = 0; j < MAX; j++) S.counts[j] = 0;
+    hist = []; S.reach = -1; S.show = null;
+    renderNums(); renderBatsu(); send({ k: 'hide' });
+  } });
 
   /* ---- 目標回数・音・表記 ---- */
   $('thDown').onclick = function () { S.th = Math.max(1, S.th - 1); afterTh(); };
@@ -668,10 +676,7 @@ details.c-set.k-fold:last-of-type{border-bottom:var(--k-bw-s) solid var(--k-sumi
   });
 
   /* ---- 表示ページを別ウィンドウで（OBS のウィンドウキャプチャ用）・URLをコピー ---- */
-  $('openView').addEventListener('click', function (e) {
-    kkpEvent('view_open_click', { from: 'counter' });
-    try { var w = window.open('/counter/view/', 'kkp_counter_view', 'popup=yes,width=1280,height=720'); if (w) { e.preventDefault(); w.focus(); } } catch (err) {}
-  });
+  $('openView').addEventListener('click', function () { kkpEvent('view_open_click', { from: 'counter' }); });   // 開くのは stream.js（KKit.openView・別窓 1280x720）
   $('copyView').addEventListener('click', function () {
     var url = ORIGIN + '/counter/view/', btn = this;
     var done = function () { $('viewMsg').textContent = 'コピーしました（表示ページは同じブラウザで開いてください）'; btn.textContent = 'コピーしました'; setTimeout(function () { btn.textContent = 'URLをコピー'; $('viewMsg').textContent = ''; }, 2400); };
@@ -704,6 +709,14 @@ details.c-set.k-fold:last-of-type{border-bottom:var(--k-bw-s) solid var(--k-sumi
     renderItems(); renderCounters(); renderBatsu(); renderBz(); fit();
   }
   renderAll();
+  // 続きから（kit の KKit.resume）。数はこの端末の設定（kkp_counter_settings）に期限なしで残っている。
+  // 前回の数があれば「続きから／消して新しく」を出し、選ぶまでは表示ページに送らない（前の数のまま）。消すと全員0（名前・縛りは残す）
+  RES = KKit.resume({ key: 'kkp-counter-run', box: '#resumeBox', live: LIVE, ttl: 30 * 24 * 3600 * 1000,
+    valid: function () { return total() > 0 || !!S.show; },
+    label: function (d) { return (String(d.rule || '').trim() || '縛り') + '・合計' + (d.total | 0) + '回'; },
+    onResume: function () { fit(); },
+    onDiscard: function () { for (var j = 0; j < MAX; j++) S.counts[j] = 0; hist = []; S.reach = -1; S.show = null; renderNums(); renderBatsu(); send({ k: 'hide' }); fit(); } });
+  if (!RES.pending && (total() > 0 || S.show)) RES.save({ rule: S.rule, total: total(), n: S.n });   // 前の版で数えていた分
   send();
   // 見本（表示ページを小さく埋め込む）。設定を開いたときに読み込む
   var pvLoaded = false;

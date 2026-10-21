@@ -1,23 +1,22 @@
-/* 配信モード（ルーレット・お題ガチャ・配信カウンター共通）。head で ga.js のすぐ後に読む（同期）。
-   はぁ・ito・ワードウルフ・ビンゴと同じ決まり:
-   - PC幅（768px以上）で手動オン（ページのスイッチ／?mode=stream）。localStorage で覚える
-   - オン中は AdSense のスクリプト自体を読まない（自動広告・アンカー広告も出ない）
-   - スマホでは ?mode=stream も効かない（ふだんの使い方で広告を消す抜け道にしないため）。?kkptest=1 のときは幅を見ない（確認用）
-   - 見た目は html.stream の下に stream.css で書く（説明・広告・フッターを畳み、大事な所を大きく） */
+/* 配信モード（ルーレット・お題ガチャ・配信カウンター共通）。head で ga.js と kit/kit.js（defer なし）のすぐ後に読む（同期）。
+   2026-10-22 中身は kit の部品にまとめた:
+   - 配信モード = KKit.stream（PC幅768以上で手動・?mode=stream。切り替えは URL の # と mode= を消して読み直す。前の版の直しは kit に入った）
+     覚えるキーは前の版と同じ kkp-roulette-stream（'1' で配信モード）なので移しかえはいらない
+   - 表示ページを開く = KKit.openView（別窓 1280x720。ポップアップが止められても操作画面は動かさない）
+   - つながりの札 = .k-live（ページが KKit.live を作ったときだけ「つながっています」になる）
+   - オン中は AdSense のスクリプト自体を読まない（自動広告・アンカー広告も出ない）。スマホでは ?mode=stream も効かない。?kkptest=1 のときは幅を見ない（確認用）
+   - 見た目は html.stream の下に stream.css で書く（説明・広告・フッターを畳み、大事な所を大きく）
+   背景は5択（クリーム／緑／透過／白／黒）のまま。kit の背景3択（.k-view-open）には白・黒がないので、ページの window.kkpStreamBg を使う */
 (function () {
   'use strict';
-  var KEY = 'kkp-roulette-stream';
-  var on = false;
-  try { on = localStorage.getItem(KEY) === '1'; } catch (e) {}
-  if (/[?&]mode=stream\b/.test(location.search)) on = true;
-  if (!window.__kkpTest && !(window.matchMedia && window.matchMedia('(min-width:768px)').matches)) on = false;
+  var on = KKit.stream.init({ key: 'kkp-roulette-stream' });
   window.__kkpStream = on;
   if (on) document.documentElement.classList.add('stream');
 
   // 広告のスクリプトは配信モードと確認用（?kkptest=1）では読まない
   var loaded = false;
   window.kkpLoadAds = function () {
-    if (loaded || on || window.__kkpTest) return;
+    if (loaded || KKit.stream.noAds()) return;
     loaded = true;
     var s = document.createElement('script');
     s.async = true; s.crossOrigin = 'anonymous';
@@ -26,17 +25,18 @@
   };
 
   function set(v) {
-    try { localStorage.setItem(KEY, v ? '1' : '0'); } catch (e) {}
     if (window.kkpEvent) kkpEvent('stream_toggle', { mode: v ? 'on' : 'off', from: location.pathname });
-    // 2026-10-21 ハッシュ付き（#…）だと location.replace がハッシュ移動だけで終わり、読み直さなかった。
-    // ハッシュと mode を消してから reload する
-    var u = new URL(location.href); u.searchParams.delete('mode'); u.hash = '';
-    setTimeout(function () {
-      try { history.replaceState(null, '', u.pathname + u.search); } catch (e) {}
-      location.reload();
-    }, 120);
+    setTimeout(function () { KKit.stream.set(v); }, 120);   // 計測を送ってから読み直す
   }
   window.kkpSetStream = set;
+
+  // 表示ページを別窓で開く（ページの #openView の href と data-ch を使う）
+  function openViewWin(ov, msg) {
+    var ok = KKit.openView({ url: ov.getAttribute('href') || '/view/', ch: ov.getAttribute('data-ch') || '', name: ov.getAttribute('data-name') || 'kkp_roulette_view' });
+    if (msg) msg.textContent = ok ? '' : 'ポップアップが止められました。許可してもう一度押してください';
+    return ok;
+  }
+  window.kkpOpenView = openViewWin;
 
   // スイッチ: ページの [data-stream-sw] に置く（PC幅だけ見える）。オン中は上の帯にも「配信モードを終える」
   function ui() {
@@ -49,6 +49,9 @@
       var c = box.querySelector('input'); c.checked = on;
       c.addEventListener('change', function () { set(c.checked); });
     });
+    // ページの「表示ページを開く」も別窓（開けないときは知らせるだけ。計測はページ側）
+    var ov = document.getElementById('openView');
+    if (ov) ov.addEventListener('click', function (e) { e.preventDefault(); openViewWin(ov, document.getElementById('openViewMsg')); });
     if (on) {
       var bar = document.querySelector('.site-in');
       viewRow(bar);
@@ -60,32 +63,25 @@
       }
     }
   }
-  // 2026-10-21 配信モードでは「OBSに映す」の段（.narrow）を畳むので、開くボタンと背景が消えていた。
-  // ページの #openView が見えないときだけ、上の帯（「配信モードを終える」の左）に「表示ページを開く」（別窓 1280x720）と背景を出す。
-  // 背景はページが window.kkpStreamBg = { get(), set(v) } を用意したときだけ。
-  function openViewWin(href, msg) {
-    var w = null;
-    try { w = window.open(href, 'kkp_roulette_view', 'popup=yes,width=1280,height=720'); } catch (e) {}
-    if (w) { try { w.focus(); } catch (e) {} if (msg) msg.textContent = ''; }
-    else if (msg) msg.textContent = 'ポップアップが止められました。許可してもう一度押してください';
-    if (window.kkpEvent) kkpEvent('view_open_click', { from: location.pathname, where: 'stream' });
-  }
+  // 配信モードでは「OBSに映す」の段（.narrow）を畳むので、ページの #openView が見えないときだけ、
+  // 上の帯（「配信モードを終える」の左）に「表示ページを開く」・つながりの札・背景（ページが window.kkpStreamBg を用意したとき）を出す
+  var BGS = [['#fff6ea', 'クリーム'], ['#00b140', '緑（抜く用）'], ['transparent', '透過'], ['#ffffff', '白'], ['#000000', '黒']];
   function viewRow(bar) {
     var ov = document.getElementById('openView');
     var box = bar || document.querySelector('[data-stream-sw]');
     if (!ov || !box || ov.offsetParent !== null) return;
-    var href = ov.getAttribute('href') || '/view/';
+    var ch = ov.getAttribute('data-ch') || '';
     var row = document.createElement('div');
     row.className = 'stream-view';
-    row.innerHTML = '<button type="button" class="k-btn k-btn-sub stream-view-open">表示ページを開く</button>'
+    row.innerHTML = (ch ? '<span class="k-live" data-k-live="' + ch + '">表示ページ：つながっていません</span>' : '')
+      + '<button type="button" class="k-btn k-btn-sub stream-view-open">表示ページを開く</button>'
       + (window.kkpStreamBg ? '<label class="stream-view-bg" title="緑はOBSのフィルタ「クロマキー」で抜けます">背景 <select>'
-        + '<option value="#fff6ea">クリーム</option><option value="#00b140">緑（抜く用）</option>'
-        + '<option value="transparent">透過</option><option value="#ffffff">白</option><option value="#000000">黒</option>'
+        + BGS.map(function (b) { return '<option value="' + b[0] + '">' + b[1] + '</option>'; }).join('')
         + '</select></label>' : '')
       + '<span class="stream-view-msg" aria-live="polite"></span>';
     box.appendChild(row);
     var msg = row.querySelector('.stream-view-msg');
-    row.querySelector('.stream-view-open').addEventListener('click', function () { openViewWin(href, msg); });
+    row.querySelector('.stream-view-open').addEventListener('click', function () { openViewWin(ov, msg); if (window.kkpEvent) kkpEvent('view_open_click', { from: location.pathname, where: 'stream' }); });
     var sel = row.querySelector('select');
     if (sel) {
       var cur = window.kkpStreamBg.get();
@@ -97,7 +93,7 @@
     }
     // 「表示ページのURL」（#obs）への文字リンクは、配信モードでは飛び先が畳まれているので別窓を開く
     [].forEach.call(document.querySelectorAll('a[href="#obs"]'), function (a) {
-      a.addEventListener('click', function (e) { e.preventDefault(); openViewWin(href, msg); });
+      a.addEventListener('click', function (e) { e.preventDefault(); openViewWin(ov, msg); if (window.kkpEvent) kkpEvent('view_open_click', { from: location.pathname, where: 'stream' }); });
     });
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', ui); else ui();

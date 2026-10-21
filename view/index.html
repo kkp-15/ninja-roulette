@@ -12,7 +12,7 @@
 <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@800;900&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&display=swap&text=NRS%E7%B5%90%E6%9E%9C%E6%AE%8B%E3%82%8A0123456789%2F" rel="stylesheet">
 <link rel="stylesheet" href="/kit/kit.css">
-<script src="/kit/kit.js" defer></script>
+<script src="/kit/kit.js"></script>
 <script src="/ga.js"></script>
 <style>
 /* OBS のウィンドウキャプチャで取り込む表示ページ（別端末用のURLはブラウザソースでも動く）: 背景は透過（既定）。操作ボタン・広告・説明文は映さない
@@ -117,20 +117,21 @@ body{background:transparent;font-family:"M PLUS Rounded 1c","Hiragino Maru Gothi
     var o = { rarity: msg.rarity, text: msg.text, packName: msg.packName, scale: scale(), place: place(), band: band(), speed: msg.speed || settings.speed };
     gctl = quiet ? G.show($('gstage'), o) : G.play($('gstage'), Object.assign(o, { fx: msg.fx || 'full', sound: !!settings.sound }));
   }
-  function runSpin(msg) {
+  // quiet: 開き直したときの最後の画面（回す演出・手裏剣・音なしで止まった所だけ出す）
+  function runSpin(msg, quiet) {
     if (msg.id && msg.id === lastId) return;
     lastId = msg.id || 0;
     showGacha(false);
     if (msg.items) setItems(msg.items);
     if (msg.settings) applySettings(msg.settings);
     showResult('', false);
-    var dur = K.reduce ? 1 : msg.dur;
-    wheel.throwStar($('wheel').parentNode, msg.final, dur, settings.speed, settings.sound ? K.sound : null);
+    var dur = K.reduce || quiet ? 1 : msg.dur;
+    if (!quiet) wheel.throwStar($('wheel').parentNode, msg.final, dur, settings.speed, settings.sound ? K.sound : null);
     wheel.spin(msg.from, msg.final, dur, function (idx) {
       var rv = msg.reveal && msg.reveal[idx];
-      if (rv) { lastResult = ''; var box = $('resbox'); box.innerHTML = ''; G.telop(box, { rarity: rv.r, text: rv.text, packName: rv.packName, band: band() }).classList.add('in'); }
-      else showResult(items[idx] ? items[idx].label : '', true);
-      if (settings.sound) K.sound('done');
+      if (rv) { lastResult = ''; var box = $('resbox'); box.innerHTML = ''; var t = G.telop(box, { rarity: rv.r, text: rv.text, packName: rv.packName, band: band() }); if (!quiet) t.classList.add('in'); }
+      else showResult(items[idx] ? items[idx].label : '', !quiet);
+      if (settings.sound && !quiet) K.sound('done');
     });
   }
   wheel.onTick = function () { if (settings.sound) K.sound('tick'); };
@@ -146,7 +147,7 @@ body{background:transparent;font-family:"M PLUS Rounded 1c","Hiragino Maru Gothi
       if (gctl && gctl.playing()) return;
       showGacha(false);
       if (msg.settings) applySettings(msg.settings);
-      if (!wheel.spinning) { setItems(msg.items); if (msg.result) showResult(msg.result, false); }
+      if (!wheel.spinning) { setItems(msg.items); if (msg.result && msg.result !== lastResult) showResult(msg.result, false); }
     }
   }
 
@@ -188,15 +189,18 @@ body{background:transparent;font-family:"M PLUS Rounded 1c","Hiragino Maru Gothi
     document.addEventListener('click', spinHere);
     document.addEventListener('keydown', function (e) { if (e.code === 'Space' || e.key === 'Enter') { e.preventDefault(); spinHere(); } });
   } else {
-    var st = load('kkp_roulette_state');
-    if (st) handle(st);
-    try {
-      var chan = new BroadcastChannel('kkp-roulette');
-      chan.onmessage = function (e) { handle(e.data); };
-    } catch (e) { /* storage イベントで受ける */ }
-    window.addEventListener('storage', function (e) {
-      if (e.key === 'kkp_roulette_msg' && e.newValue) { try { handle(JSON.parse(e.newValue)); } catch (err) {} }
-    });
+    // 同じブラウザの操作ページ（ルーレット・お題ガチャ）から kit の KKit.live で受け取る（3秒ごとに hello＝操作ページの「つながっています」）。
+    // 開いたときの最初の1つは、演出を動かさずに最後の画面だけ出す（回す→止まった所・ガチャ→結果・スキップ／背景→直前の結果）
+    var first = true;
+    KKit.live({ ch: 'kkp-roulette', role: 'view', onState: function (m) {
+      if (!m) { first = false; return; }
+      if (!first) { handle(m); return; }
+      first = false;
+      if (m.t === 'spin') runSpin(m, true);
+      else if (m.t === 'gacha') { runGacha(m, true); lastId = m.id || 0; }
+      else if (m.t === 'gskip' || m.t === 'cfg') { if (m.settings) applySettings(m.settings); if (m.st) handle(m.st); }
+      else handle(m);
+    } }).start();
   }
 
   // 盤面とテロップの大きさ（置き方ごと）

@@ -50,3 +50,5 @@ html.stream .res .rt{font-size:clamp(22px,2vw,38px)}
 .stream-view-msg:empty{display:none}
 /* 狭い窓（960 など）では上の帯が2段になってはみ出すので、ページの切替リンクを畳む（配信中は道具を切り替えない前提） */
 @media(max-width:1100px){html.stream .site-in:has(.stream-view) .site-nav{display:none}}
+/* 2026-10-22 帯につながりの札（.k-live）が入ったので、狭い窓ではサイト名も畳む（帯を1段に保つ） */
+@media(max-width:1100px){html.stream .site-in:has(.stream-view) .site-name{display:none}}

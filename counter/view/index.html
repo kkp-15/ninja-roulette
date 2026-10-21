@@ -14,6 +14,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Yuji+Syuku&family=RocknRoll+One&display=swap&text=%2F0123456789NRS%E3%82%A2%E3%82%A6%E3%82%B2%E3%83%88%E3%83%A0%E3%83%BC%E5%9B%9E%E7%9B%AE%E7%B8%9B%E7%BD%B0" rel="stylesheet">
 <!-- k-fonts:end -->
 <link rel="stylesheet" href="/kit/kit.css">
+<script src="/kit/kit.js"></script>
 <script src="/ga.js"></script>
 <style>
 /* 配信カウンターの OBS 表示ページ（ウィンドウキャプチャで取り込む）。操作ボタン・広告・説明文は映さない。
@@ -268,12 +269,20 @@ body[data-bg="cream"]{background:var(--k-kinari) url(/kit/img/d4-washi.webp) 0 0
   }
   window.addEventListener('resize', fit); fit();
 
-  try { var st = JSON.parse(localStorage.getItem('kkp_counter_state') || 'null'); if (st) handle({ s: st }); else $('wait').hidden = pv; } catch (e) { $('wait').hidden = pv; }
-  if (!S) { S = { rule: '敬語禁止', n: 3, names: [], counts: [0, 0, 0, 0, 0, 0, 0, 0, 0], th: 3 }; render(); }
-  try { var ch = new BroadcastChannel('kkp-counter'); ch.onmessage = function (e) { handle(e.data); }; } catch (e) { /* storage イベントで受ける */ }
-  window.addEventListener('storage', function (e) {
-    if (e.key === 'kkp_counter_msg' && e.newValue) { try { handle(JSON.parse(e.newValue)); } catch (err) {} }
-  });
+  // 操作ページ（同じブラウザ）から kit の KKit.live で受け取る（3秒ごとに hello＝操作ページの「つながっています」）。
+  // 開いたときの最初の1つは数だけ出す（アウト・罰ゲームの演出は出し直さない）
+  var first = true;
+  function onState(m) {
+    if (first) { first = false; if (m && m.s) { handle({ s: m.s, id: m.id }); return; } $('wait').hidden = pv; }
+    else handle(m);
+    if (!S) { S = { rule: '敬語禁止', n: 3, names: [], counts: [0, 0, 0, 0, 0, 0, 0, 0, 0], th: 3 }; render(); }
+  }
+  var LV = KKit.live({ ch: 'kkp-counter', role: 'view', onState: function (m) { onState(m); } });
+  if (!pv) LV.start();
+  else {   // 操作画面の中の見本は hello を出さない（「つながっています」を本物の表示ページだけにする）
+    var d0 = null; try { d0 = JSON.parse(localStorage.getItem('k-live:kkp-counter') || 'null'); } catch (e) {}
+    onState(d0 && d0.s);
+  }
   try { document.fonts.ready.then(render); } catch (e) {}
   if (!pv) kkpEvent('counter_view_open', { from: 'local' });
 })();

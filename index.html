@@ -25,6 +25,8 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://roulette.kkpwebninja.com/ogp.png?d=20261015">
 <script src="/ga.js"></script>
+<!-- 共通部品 D4 の kit.js は defer なしで先に読む（配信モードの判定 KKit.stream を stream.js と広告より先に使う） -->
+<script src="/kit/kit.js"></script>
 <script src="/stream.js"></script>
 <script type="application/ld+json">
 {
@@ -42,10 +44,9 @@
 </script>
 <!-- 共通部品 D4（kkp-kit を kit/ にコピーしたもの。中は手で直さず kkp-kit 側で直して sync.sh） -->
 <!-- k-fonts:start -->
-<link href="https://fonts.googleapis.com/css2?family=Yuji+Syuku&family=RocknRoll+One&display=swap&text=.0123456789BCLOPRSUbew%E2%80%A6%E3%81%82%E3%81%84%E3%81%88%E3%81%8A%E3%81%8B%E3%81%8C%E3%81%8D%E3%81%8F%E3%81%93%E3%81%97%E3%81%98%E3%81%99%E3%81%9B%E3%81%9F%E3%81%A3%E3%81%A4%E3%81%A6%E3%81%A7%E3%81%A8%E3%81%A9%E3%81%AA%E3%81%AB%E3%81%AE%E3%81%AF%E3%81%B0%E3%81%BE%E3%81%BF%E3%82%82%E3%82%84%E3%82%88%E3%82%89%E3%82%8A%E3%82%8B%E3%82%8C%E3%82%8D%E3%82%92%E3%82%93%E3%82%A3%E3%82%A6%E3%82%AD%E3%82%B3%E3%82%B6%E3%82%B8%E3%82%B9%E3%82%BD%E3%83%81%E3%83%83%E3%83%88%E3%83%89%E3%83%94%E3%83%96%E3%83%97%E3%83%9A%E3%83%9B%E3%83%9E%E3%83%A3%E3%83%A9%E3%83%AB%E3%83%AC%E3%83%B3%E3%83%BB%E3%83%BC%E4%BA%BA%E4%BB%B6%E4%BC%81%E4%BD%9C%E4%BD%BF%E4%BE%8B%E4%BF%A1%E5%80%8B%E5%85%A5%E5%85%A8%E5%87%BA%E5%88%A5%E5%8A%9B%E5%8B%95%E5%90%8C%E5%90%8D%E5%95%8F%E5%9B%9E%E5%A0%B1%E5%A4%96%E5%AE%9A%E5%BF%8D%E6%83%85%E6%88%BB%E6%89%B1%E6%93%8D%E6%96%B9%E6%98%8E%E6%98%A0%E6%99%AF%E6%AD%A2%E6%AE%B5%E6%B6%88%E7%94%A8%E7%94%BB%E7%9B%AE%E7%A0%A6%E7%A4%BA%E8%80%85%E8%81%B4%E8%83%8C%E8%A1%A8%E8%A6%8B%E8%A6%96%E8%A8%AD%E8%B2%BC%E8%B3%AA%E9%80%81%E9%80%8F%E9%83%A8%E9%85%8D%E9%87%8D%E9%96%89%E9%96%8B%E9%9F%B3%E9%A0%85%E9%A1%8C%EF%BC%88%EF%BC%89" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Yuji+Syuku&family=RocknRoll+One&display=swap&text=.0123456789BCLOPRSUbew%E2%80%A6%E3%80%82%E3%81%82%E3%81%84%E3%81%86%E3%81%88%E3%81%8A%E3%81%8B%E3%81%8C%E3%81%8D%E3%81%8F%E3%81%93%E3%81%95%E3%81%97%E3%81%98%E3%81%99%E3%81%9B%E3%81%9F%E3%81%A0%E3%81%A3%E3%81%A4%E3%81%A6%E3%81%A7%E3%81%A8%E3%81%A9%E3%81%AA%E3%81%AB%E3%81%AE%E3%81%AF%E3%81%B0%E3%81%BE%E3%81%BF%E3%82%81%E3%82%82%E3%82%84%E3%82%88%E3%82%89%E3%82%8A%E3%82%8B%E3%82%8C%E3%82%8D%E3%82%92%E3%82%93%E3%82%A2%E3%82%A3%E3%82%A6%E3%82%AD%E3%82%B3%E3%82%B6%E3%82%B8%E3%82%B9%E3%82%BD%E3%83%81%E3%83%83%E3%83%88%E3%83%89%E3%83%94%E3%83%96%E3%83%97%E3%83%9A%E3%83%9B%E3%83%9D%E3%83%9E%E3%83%A3%E3%83%A9%E3%83%AB%E3%83%AC%E3%83%B3%E3%83%BB%E3%83%BC%E4%B8%80%E4%BA%BA%E4%BB%B6%E4%BC%81%E4%BD%9C%E4%BD%BF%E4%BE%8B%E4%BF%A1%E5%80%8B%E5%85%A5%E5%85%A8%E5%87%BA%E5%88%A5%E5%8A%9B%E5%8B%95%E5%8F%AF%E5%90%8C%E5%90%8D%E5%95%8F%E5%9B%9E%E5%A0%B1%E5%A4%96%E5%AE%9A%E5%BA%A6%E5%BF%8D%E6%83%85%E6%88%BB%E6%89%B1%E6%8A%BC%E6%93%8D%E6%96%B9%E6%98%8E%E6%98%A0%E6%99%AF%E6%AD%A2%E6%AE%B5%E6%B6%88%E7%94%A8%E7%94%BB%E7%9B%AE%E7%A0%A6%E7%A4%BA%E8%80%85%E8%81%B4%E8%83%8C%E8%A1%A8%E8%A6%8B%E8%A6%96%E8%A8%AD%E8%A8%B1%E8%B2%BC%E8%B3%AA%E9%80%81%E9%80%8F%E9%83%A8%E9%85%8D%E9%87%8D%E9%96%89%E9%96%8B%E9%9F%B3%E9%A0%85%E9%A1%8C%EF%BC%88%EF%BC%89" rel="stylesheet">
 <!-- k-fonts:end -->
 <link rel="stylesheet" href="/kit/kit.css">
-<script src="/kit/kit.js" defer></script>
 <style>
 :root{--ink:#2b2b2b;--sub:#5f5f5f;--line:#cfc6b8;--line-l:#e8e1d6;--head:#fff6ea;--accent:#e2600f;--accent-d:#b84c0a;--link:#0b57a4;--maru:"M PLUS Rounded 1c","Hiragino Maru Gothic ProN","Hiragino Sans","Noto Sans JP",sans-serif}
 *{box-sizing:border-box}
@@ -133,6 +134,7 @@ textarea#items{width:100%;min-height:260px;padding:10px;border:1px solid var(--l
 .steps li{border-bottom:1px solid var(--line-l);padding:8px 0;margin:0;display:grid;grid-template-columns:5.2em 1fr;gap:10px}
 .steps li b{font-weight:700}
 .urlrow{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:4px 0 8px}
+.vlive{display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;margin:0 0 8px}
 .urlrow input{flex:1 1 320px;padding:7px 9px;border:1px solid var(--line);font-size:14px;background:#faf8f4}
 .set{width:100%;max-width:760px}
 .set th{width:11em}
@@ -219,9 +221,10 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
 
 <h2 id="obs" class="k-h2">OBSに映す（ウィンドウキャプチャ）</h2>
 <p>回すのはこの画面。表示ページに操作ボタンや広告は映りません。</p>
-<div class="urlrow"><input type="text" id="viewUrl" readonly value="https://roulette.kkpwebninja.com/view/"><button class="btn" id="copyView">URLをコピー</button><a class="btn" id="openView" href="/view/" target="_blank" rel="noopener">表示ページを開く</a><span class="flash" id="copyMsg"></span></div>
+<div class="urlrow"><input type="text" id="viewUrl" readonly value="https://roulette.kkpwebninja.com/view/"><button class="btn" id="copyView">URLをコピー</button><a class="btn" id="openView" href="/view/" data-ch="kkp-roulette" data-name="kkp_roulette_view" target="_blank" rel="noopener">表示ページを開く</a><span class="flash" id="copyMsg"></span></div>
+<p class="vlive"><span class="k-live" data-k-live="kkp-roulette">表示ページ：つながっていません</span><span class="flash" id="openViewMsg" aria-live="polite"></span></p>
 <ol>
-  <li>「表示ページを開く」で、同じブラウザに開きます（閉じると届きません）。</li>
+  <li>「表示ページを開く」で、同じブラウザに別ウィンドウで開きます（閉じると届きません）。</li>
   <li>OBSの「ソース」で「＋」→「ウィンドウキャプチャ」を選び、表示ページのウィンドウを選びます。</li>
   <li>背景を抜くなら、設定で背景を「緑（クロマキー）」にし、OBSでフィルタ「クロマキー」をかけます。</li>
 </ol>
@@ -336,19 +339,17 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
   var items = [], pool = [];
   var wheel = new K.Wheel($('wheel'));
   wheel.setArt(K.ART);
-  var chan = null;
-  try { chan = new BroadcastChannel('kkp-roulette'); } catch (e) { chan = null; }
-
-  function send(msg) {
-    msg.ts = Date.now();
-    if (chan) { try { chan.postMessage(msg); } catch (e) {} }
-    save(LS.msg, msg);  // 別タブへの保険（storage イベント）
-  }
+  // 表示ページ（/view/）へ送る: kit の KKit.live（同じブラウザの中だけ。BroadcastChannel＋localStorage・つながりの札 .k-live）。
+  // 最後に送ったものが表示ページを開き直したときの画面になる（回す・ガチャの演出は開き直しでは動かさない＝表示ページ側）
+  var LIVE = KKit.live({ ch: 'kkp-roulette', role: 'op' });
+  function send(msg) { msg.ts = Date.now(); LIVE.send(msg); }
   function viewSettings() {
     return { bg: settings.bg === 'custom' ? settings.bgColor : settings.bg, layout: settings.layout, place: settings.place, wfx: settings.wfx, speed: settings.speed, size: settings.size, ink: settings.ink, credit: settings.credit, sound: settings.viewSound };
   }
+  // 項目はこの端末に残る（kkp_roulette_text・期限なし）。読み直したら、直前の結果をつけて今の盤面を送る（表示ページの結果を消さない）
   function pushState(result) {
-    var st = { t: 'state', items: pool, settings: viewSettings(), result: result === undefined ? null : result };
+    if (result === undefined) { var old = load(LS.state, null); result = old && old.result && pool.some(function (it) { return it.label === old.result; }) ? old.result : null; }
+    var st = { t: 'state', items: pool, settings: viewSettings(), result: result };
     save(LS.state, st);
     send(st);
   }
@@ -487,7 +488,7 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
   }
   $('copyView').addEventListener('click', function () { copy($('viewUrl').value, this); kkpEvent('obs_url_copy'); });
   $('copyRemote').addEventListener('click', function () { copy($('remoteUrl').value, this); kkpEvent('obs_url_copy', { from: 'remote' }); });
-  $('openView').addEventListener('click', function () { kkpEvent('view_open_click'); });
+  $('openView').addEventListener('click', function () { kkpEvent('view_open_click'); });   // 開くのは stream.js（KKit.openView・別窓）
   // 2026-10-21 配信モード中の背景の切替（stream.js がスイッチの横に出す）
   window.kkpStreamBg = {
     get: function () { return settings.bg === 'custom' ? settings.bgColor : settings.bg; },

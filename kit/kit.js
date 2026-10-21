@@ -6,6 +6,8 @@
    - 部品の手伝い（2026-10-20〜）: KKit.toast / KKit.countdown / KKit.reveal / KKit.share / KKit.install。
      .k-install[data-k-key] と [data-k-share] は書いておくだけで自動でつながる
    - 演出の部品: KKit.fx.slash（札を刀で斬る）・KKit.fx.shuriken（手裏剣が飛んできて刺さる）。下の fxParts を見る
+   - 配信の土台（2026-10-21〜）: KKit.stream / KKit.live / KKit.openView / KKit.view / KKit.resume / KKit.twice / KKit.fitText / KKit.streamTitle。下の streamParts を見る。
+     読み込み時に使うページは kit.js を defer なしで <head> に置く（本体の script より先に KKit が要るため）
    動きを減らす設定（prefers-reduced-motion）では、季節と部品の手伝い以外は何もしない（演出の部品は動かさずに、すぐ結果の合図だけ出す）。 */
 (function () {
   var root = document.documentElement;
@@ -17,6 +19,7 @@
   var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
   fxParts();
   helpers();
+  streamParts();
   if (reduce) return;
 
   function start() {
@@ -159,6 +162,269 @@
       });
     }
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', auto); else auto();
+  }
+
+  /* ===== 配信の土台（2026-10-21〜） =====
+     KKit.stream.init({ key })      配信モードかどうか（PC幅768以上・?mode=stream で入る・?mode=normal で出る）。<html data-k-stream> を付ける
+     KKit.stream.set(on, params)    切り替え。URL の #… と mode= を消してから読み直す（#付きだと読み直さない不具合の再発防止）
+     KKit.stream.on / can() / noAds()  いま配信中か／PC幅か（?kkptest=1 ならスマホでも可）／広告を読まないか
+     KKit.live({ ch, role, onState, onHello })  BroadcastChannel＋localStorage の同期。op は send(state)・hold(true/false)・connected()
+                                    .k-live[data-k-live="ch"] の札を自動で「つながっています／つながっていません」に
+     KKit.openView({ url, ch, name })  表示ページを別窓 1280x720 で開く（開けたら true）。操作画面は動かさない
+     .k-view-open[data-k-view][data-k-ch]  開く・URLをコピー・背景3択・OBS の1行を作る。開いたら 'k-view-open' の event
+     KKit.view({ ch })              /view/ 側: 背景（?bg= ＞ 操作画面の選択 ＞ cream）を <html data-k-bg> に。idle(true/false) で待ち画面
+     KKit.resume({ key, box, label, onResume, onDiscard, live, ttl })  続きから（既定12時間・この端末だけ）。選ぶまで live を止める
+     KKit.twice(要素, { text, ms, when, ok })  回が消える操作の2回押し。when() が false なら1回で ok
+     KKit.fitText(要素, { min, max, lines })   字を縮めて lines 行（既定1）に収める。min（px）より小さくしない
+     KKit.streamTitle(要素, { key, onChange })  「〇〇の」タイトル欄（12字・空なら「みんな」・端末に覚える） */
+  function streamParts() {
+    var K = window.KKit = window.KKit || {};
+    var ls = {
+      get: function (k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+      set: function (k, v) { try { localStorage.setItem(k, v); } catch (e) {} },
+      del: function (k) { try { localStorage.removeItem(k); } catch (e) {} }
+    };
+    function $el(x) { return typeof x === 'string' ? document.querySelector(x) : x; }
+    function ready(f) { if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', f); else f(); }
+    function call(f, a, b) { if (typeof f === 'function') try { return f(a, b); } catch (e) { setTimeout(function () { throw e; }); } }
+
+    /* --- 配信モード --- */
+    var ST = K.stream = {
+      key: 'k-stream', on: false,
+      can: function () { return !!window.__kkpTest || !!(window.matchMedia && matchMedia('(min-width:768px)').matches); },
+      noAds: function () { return ST.on || !!window.__kkpTest; },
+      init: function (o) {
+        o = o || {}; if (o.key) ST.key = o.key;
+        var q = location.search;
+        if (/[?&]mode=normal\b/.test(q)) ls.del(ST.key);
+        else if (/[?&]mode=stream\b/.test(q) && ST.can()) ls.set(ST.key, '1');
+        ST.on = ST.can() && ls.get(ST.key) === '1';
+        if (ST.on) {
+          root.setAttribute('data-k-stream', '');
+          try { history.scrollRestoration = 'manual'; } catch (e) {}
+          ready(function () { window.scrollTo(0, 0); });
+        } else root.removeAttribute('data-k-stream');
+        return ST.on;
+      },
+      set: function (on, params) {
+        on = !!on && ST.can();
+        if (on) ls.set(ST.key, '1'); else ls.del(ST.key);
+        var u;
+        try { u = new URL(location.href); } catch (e) { location.reload(); return; }
+        u.hash = ''; u.searchParams.delete('mode');
+        if (params) Object.keys(params).forEach(function (k) { if (params[k] == null) u.searchParams.delete(k); else u.searchParams.set(k, params[k]); });
+        try { history.replaceState(null, '', u.pathname + u.search); } catch (e) {}
+        location.reload();
+      }
+    };
+
+    /* --- 同期（操作画面 ⇄ 表示ページ。同じブラウザの中だけ） --- */
+    var lives = {};
+    K.live = function (o) {
+      o = o || {};
+      var ch = o.ch || 'k-live', key = 'k-live:' + ch, hkey = 'k-live-hello:' + ch, TTL = o.ttl || 12 * 3600 * 1000;
+      var bc = null; try { bc = new BroadcastChannel(ch); } catch (e) {}
+      function post(m) { try { if (bc) bc.postMessage(m); } catch (e) {} }
+      var api = { ch: ch };
+      if (o.role === 'view') {
+        var lastT = 0;
+        var take = function (d) { if (!d || d.s === undefined || (d.t && d.t < lastT)) return; lastT = d.t || Date.now(); call(o.onState, d.s, d); };
+        if (bc) bc.addEventListener('message', function (e) { var m = e.data || {}; if (m.k === 's') take(m.d); });
+        window.addEventListener('storage', function (e) { if (e.key === key && e.newValue) { try { take(JSON.parse(e.newValue)); } catch (x) {} } });
+        var hello = function () { post({ k: 'hello', t: Date.now() }); ls.set(hkey, String(Date.now())); };
+        api.start = function () {
+          try { var d = JSON.parse(ls.get(key) || 'null'); if (d && d.t && Date.now() - d.t < TTL) take(d); else call(o.onState, null); } catch (e) { call(o.onState, null); }
+          hello(); setInterval(hello, 3000);
+          return api;
+        };
+        return api;
+      }
+      // op（操作画面）
+      var last = 0, held = false, cur = null, pend = null, firstSent = 0;
+      function paint() {
+        var on = Date.now() - last < 7000;
+        [].forEach.call(document.querySelectorAll('.k-live[data-k-live="' + ch + '"]'), function (b) {
+          b.classList.toggle('k-on', on);
+          b.textContent = '表示ページ：' + (on ? 'つながっています' : 'つながっていません');
+        });
+      }
+      function heard() { var first = Date.now() - last > 7000; last = Date.now(); paint(); if (first) { call(o.onHello); if (cur && !held) post({ k: 's', d: cur }); } }
+      if (bc) bc.addEventListener('message', function (e) { var m = e.data || {}; if (m.k === 'hello') heard(); });
+      window.addEventListener('storage', function (e) { if (e.key === hkey) heard(); });
+      setInterval(paint, 1000); ready(paint);
+      api.send = function (state) {
+        if (held) { pend = { s: state }; return; }
+        cur = { t: Date.now(), s: state }; pend = null;
+        ls.set(key, JSON.stringify(cur)); post({ k: 's', d: cur });
+      };
+      api.hold = function (b) { held = !!b; if (!held && pend) api.send(pend.s); };
+      api.held = function () { return held; };
+      api.connected = function () { return Date.now() - last < 7000; };
+      api.paint = paint;
+      lives[ch] = api;
+      return api;
+    };
+
+    /* --- 表示ページを開く --- */
+    var BG = ['cream', 'green', 'clear'];
+    function bgOf(ch) { var b = ls.get('k-view-bg:' + ch); return BG.indexOf(b) >= 0 ? b : 'cream'; }
+    function viewUrl(o) { var b = bgOf(o.ch || ''); return (o.url || '/view/') + (b === 'cream' ? '' : ((o.url || '').indexOf('?') >= 0 ? '&' : '?') + 'bg=' + b); }
+    K.openView = function (o) {
+      o = o || {};
+      var w = null; try { w = window.open(viewUrl(o), o.name || 'kView', 'popup=yes,width=1280,height=720'); } catch (e) {}
+      if (w && o.ch && lives[o.ch]) setTimeout(function () { lives[o.ch].paint(); }, 600);
+      return !!w;
+    };
+    var HOW = {
+      cream: 'OBS の「ウィンドウキャプチャ」でこの窓を取り込む',
+      green: 'ウィンドウキャプチャで取り込み、フィルタの「クロマキー」で緑を消す',
+      clear: '背景なし（ウィンドウキャプチャでは白く映ります）'
+    };
+    K.viewOpen = function (el, o) {
+      el = $el(el); if (!el || el._kvo) return; el._kvo = true; o = o || {};
+      var url = o.url || el.getAttribute('data-k-view') || '/view/', ch = o.ch || el.getAttribute('data-k-ch') || '', name = o.name || el.getAttribute('data-k-name') || 'kView';
+      el.innerHTML = '<button type="button" class="k-btn k-btn-sub k-vo-go">表示ページを別ウィンドウで開く</button>'
+        + '<button type="button" class="k-btn k-btn-sub k-vo-copy">URLをコピー</button>'
+        + '<div class="k-seg k-vo-bg" role="group" aria-label="表示ページの背景"><button type="button" data-bg="cream">クリーム</button><button type="button" data-bg="green">緑</button><button type="button" data-bg="clear">透過</button></div>'
+        + '<p class="k-vo-how"></p><p class="k-vo-msg" role="status" hidden>ポップアップを許可して、もう一度押してください</p>';
+      var how = el.querySelector('.k-vo-how'), msg = el.querySelector('.k-vo-msg');
+      function paint() { var b = bgOf(ch); [].forEach.call(el.querySelectorAll('[data-bg]'), function (x) { x.setAttribute('aria-pressed', String(x.getAttribute('data-bg') === b)); }); how.textContent = HOW[b]; }
+      el.querySelector('.k-vo-go').addEventListener('click', function () {
+        var ok = K.openView({ url: url, ch: ch, name: name });
+        msg.hidden = ok;
+        el.dispatchEvent(new CustomEvent('k-view-open', { bubbles: true, detail: { ok: ok } }));
+      });
+      el.querySelector('.k-vo-copy').addEventListener('click', function () {
+        var u = location.origin + viewUrl({ url: url, ch: ch });
+        var done = function () { if (K.toast) K.toast('表示ページのURLをコピーしました'); };
+        if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(u).then(done, function () { if (K.toast) K.toast(u, 6000); });
+        else if (K.toast) K.toast(u, 6000);
+      });
+      el.querySelector('.k-vo-bg').addEventListener('click', function (e) {
+        var b = e.target.closest('[data-bg]'); if (!b) return;
+        ls.set('k-view-bg:' + ch, b.getAttribute('data-bg')); paint();
+      });
+      paint();
+      return { paint: paint };
+    };
+
+    /* --- 表示ページ側の枠 --- */
+    K.view = function (o) {
+      o = o || {};
+      var ch = o.ch || '', m = /[?&]bg=(cream|green|clear)\b/.exec(location.search), fixed = m ? m[1] : '';
+      function apply() { root.setAttribute('data-k-bg', fixed || bgOf(ch)); }
+      apply();
+      if (!fixed) window.addEventListener('storage', function (e) { if (e.key === 'k-view-bg:' + ch) apply(); });
+      var stage = null, idleT = null;
+      window.addEventListener('resize', function () { clearTimeout(idleT); idleT = setTimeout(function () { var t = stage && !stage.querySelector('.k-view-idle').hidden && stage.querySelector('.k-view-idle b,.k-view-idle-t'); if (t) K.fitText(t, { min: 42 }); }, 150); });
+      return {
+        bg: function () { return root.getAttribute('data-k-bg'); },
+        idle: function (on, title) {
+          stage = stage || document.querySelector(o.stage || '.k-view-stage');
+          if (!stage) return;
+          stage.classList.toggle('k-idle', !!on);
+          var box = stage.querySelector('.k-view-idle');
+          if (box) {
+            box.hidden = !on;
+            if (on && title != null) { var t = box.querySelector('b,.k-view-idle-t'); if (t && t.textContent !== title) { t.textContent = title; K.fitText(t, { min: 42 }); } }
+          }
+        }
+      };
+    };
+
+    /* --- 続きから --- */
+    K.resume = function (o) {
+      o = o || {};
+      var key = o.key || 'k-resume', TTL = o.ttl || 12 * 3600 * 1000, live = o.live || null, api = { pending: false };
+      api.save = function (data) { ls.set(key, JSON.stringify({ at: Date.now(), data: data })); };
+      api.clear = function () { ls.del(key); };
+      var run = null; try { run = JSON.parse(ls.get(key) || 'null'); } catch (e) {}
+      if (!run || !run.data || !run.at || Date.now() - run.at > TTL || (o.valid && !o.valid(run.data))) { if (run) ls.del(key); return api; }
+      var box = $el(o.box);
+      if (!box) return api;
+      var ago = Math.max(0, Math.round((Date.now() - run.at) / 60000));
+      var agoT = ago < 1 ? 'たった今' : ago < 60 ? ago + '分前' : Math.floor(ago / 60) + '時間前';
+      var lab = call(o.label, run.data);
+      box.classList.add('k-resume');
+      box.innerHTML = '<p></p><button type="button" class="k-btn k-btn-main k-btn-sm" data-k-go>続きから</button><button type="button" class="k-btn k-btn-sub k-btn-sm" data-k-del>消して新しく</button>';
+      box.querySelector('p').textContent = '前回の続きがあります（' + (lab ? lab + '・' : '') + agoT + '）';
+      box.hidden = false; api.pending = true;
+      if (live) live.hold(true);
+      function close() { box.hidden = true; api.pending = false; }
+      box.querySelector('[data-k-go]').addEventListener('click', function () { close(); call(o.onResume, run.data); if (live) live.hold(false); });
+      box.querySelector('[data-k-del]').addEventListener('click', function () { close(); ls.del(key); call(o.onDiscard); if (live) live.hold(false); });
+      return api;
+    };
+
+    /* --- 2回押し --- */
+    K.twice = function (el, o) {
+      el = $el(el); if (!el) return; o = o || {};
+      var armed = false, t = 0, saved = '';
+      function disarm() {
+        if (!armed) return; armed = false; clearTimeout(t);
+        if (el.textContent === o.text) el.innerHTML = saved;
+        el.classList.remove('k-twice-on');
+      }
+      el.addEventListener('click', function (e) {
+        if (el.disabled) return;
+        if (o.when && !o.when()) { disarm(); call(o.ok, e); return; }
+        if (!armed) {
+          armed = true; saved = el.innerHTML; el.textContent = o.text || 'もう一度押すと決定'; el.classList.add('k-twice-on');
+          t = setTimeout(disarm, o.ms || 3000); return;
+        }
+        disarm(); call(o.ok, e);
+      });
+      return { disarm: disarm, armed: function () { return armed; } };
+    };
+
+    /* --- 字を縮めて収める --- */
+    K.fitText = function (el, o) {
+      el = $el(el); if (!el) return 0; o = o || {};
+      var lines = o.lines || 1;
+      el.style.fontSize = '';
+      if (lines === 1) { el.style.whiteSpace = 'nowrap'; el.style.overflow = 'hidden'; el.style.textOverflow = 'ellipsis'; }
+      var max = o.max || parseFloat(getComputedStyle(el).fontSize) || 16, min = Math.min(o.min || 14, max);
+      function fits() {
+        if (el.scrollWidth > el.clientWidth) return false;
+        if (lines > 1) {
+          var cs = getComputedStyle(el), lh = parseFloat(cs.lineHeight);
+          if (isNaN(lh)) lh = parseFloat(cs.fontSize) * 1.3;
+          if (el.scrollHeight > lh * lines + parseFloat(cs.paddingTop || 0) + parseFloat(cs.paddingBottom || 0) + 2) return false;
+        }
+        return true;
+      }
+      el.style.fontSize = max + 'px';
+      if (!el.clientWidth || fits()) { el.style.fontSize = ''; return max; }
+      var lo = min, hi = max;
+      for (var i = 0; i < 12 && hi - lo > 0.5; i++) { var mid = (lo + hi) / 2; el.style.fontSize = mid + 'px'; if (fits()) lo = mid; else hi = mid; }
+      lo = Math.max(min, Math.floor(lo) - (lines === 1 ? 1 : 0));   // 端数で「…」が出ないよう少し小さめに
+      el.style.fontSize = lo + 'px';
+      return lo;
+    };
+
+    /* --- 「〇〇の」タイトル --- */
+    K.streamTitle = function (el, o) {
+      el = $el(el); if (!el) return null; o = o || {};
+      var key = o.key || el.getAttribute('data-k-key') || 'k-stream-title', inp = el.querySelector('input'), sp = el.querySelector('span');
+      var suffix = o.suffix != null ? o.suffix : (sp ? sp.textContent : '');
+      var max = o.max || 12;
+      if (inp) { inp.maxLength = max; if (!inp.placeholder) inp.placeholder = 'みんな'; inp.value = (ls.get(key) || '').slice(0, max); }
+      var api = {
+        value: function () { return String(ls.get(key) || '').trim().slice(0, max); },
+        text: function () { return (api.value() || 'みんな') + suffix; },
+        set: function (v) { v = String(v || '').slice(0, max); ls.set(key, v.trim()); if (inp && inp.value !== v) inp.value = v; }
+      };
+      if (inp) {
+        inp.addEventListener('input', function (e) { if (e.isComposing) return; ls.set(key, inp.value.trim().slice(0, max)); call(o.onChange, api.text()); });
+        inp.addEventListener('compositionend', function () { ls.set(key, inp.value.trim().slice(0, max)); call(o.onChange, api.text()); });
+        inp.addEventListener('keydown', function (e) { if (e.key === 'Enter' && !e.isComposing) { e.preventDefault(); inp.blur(); } });
+      }
+      return api;
+    };
+
+    ready(function () {
+      [].forEach.call(document.querySelectorAll('.k-view-open[data-k-view]'), function (el) { K.viewOpen(el); });
+    });
   }
 
   /* ===== 演出の部品 =====
