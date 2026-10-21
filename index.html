@@ -488,6 +488,15 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
   $('copyView').addEventListener('click', function () { copy($('viewUrl').value, this); kkpEvent('obs_url_copy'); });
   $('copyRemote').addEventListener('click', function () { copy($('remoteUrl').value, this); kkpEvent('obs_url_copy', { from: 'remote' }); });
   $('openView').addEventListener('click', function () { kkpEvent('view_open_click'); });
+  // 2026-10-21 配信モード中の背景の切替（stream.js がスイッチの横に出す）
+  window.kkpStreamBg = {
+    get: function () { return settings.bg === 'custom' ? settings.bgColor : settings.bg; },
+    set: function (v) {
+      var r = document.querySelector('input[name=bg][value="' + v + '"]');
+      if (r) r.checked = true; else { document.querySelector('input[name=bg][value=custom]').checked = true; $('bgColor').value = v; }
+      readForm();
+    }
+  };
 
   // 盤面の大きさ（PCは高さに合わせる）
   // 2026-10-20 PC（2列）のときは「回す」と「直前の結果」までスクロールなしで1画面に入る大きさにする。大きい画面では盤も大きく

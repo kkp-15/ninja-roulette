@@ -536,6 +536,15 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
   $('copyView').addEventListener('click', function () { copy($('viewUrl').value, this); kkpEvent('obs_url_copy', { from: 'gacha' }); });
   $('copyRemote').addEventListener('click', function () { copy($('remoteUrl').value, this); kkpEvent('obs_url_copy', { from: 'gacha_remote' }); });
   $('openView').addEventListener('click', function () { kkpEvent('view_open_click', { from: 'gacha' }); });
+  // 2026-10-21 配信モード中の背景の切替（stream.js がスイッチの横に出す）。背景はルーレットの設定と共通
+  window.kkpStreamBg = {
+    get: function () { var r = load(LS.rset, {}); var bg = r.bg || 'transparent'; return bg === 'custom' ? (r.bgColor || '#fff6ea') : bg; },
+    set: function (v) {
+      var r = load(LS.rset, {}); r.bg = v; save(LS.rset, r);
+      var st = load(LS.state, null); if (st && st.kind === 'gacha') { st.settings = viewSettings(); save(LS.state, st); }
+      send({ t: 'cfg', settings: viewSettings() });
+    }
+  };
 
   // 広告（表示されてから1回だけ push）
   function pushAdWhenVisible(box) {

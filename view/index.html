@@ -139,6 +139,7 @@ body{background:transparent;font-family:"M PLUS Rounded 1c","Hiragino Maru Gothi
     if (!msg || !msg.t) return;
     if (msg.t === 'spin') runSpin(msg);
     else if (msg.t === 'gacha') runGacha(msg);
+    else if (msg.t === 'cfg') { if (msg.settings) applySettings(msg.settings); }
     else if (msg.t === 'gskip') { if (gctl && gctl.playing()) gctl.skip(); }
     else if (msg.t === 'state' && msg.kind === 'gacha') { if (!(gctl && gctl.playing())) runGacha(msg, true); }
     else if (msg.t === 'state') {

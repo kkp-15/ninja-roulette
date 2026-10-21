@@ -28,8 +28,13 @@
   function set(v) {
     try { localStorage.setItem(KEY, v ? '1' : '0'); } catch (e) {}
     if (window.kkpEvent) kkpEvent('stream_toggle', { mode: v ? 'on' : 'off', from: location.pathname });
-    var u = new URL(location.href); u.searchParams.delete('mode');
-    setTimeout(function () { location.replace(u.pathname + u.search + u.hash); }, 120);
+    // 2026-10-21 ハッシュ付き（#…）だと location.replace がハッシュ移動だけで終わり、読み直さなかった。
+    // ハッシュと mode を消してから reload する
+    var u = new URL(location.href); u.searchParams.delete('mode'); u.hash = '';
+    setTimeout(function () {
+      try { history.replaceState(null, '', u.pathname + u.search); } catch (e) {}
+      location.reload();
+    }, 120);
   }
   window.kkpSetStream = set;
 
@@ -46,6 +51,7 @@
     });
     if (on) {
       var bar = document.querySelector('.site-in');
+      viewRow(bar);
       if (bar) {
         var b = document.createElement('button');
         b.type = 'button'; b.className = 'stream-off'; b.textContent = '配信モード中（広告なし）・終える';
@@ -53,6 +59,46 @@
         bar.appendChild(b);
       }
     }
+  }
+  // 2026-10-21 配信モードでは「OBSに映す」の段（.narrow）を畳むので、開くボタンと背景が消えていた。
+  // ページの #openView が見えないときだけ、上の帯（「配信モードを終える」の左）に「表示ページを開く」（別窓 1280x720）と背景を出す。
+  // 背景はページが window.kkpStreamBg = { get(), set(v) } を用意したときだけ。
+  function openViewWin(href, msg) {
+    var w = null;
+    try { w = window.open(href, 'kkp_roulette_view', 'popup=yes,width=1280,height=720'); } catch (e) {}
+    if (w) { try { w.focus(); } catch (e) {} if (msg) msg.textContent = ''; }
+    else if (msg) msg.textContent = 'ポップアップが止められました。許可してもう一度押してください';
+    if (window.kkpEvent) kkpEvent('view_open_click', { from: location.pathname, where: 'stream' });
+  }
+  function viewRow(bar) {
+    var ov = document.getElementById('openView');
+    var box = bar || document.querySelector('[data-stream-sw]');
+    if (!ov || !box || ov.offsetParent !== null) return;
+    var href = ov.getAttribute('href') || '/view/';
+    var row = document.createElement('div');
+    row.className = 'stream-view';
+    row.innerHTML = '<button type="button" class="k-btn k-btn-sub stream-view-open">表示ページを開く</button>'
+      + (window.kkpStreamBg ? '<label class="stream-view-bg" title="緑はOBSのフィルタ「クロマキー」で抜けます">背景 <select>'
+        + '<option value="#fff6ea">クリーム</option><option value="#00b140">緑（抜く用）</option>'
+        + '<option value="transparent">透過</option><option value="#ffffff">白</option><option value="#000000">黒</option>'
+        + '</select></label>' : '')
+      + '<span class="stream-view-msg" aria-live="polite"></span>';
+    box.appendChild(row);
+    var msg = row.querySelector('.stream-view-msg');
+    row.querySelector('.stream-view-open').addEventListener('click', function () { openViewWin(href, msg); });
+    var sel = row.querySelector('select');
+    if (sel) {
+      var cur = window.kkpStreamBg.get();
+      if (![].some.call(sel.options, function (o) { return o.value === cur; })) {
+        var o = document.createElement('option'); o.value = cur; o.textContent = 'いまの色'; sel.insertBefore(o, sel.firstChild);
+      }
+      sel.value = cur;
+      sel.addEventListener('change', function () { window.kkpStreamBg.set(sel.value); });
+    }
+    // 「表示ページのURL」（#obs）への文字リンクは、配信モードでは飛び先が畳まれているので別窓を開く
+    [].forEach.call(document.querySelectorAll('a[href="#obs"]'), function (a) {
+      a.addEventListener('click', function (e) { e.preventDefault(); openViewWin(href, msg); });
+    });
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', ui); else ui();
 })();

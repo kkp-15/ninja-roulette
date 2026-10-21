@@ -39,3 +39,14 @@ html.stream .col-ctl .stream-sw-box{margin:4px 0 0}
 html.stream .col-ctl .stream-sw{min-height:32px}
 /* 直前のお題・直前の結果を大きく */
 html.stream .res .rt{font-size:clamp(22px,2vw,38px)}
+
+/* 2026-10-21 配信モード中の「表示ページを開く」と背景（stream.js の viewRow） */
+.stream-view{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;margin:0 0 0 auto;position:relative}
+.stream-view + .stream-off{margin-left:10px}
+.stream-view .k-btn{min-height:44px;font-size:14px;padding:0 12px;box-shadow:3px 3px 0 var(--k-sumi,#1f1a17)}
+.stream-view-bg{display:flex;align-items:center;gap:6px;font-size:14px;font-weight:700;color:var(--k-sumi,#1f1a17)}
+.stream-view-bg select{min-height:44px;font-size:14px;padding:2px 8px;border:2px solid var(--k-sumi,#1f1a17);border-radius:6px;background:#fff;color:var(--k-sumi,#1f1a17)}
+.stream-view-msg{position:absolute;right:0;top:100%;z-index:50;margin-top:4px;padding:4px 10px;border:2px solid var(--k-sumi,#1f1a17);border-radius:6px;background:#fff;font-size:14px;color:#a8321d;white-space:nowrap}
+.stream-view-msg:empty{display:none}
+/* 狭い窓（960 など）では上の帯が2段になってはみ出すので、ページの切替リンクを畳む（配信中は道具を切り替えない前提） */
+@media(max-width:1100px){html.stream .site-in:has(.stream-view) .site-nav{display:none}}
