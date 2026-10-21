@@ -208,12 +208,13 @@ body[data-bg="cream"]{background:var(--k-kinari) url(/kit/img/d4-washi.webp) 0 0
     stage.querySelectorAll('[data-i="' + i + '"] [data-c]').forEach(function (el) { el.classList.remove('bump'); void el.offsetWidth; el.classList.add('bump'); });
   }
 
-  function hideFx(el) { el.classList.add('fadeout'); setTimeout(function () { el.classList.remove('show', 'fadeout', 'drawn'); }, 400); }
+  // 消す途中（0.4秒）に次の表示が来たら、消す予約を取り消す（罰ゲームを引いた直後に巻物が消えていた）
+  function hideFx(el) { el.classList.add('fadeout'); clearTimeout(el._hT); el._hT = setTimeout(function () { el.classList.remove('show', 'fadeout', 'drawn'); }, 400); }
   function showOut(i) {
     var fx = $('fxOut');
     if (!S.show) $('fxBatsu').classList.remove('show');
     $('outWho').textContent = nm(i); $('outN').textContent = (S.counts[i] | 0) + '回目';
-    fx.classList.remove('show', 'fadeout'); void fx.offsetWidth; fx.classList.add('show');
+    clearTimeout(fx._hT); fx.classList.remove('show', 'fadeout'); void fx.offsetWidth; fx.classList.add('show');
     clearTimeout(outT); outT = setTimeout(function () { hideFx(fx); }, 1300);
   }
   function showReach(i) {
@@ -221,7 +222,7 @@ body[data-bg="cream"]{background:var(--k-kinari) url(/kit/img/d4-washi.webp) 0 0
     fx.classList.remove('drawn');
     $('bWho').textContent = nm(i);
     $('bSub').textContent = (String(S.rule || '').trim() || '縛り') + 'で ' + (S.counts[i] | 0) + '回アウト';
-    fx.classList.remove('show', 'fadeout'); void fx.offsetWidth; fx.classList.add('show');
+    clearTimeout(fx._hT); fx.classList.remove('show', 'fadeout'); void fx.offsetWidth; fx.classList.add('show');
     clearTimeout(batsuT); batsuT = setTimeout(function () { if (!S.show) hideFx(fx); }, 3200);
   }
   // 引いた罰ゲームは、操作画面で「表示を消す」まで出したまま
@@ -237,7 +238,7 @@ body[data-bg="cream"]{background:var(--k-kinari) url(/kit/img/d4-washi.webp) 0 0
     fx.classList.add('drawn');
     clearTimeout(batsuT);
     if (key !== shownKey) { shownKey = key; fx.classList.remove('show', 'fadeout'); void fx.offsetWidth; }
-    fx.classList.remove('fadeout'); fx.classList.add('show');
+    clearTimeout(fx._hT); fx.classList.remove('fadeout'); fx.classList.add('show');
     // まず1行で入る大きさを探す（56pxまで）。入らなければ2行にして、文の切れ目で折る（変な所で改行しない）
     var it = $('bItem'); var fs = 72; it.classList.add('one'); it.style.fontSize = fs + 'px';
     while (fs > 56 && it.scrollWidth > it.clientWidth + 1) { fs -= 2; it.style.fontSize = fs + 'px'; }
