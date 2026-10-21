@@ -192,6 +192,8 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
 .olist .off span.tx{color:#aaa;text-decoration:line-through}
 .fromstream{border:2px solid var(--accent);background:var(--head);padding:8px 12px;margin:0 0 10px;font-size:14.5px;display:flex;gap:10px;align-items:flex-start}
 .fromstream[hidden]{display:none}
+/* 2026-10-22 回し方・演出・音（ふつうは開いたまま。配信モードは1行に畳み、押すと開く＝stream.css） */
+.opts-sw{display:none}
 .fromstream p{margin:0;flex:1}
 .uf{text-align:center;padding:2rem 1rem 2.5rem;font-size:.875rem;color:#94a3b8;line-height:2;border-top:1px solid #f0e6d2;margin-top:2.5rem;background:#fffcf7}
 .uf-name{font-weight:800;color:#8b6b3d;font-size:.875rem;margin-bottom:.4rem}
@@ -249,6 +251,8 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
     <div class="stat"><span id="leftTxt"></span> <button class="btn sm" id="resetSeen">最初から</button> <span class="flash" id="flash"></span></div>
     <div class="sec"><b>パック</b><span class="note">押すたびに入る・外れる。混ぜられます</span></div>
     <div class="packs" id="packs"></div>
+    <button type="button" class="opts-sw" id="optsSw" aria-expanded="false" aria-controls="opts"><b>回し方・演出・音</b><span id="optsNow"></span></button>
+    <div class="opts" id="opts">
     <div class="sec"><b>回し方</b></div>
     <div class="seg" role="radiogroup"><label><input type="radio" name="mode" value="gacha" checked><span>ガチャ</span></label><label><input type="radio" name="mode" value="wheel"><span>ルーレット（8つから）</span></label></div>
     <div class="sec"><b>演出</b><span class="note">控えめ＝揺れなし</span></div>
@@ -257,6 +261,7 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
     <div class="seg" role="radiogroup"><label><input type="radio" name="speed" value="short"><span>短い</span></label><label><input type="radio" name="speed" value="normal" checked><span>ふつう</span></label><label><input type="radio" name="speed" value="long"><span>長い</span></label></div>
     <div class="sec"><b>効果音</b></div>
     <div class="chk"><label><input type="checkbox" id="snd"> この画面</label><label><input type="checkbox" id="vsnd"> OBS側</label></div>
+    </div>
     <details class="my"><summary>自分のお題を足す（<span id="myN">0</span>個）</summary>
       <label class="lab" for="my">1行に1つ。行末に <b>*SSR</b> などでレア度（なければR）</label>
       <textarea id="my" spellcheck="false" placeholder="好きな配信者さんの話をする *SR
@@ -423,13 +428,28 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
     save(LS.off, off); rebuild();
   }
 
+  // 2026-10-22 PC（2列）では、映る舞台の下の「直前」の行（長いお題は2〜3行）まで画面に入るよう、舞台の高さを画面の高さから決める
+  // （まだ引いていないときは2行ぶんを取っておく＝引いたあとに舞台の大きさが変わりにくい）
+  function fitStage() {
+    var st = $('gstage');
+    if (window.innerWidth <= 860) { st.style.maxHeight = ''; return; }
+    var res = $('res'), fs = parseFloat(getComputedStyle($('resTxt')).fontSize) || 20;
+    var need = Math.max(res.hidden ? 0 : res.offsetHeight, fs * 1.4 * 2 + (document.documentElement.classList.contains('stream') ? 70 : 14)) + 12;   // 配信モードの「直前」は2段（札とボタン／お題2行）
+    var top = st.getBoundingClientRect().top + window.scrollY;
+    st.style.maxHeight = Math.max(160, Math.floor(window.innerHeight - top - need - 8)) + 'px';
+    if (!$('gwheel').hidden) fitWheel();
+  }
+  window.addEventListener('resize', fitStage);
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fitStage); else fitStage();
+  try { document.fonts.ready.then(fitStage); } catch (e) {}
+
   // 結果の記録
   function record(it) {
     last = it;
     if (seen.indexOf(it.id) < 0) seen.push(it.id); save(LS.seen, seen);
     hist.unshift({ t: it.text, r: it.r, ts: Date.now() }); hist = hist.slice(0, 20); save(LS.hist, hist); renderHist();
-    $('res').hidden = false; $('resTag').className = 'tag t-' + it.r; $('resTag').textContent = it.r; $('resTxt').textContent = it.text;
-    rebuild(); showResultAd();
+    $('res').hidden = false; $('resTag').className = 'tag t-' + it.r; $('resTag').textContent = it.r; $('resTxt').textContent = it.text; $('resTxt').title = it.text;
+    rebuild(); showResultAd(); fitStage();
     save(LS.state, gState(it));
   }
   function gState(it) { return { t: 'state', kind: 'gacha', rarity: it.r, text: it.text, packName: packName[it.pack] || '', settings: viewSettings() }; }
@@ -473,12 +493,15 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
     if (pool.length < 2) return;
     if ($('gstage')._kg) $('gstage')._kg.destroy();
     var tmpSeen = seen.slice(), cands = [];
-    for (var i = 0; i < 8 && cands.length < pool.length; i++) {
+    var has = function (id) { return cands.some(function (c) { return c.id === id; }); };
+    for (var i = 0; i < 40 && cands.length < 8 && cands.length < pool.length; i++) {
       var d = G.draw(pool, tmpSeen); if (!d) break;
-      if (d.resetR) { if (cands.some(function (c) { return c.id === d.item.id; })) continue; }
+      if (has(d.item.id)) continue;
       cands.push(d.item); tmpSeen.push(d.item.id);
     }
-    if (cands.length < 2) { seen = []; save(LS.seen, seen); return spinWheel(); }
+    // 2026-10-22 2つそろわないとき（同じ文のお題が2行など）は、残りから順に足す（前は自分を呼び直し続けて止まっていた）
+    pool.forEach(function (p) { if (cands.length < 2 && !has(p.id)) cands.push(p); });
+    if (cands.length < 2) return;
     wheelItems = cands;
     // 盤面は中身を伏せる（「？？？」）。止まったらテロップで発表する
     var items = cands.map(function (c, k) { return { label: '？？？', weight: 1 }; });
@@ -526,6 +549,25 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
   $('snd').checked = !!S.snd; $('vsnd').checked = !!S.vsnd;
   $('snd').addEventListener('change', function () { S.snd = this.checked; saveS(); });
   $('vsnd').addEventListener('change', function () { S.vsnd = this.checked; saveS(); rebuild(); });
+  // 配信モードでは「回し方・演出・音」を1行に畳む（いまの選択を横に出す）。押すと開く
+  function optsNow() {
+    var t = { gacha: 'ガチャ', wheel: 'ルーレット' }[S.mode] + '・' + { full: '派手', lite: '控えめ', off: '演出なし' }[S.fx] + '・' + { short: '短い', normal: 'ふつう', long: '長い' }[S.speed]
+      + '・' + (S.snd || S.vsnd ? '音あり' : '音なし');
+    $('optsNow').textContent = t;
+  }
+  optsNow();
+  document.querySelectorAll('#opts input').forEach(function (r) { r.addEventListener('change', optsNow); });
+  var optsHand = false;   // 自分で開け閉めしたら、そのあとは自動で開け閉めしない
+  function optsSet(o) { $('optsSw').setAttribute('aria-expanded', o ? 'true' : 'false'); $('opts').classList.toggle('open', o); }
+  $('optsSw').addEventListener('click', function () { optsHand = true; optsSet(this.getAttribute('aria-expanded') !== 'true'); });
+  // 開いても画面に入る大きさ（1280x720 など）なら、はじめから開いておく。入らない窓（960x540 など）は畳んだまま
+  function optsAuto() {
+    if (optsHand || !document.documentElement.classList.contains('stream')) return;
+    optsSet(true);
+    if ($('opts').getBoundingClientRect().bottom > window.innerHeight - 8 || document.documentElement.scrollWidth > window.innerWidth) optsSet(false);
+  }
+  window.addEventListener('resize', optsAuto);
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', optsAuto); else optsAuto();
 
   var myTimer = null;
   $('my').value = load(LS.my, '');
