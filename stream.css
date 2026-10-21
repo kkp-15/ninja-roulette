@@ -7,8 +7,8 @@
 @media(min-width:768px){.stream-sw-box{display:block;margin:8px 0 0}}
 .stream-sw{display:flex;align-items:center;gap:8px;min-height:40px;font-weight:700;font-size:14px;cursor:pointer;color:var(--k-sumi,#1f1a17)}
 .stream-sw input{width:20px;height:20px;accent-color:var(--k-shu,#d9432a);flex:none}
-.stream-sw span{font-weight:400;font-size:12.5px;color:var(--k-text-2,#4a3f37)}
-.stream-off{margin-left:auto;min-height:34px;padding:2px 12px;border:2px solid var(--k-sumi,#1f1a17);border-radius:6px;background:var(--k-shu,#d9432a);color:#fff;font-weight:700;font-size:13px;cursor:pointer;box-shadow:3px 3px 0 var(--k-sumi,#1f1a17)}
+.stream-sw span{font-weight:400;font-size:14px;color:var(--k-text-2,#4a3f37)}
+.stream-off{margin-left:auto;min-height:34px;padding:2px 12px;border:2px solid var(--k-sumi,#1f1a17);border-radius:6px;background:var(--k-shu,#d9432a);color:#fff;font-weight:700;font-size:14px;cursor:pointer;box-shadow:3px 3px 0 var(--k-sumi,#1f1a17)}
 .stream-off:active{transform:translate(3px,3px);box-shadow:none}
 
 /* 畳むもの（全ページ共通） */
@@ -23,9 +23,9 @@ html.stream .stream-sw span{display:none}
 /* お題ガチャ: 右の操作欄を詰める（キーの説明・出る割合・自分のお題は畳む） */
 html.stream .col-ctl .keys,html.stream .col-ctl .rates,html.stream .col-ctl details.my{display:none}
 html.stream .col-ctl .packs{grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}
-html.stream .col-ctl .pk{min-height:38px;padding:3px 6px;font-size:13px;gap:4px}
+html.stream .col-ctl .pk{min-height:36px;padding:2px 6px;font-size:14px;gap:4px}
 html.stream .col-ctl .pk .c{display:none}
-html.stream .col-ctl .sec{margin:8px 0 3px}
+html.stream .col-ctl .sec{margin:6px 0 2px}
 html.stream .col-ctl .seg label{min-height:34px}
 html.stream .col-ctl .stat{margin-top:4px;padding:3px 0}
 html.stream .col-ctl .chk label{min-height:30px}

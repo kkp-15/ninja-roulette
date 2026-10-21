@@ -34,11 +34,17 @@ body{background:transparent;font-family:"M PLUS Rounded 1c","Hiragino Maru Gothi
 .g-full{inset:0}
 .g-band{left:0;right:0;bottom:0;height:36vh}
 .g-corner{right:2vw;bottom:3vh;width:44vw;height:56vh}
-.credit,.hint{position:fixed;font-size:15px;font-weight:800;color:#fff;text-shadow:0 0 2px #2b2b2b,1px 1px 0 #2b2b2b,-1px -1px 0 #2b2b2b,1px -1px 0 #2b2b2b,-1px 1px 0 #2b2b2b;pointer-events:none}
+.credit,.hint{position:fixed;font-size:max(15px,2.19vw);font-weight:800;color:#fff;text-shadow:0 0 3px #2b2b2b,2px 2px 0 #2b2b2b,-2px -2px 0 #2b2b2b,2px -2px 0 #2b2b2b,-2px 2px 0 #2b2b2b;pointer-events:none}
 .credit{right:12px;bottom:8px;opacity:.9}
 .credit.top{bottom:auto;top:8px}
 .credit[hidden],.hint[hidden]{display:none}
 .hint{left:12px;bottom:8px}
+/* 1920x1080 を1/3に縮めて置いても読める下限（42px＝2.19vw）。gacha.js が後から足す CSS より強くするため id で書く */
+#gstage .tl-tag,#resbox .tl-tag{font-size:max(.62em,2.19vw)}
+#gstage .tl-sub,#resbox .tl-sub{font-size:max(.34em,2.19vw)}
+#gstage .tl .tl-txt,#resbox .tl .tl-txt{font-size:max(1em,2.19vw)}
+#gstage .tl.m .tl-txt,#resbox .tl.m .tl-txt{font-size:max(.82em,2.19vw)}
+#gstage .tl.l .tl-txt,#resbox .tl.l .tl-txt{font-size:max(.68em,2.19vw)}
 @media(max-aspect-ratio:1/1){
   .place-full{flex-direction:column}
   .place-band{height:30vh}

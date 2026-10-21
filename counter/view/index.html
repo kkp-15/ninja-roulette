@@ -25,7 +25,7 @@ body[data-bg="transparent"]{background:transparent}
 body[data-bg="cream"]{background:var(--k-kinari) url(/kit/img/d4-washi.webp) 0 0/480px auto}
 .stage{position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:0 0}
 .tl{position:absolute;font-family:var(--k-bold);color:var(--k-sumi)}
-.seal{display:inline-grid;place-items:center;flex:none;background:url(/kit/img/d4-seal.webp) center/100% 100% no-repeat;color:#fff;font-family:var(--k-brush);line-height:1}
+.seal{display:inline-grid;place-items:center;flex:none;background:url(/kit/img/d4-seal.webp) center/100% 100% no-repeat;color:#fff;font-family:var(--k-head);font-weight:800;line-height:1}
 .rule{display:flex;align-items:center;min-width:0;overflow:hidden;transform:none;color:#fff;font-family:"M PLUS Rounded 1c",sans-serif;font-weight:900;letter-spacing:.06em;line-height:1.15;text-shadow:0 0 4px var(--k-sumi);word-break:auto-phrase;text-wrap:balance;font-feature-settings:"palt" 1}
 /* 墨の帯は kit の .k-hd（入り・真ん中・端の3枚）。1920 の舞台で高さがあるので、入りと端の幅だけ広げる */
 .rule.k-hd,.fx-out .who.k-hd{background-size:120px 100%,26px 100%,calc(100% - 128px) 100%;background-position:0 0,100% 0,110px 0;text-wrap:balance;letter-spacing:.06em}
@@ -37,7 +37,7 @@ body[data-bg="cream"]{background:var(--k-kinari) url(/kit/img/d4-washi.webp) 0 0
 .tl .p .nm.two{white-space:normal;word-break:break-all;line-height:1.15;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;text-align:center}
 .p .nm{display:block;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;font-family:"M PLUS Rounded 1c",sans-serif;font-weight:900;font-feature-settings:"palt" 1}
 .p .of{font-family:var(--k-bold);color:var(--k-text-2);font-variant-numeric:tabular-nums}
-.p .bm{position:absolute;display:none;place-items:center;background:url(/kit/img/d4-hanko.webp) center/100% 100% no-repeat;color:var(--k-shu);font-family:var(--k-brush);transform:rotate(-10deg)}
+.p .bm{position:absolute;display:none;place-items:center;background:url(/kit/img/d4-hanko.webp) center/100% 100% no-repeat;color:var(--k-shu);font-family:var(--k-head);font-weight:800;transform:rotate(-10deg)}
 .p.over .bm{display:grid}
 
 /* 下の帯 */
@@ -52,7 +52,7 @@ body[data-bg="cream"]{background:var(--k-kinari) url(/kit/img/d4-washi.webp) 0 0
 .tl-band .p .nm{max-width:100%;font-size:44px;line-height:1.25}
 .tl-band .p .ct{display:flex;align-items:baseline;gap:6px}
 .tl-band .p .big-out{font-size:120px}
-.tl-band .p .of{font-size:36px}
+.tl-band .p .of{font-size:44px}
 .tl-band .p .bm{right:-4px;top:-66px;width:96px;height:96px;font-size:46px}
 
 /* 右上に小さく */
@@ -66,13 +66,13 @@ body[data-bg="cream"]{background:var(--k-kinari) url(/kit/img/d4-washi.webp) 0 0
 .tl-corner .p .nm{flex:1;font-size:42px;line-height:1.2}
 .tl-corner .p .ct{display:flex;align-items:baseline;gap:6px;flex:none}
 .tl-corner .p .big-out{font-size:76px}
-.tl-corner .p .of{font-size:30px;min-width:52px}
-.tl-corner .p .bm{left:8px;top:11px;width:62px;height:62px;font-size:30px}
+.tl-corner .p .of{font-size:42px;min-width:64px}
+.tl-corner .p .bm{left:4px;top:5px;width:76px;height:76px;font-size:42px}
 
 /* アウトの判子 */
 .fx-out{position:absolute;left:50%;top:40%;width:900px;margin-left:-450px;margin-top:-260px;display:none;flex-direction:column;align-items:center;pointer-events:none}
 .fx-out.show{display:flex}
-.fx-out .hk{display:grid;place-items:center;width:420px;height:420px;background:url(/kit/img/d4-hanko.webp) center/100% 100% no-repeat;font-family:var(--k-brush);font-size:108px;color:var(--k-shu);line-height:1;transform:rotate(-8deg)}
+.fx-out .hk{display:grid;place-items:center;width:420px;height:420px;background:url(/kit/img/d4-hanko.webp) center/100% 100% no-repeat;font-family:var(--k-head);font-weight:800;font-size:108px;color:var(--k-shu);line-height:1;transform:rotate(-8deg)}
 .fx-out .who{display:flex;align-items:baseline;gap:18px;max-width:900px;box-sizing:border-box;margin-top:-10px;padding:20px 64px 26px 80px;transform:none;color:#fff;text-shadow:0 0 4px var(--k-sumi);white-space:nowrap}
 .fx-out .who b{min-width:0;overflow:hidden;text-overflow:ellipsis;font-weight:900;font-size:56px}
 .fx-out .who span{flex:none;font-family:var(--k-bold);font-size:48px}
@@ -83,13 +83,13 @@ body[data-bg="cream"]{background:var(--k-kinari) url(/kit/img/d4-washi.webp) 0 0
 .fx-batsu{position:absolute;left:50%;top:40%;width:1240px;margin-left:-620px;transform:translateY(-50%);display:none;pointer-events:none}
 .fx-batsu.show{display:block}
 .fx-batsu .scr{position:relative;border-style:solid;border-width:40px 110px;border-image:url(/kit/img/d3-scroll.webp) 56 84 fill / 40px 110px stretch;padding:8px 0 16px;text-align:center}
-.fx-batsu .lab{display:block;font-family:var(--k-brush);font-size:60px;letter-spacing:.2em;line-height:1.2}
+.fx-batsu .lab{display:block;font-family:var(--k-brush);font-size:60px;letter-spacing:.08em;line-height:1.2}
 .fx-batsu .nm{display:block;font-weight:900;font-size:120px;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-feature-settings:"palt" 1}
 .fx-batsu .sub{display:block;font-weight:800;font-size:44px;color:var(--k-text-2)}
 .fx-batsu .item{display:none;margin:6px 20px 0;font-weight:900;font-size:72px;line-height:1.25;color:var(--k-shu);text-shadow:3px 0 0 var(--k-sumi),-3px 0 0 var(--k-sumi),0 3px 0 var(--k-sumi),0 -3px 0 var(--k-sumi),3px 3px 0 var(--k-sumi),-3px -3px 0 var(--k-sumi),3px -3px 0 var(--k-sumi),-3px 3px 0 var(--k-sumi);word-break:auto-phrase;text-wrap:balance;font-feature-settings:"palt" 1}
 .fx-batsu.drawn .item{display:block}
 .fx-batsu.drawn .nm{font-size:76px}
-.fx-batsu .rar{display:none;position:absolute;right:-20px;top:-26px;padding:4px 18px;border:4px solid var(--k-sumi);border-radius:8px;font-family:var(--k-bold);font-size:40px;color:#fff;text-shadow:var(--k-outline);transform:rotate(6deg)}
+.fx-batsu .rar{display:none;position:absolute;right:-20px;top:-26px;padding:4px 18px;border:4px solid var(--k-sumi);border-radius:8px;font-family:var(--k-bold);font-size:42px;color:#fff;text-shadow:var(--k-outline);transform:rotate(6deg)}
 .fx-batsu.drawn .rar{display:block}
 .fx-batsu.drawn .rar[hidden]{display:none}
 /* 7〜9項目 */
@@ -98,8 +98,8 @@ body[data-bg="cream"]{background:var(--k-kinari) url(/kit/img/d4-washi.webp) 0 0
 .stage[data-many="1"] .tl-band .rule{width:306px;padding:14px 24px 16px 40px}
 .stage[data-many="1"] .tl-band .ppl{gap:4px}
 .stage[data-many="1"] .tl-band .p{padding:0 4px}
-.stage[data-many="1"] .tl-band .p .of{font-size:28px}
-.stage[data-many="1"] .tl-band .p .bm{width:76px;height:76px;font-size:36px;top:-56px}
+.stage[data-many="1"] .tl-band .p .of{font-size:42px}
+.stage[data-many="1"] .tl-band .p .bm{width:84px;height:84px;font-size:42px;top:-60px}
 .stage[data-many="1"] .tl-corner .p{height:70px}
 .stage[data-many="1"] .tl-corner .p .big-out{font-size:62px}
 .fx-batsu .kin{position:absolute;width:240px;pointer-events:none}
@@ -110,10 +110,10 @@ body[data-bg="cream"]{background:var(--k-kinari) url(/kit/img/d4-washi.webp) 0 0
 .stage[data-place="corner"] .fx-batsu{top:52%;left:50px;margin-left:0;width:1200px}
 .stage[data-place="corner"] .fx-out{left:calc(50% - 230px)}
 
-.credit{position:absolute;right:28px;top:14px;font-size:24px;font-weight:800;color:#fff;text-shadow:0 0 3px var(--k-sumi),2px 2px 0 var(--k-sumi),-2px -2px 0 var(--k-sumi),2px -2px 0 var(--k-sumi),-2px 2px 0 var(--k-sumi);pointer-events:none}
+.credit{position:absolute;right:28px;top:10px;font-size:42px;font-weight:800;color:#fff;text-shadow:0 0 3px var(--k-sumi),2px 2px 0 var(--k-sumi),-2px -2px 0 var(--k-sumi),2px -2px 0 var(--k-sumi),-2px 2px 0 var(--k-sumi);pointer-events:none}
 .stage[data-place="corner"] .credit{top:auto;bottom:16px}
 .credit[hidden]{display:none}
-.wait{position:absolute;left:60px;top:60px;padding:16px 24px;background:rgba(255,255,255,.9);border:4px solid var(--k-sumi);border-radius:10px;font-size:32px;font-weight:800}
+.wait{position:absolute;left:60px;top:60px;padding:16px 24px;background:rgba(255,255,255,.9);border:4px solid var(--k-sumi);border-radius:10px;font-size:42px;font-weight:800}
 .wait[hidden]{display:none}
 
 @keyframes fade-up{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
