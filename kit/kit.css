@@ -476,6 +476,9 @@ a.k-card:hover h3,a.k-card:focus-visible h3{text-decoration:underline;text-decor
 .k-view-open>.k-seg>button{min-height:44px;padding:4px 10px;font-size:14px}
 .k-view-open>p{flex:1 1 260px;margin:0;font-size:14px;line-height:1.5;color:var(--k-text-2)}
 .k-view-open>.k-vo-msg{flex-basis:100%;color:var(--k-shu);font-weight:700}
+.k-view-open .k-vo-color{flex-direction:row;gap:6px}
+.k-seg>label.k-vo-color input{position:static;opacity:1;pointer-events:auto;width:30px;height:26px;padding:0;border:var(--k-bw-s) solid var(--k-sumi);border-radius:4px;background:none;cursor:pointer}
+.k-view-open .k-vo-color[aria-pressed="true"] input{border-color:#fff}
 
 /* ---------- 表示ページとのつながりの札（k-live） ---------- */
 .k-live{display:inline-flex;align-items:center;gap:6px;font-size:14px;font-weight:700;line-height:1.4;color:var(--k-text-2);white-space:nowrap}
@@ -487,6 +490,8 @@ a.k-card:hover h3,a.k-card:focus-visible h3{text-decoration:underline;text-decor
 .k-resume{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;margin:0 0 16px;padding:10px 0;border-top:2px solid var(--k-shu);border-bottom:1px solid var(--k-line-soft)}
 .k-resume>p{flex:1 1 220px;margin:0;font-size:15px;font-weight:700;line-height:1.5}
 .k-resume>.k-btn{min-height:44px;padding:0 16px;font-size:15px}
+/* display を持つ部品にも hidden を効かせる（.k-resume は display:flex のため hidden が効いていなかった） */
+.k-resume[hidden],.k-view-open[hidden],.k-view-open [hidden],.k-live[hidden],.k-view-idle[hidden],.k-dock[hidden],.k-stream-title[hidden]{display:none!important}
 
 /* ---------- 2回押しの1回目（KKit.twice） ---------- */
 .k-twice-on{outline:3px solid var(--k-shu)!important;outline-offset:2px}
@@ -501,7 +506,8 @@ a.k-card:hover h3,a.k-card:focus-visible h3{text-decoration:underline;text-decor
 /* ---------- /view/ の共通の枠（k-view） ----------
    body に k-view、中に 16:9 の .k-view-stage。ウィンドウに合わせて縮む（スクロールなし）。
    字は --k-v-* を使う: どれも max(42px, 画面の幅の◯%)＝どのウィンドウでも 1/3 に縮めて 14px 以上
-   背景は <html data-k-bg="cream|green|clear">（KKit.view が ?bg= と操作画面の選択から付ける。既定 cream）
+   背景は <html data-k-bg="cream|green|clear|white|black|color">（KKit.view が ?bg= と操作画面の選択から付ける。既定 cream。color は --k-view-bg）
+   縦型は ?layout=v（body.vert・9:16）
    <body class="k-view"><div class="k-view-stage">
      <header class="k-view-top">…</header><main class="k-view-body">…</main>
      <div class="k-view-idle" hidden>…</div>
@@ -510,6 +516,9 @@ a.k-card:hover h3,a.k-card:focus-visible h3{text-decoration:underline;text-decor
 body.k-view{margin:0;height:100vh;overflow:hidden;background:var(--k-kinari) url(img/d4-washi.webp) 0 0/420px auto;color:var(--k-sumi);font-family:var(--k-body)}
 [data-k-bg="green"] body.k-view{background:#00b140}
 [data-k-bg="clear"] body.k-view{background:transparent}
+[data-k-bg="white"] body.k-view{background:#fff}
+[data-k-bg="black"] body.k-view{background:#000}
+[data-k-bg="color"] body.k-view{background:var(--k-view-bg,#fbf3e4)}
 .k-view-stage{--k-v-min:max(42px,2.3cqw);--k-v-s:max(46px,2.8cqw);--k-v-m:max(54px,3.6cqw);--k-v-l:max(62px,4.6cqw);--k-v-xl:max(76px,6.4cqw);--k-v-credit:max(24px,1.8cqw);--k-v-pad:max(16px,2.4cqw);
   position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(100vw,177.78vh);height:min(56.25vw,100vh);container-type:size;overflow:hidden;display:flex;flex-direction:column;box-sizing:border-box}
 .k-view-top{flex:none;display:flex;align-items:center;gap:var(--k-v-pad);box-sizing:border-box;padding:calc(var(--k-v-pad)*.4) var(--k-v-pad);border-bottom:max(3px,.25cqw) solid var(--k-sumi);font-family:var(--k-head);font-weight:800;font-size:var(--k-v-min);line-height:1.2;min-width:0}
@@ -524,15 +533,149 @@ body.k-view{margin:0;height:100vh;overflow:hidden;background:var(--k-kinari) url
 .k-view-idle>small{display:block;font-size:var(--k-v-min);font-weight:700;line-height:1.35;color:var(--k-text-2)}
 .k-view-stage.k-idle .k-view-top{visibility:hidden}   /* 待ち画面では上の題名を出さない（題名は1回だけ） */
 /* 緑（クロマキー）と透過: 字の下だけ生成りの面を敷く（緑の上に字を直に置かない） */
-[data-k-bg="green"] .k-view-stage,[data-k-bg="clear"] .k-view-stage{padding:max(8px,1cqw);gap:max(6px,.8cqw)}
-[data-k-bg="green"] .k-view-top,[data-k-bg="clear"] .k-view-top,
-[data-k-bg="green"] .k-view-body,[data-k-bg="clear"] .k-view-body,
-[data-k-bg="green"] .k-view-credit,[data-k-bg="clear"] .k-view-credit{background:var(--k-kinari) url(img/d4-washi.webp) 0 0/420px auto;border:max(3px,.25cqw) solid var(--k-sumi);border-radius:max(6px,.6cqw)}
-[data-k-bg="green"] .k-view-credit,[data-k-bg="clear"] .k-view-credit{align-self:flex-end}
-[data-k-bg="green"] .k-view-idle,[data-k-bg="clear"] .k-view-idle{inset:max(8px,1cqw) max(8px,1cqw) calc(var(--k-v-credit)*1.6 + max(14px,1.8cqw));border:max(3px,.25cqw) solid var(--k-sumi);border-radius:max(6px,.6cqw)}
+/* クリーム以外（緑・透過・白・黒・任意の色）は、字の下に生成りの面を敷く */
+[data-k-bg]:not([data-k-bg="cream"]) .k-view-stage{padding:max(8px,1cqw);gap:max(6px,.8cqw)}
+[data-k-bg]:not([data-k-bg="cream"]) .k-view-top,
+[data-k-bg]:not([data-k-bg="cream"]) .k-view-body,
+[data-k-bg]:not([data-k-bg="cream"]) .k-view-credit{background:var(--k-kinari) url(img/d4-washi.webp) 0 0/420px auto;border:max(3px,.25cqw) solid var(--k-sumi);border-radius:max(6px,.6cqw)}
+[data-k-bg]:not([data-k-bg="cream"]) .k-view-credit{align-self:flex-end}
+[data-k-bg]:not([data-k-bg="cream"]) .k-view-idle{inset:max(8px,1cqw) max(8px,1cqw) calc(var(--k-v-credit)*1.6 + max(14px,1.8cqw));border:max(3px,.25cqw) solid var(--k-sumi);border-radius:max(6px,.6cqw)}
+/* 黒の背景では面の外の墨の線が見えないので、生成りの細い線を足す */
+[data-k-bg="black"] .k-view-top,[data-k-bg="black"] .k-view-body,[data-k-bg="black"] .k-view-credit,[data-k-bg="black"] .k-view-idle{box-shadow:0 0 0 2px var(--k-kinari)}
+
+/* 縦型（9:16）: ?layout=v で KKit.view が body.vert を付ける。字の下限は 1080 幅の 1/3 で 14px（=3.9%） */
+body.k-view.vert .k-view-stage{width:min(100vw,56.25vh);height:min(177.78vw,100vh);
+  --k-v-min:max(42px,3.9cqw);--k-v-s:max(46px,4.4cqw);--k-v-m:max(54px,5.2cqw);--k-v-l:max(62px,6.4cqw);--k-v-xl:max(76px,8.4cqw);--k-v-credit:max(24px,3cqw);--k-v-pad:max(14px,3.4cqw)}
+body.k-view.vert .k-view-top{flex-wrap:wrap}
+body.k-view.vert .k-view-idle{padding:0 calc(var(--k-v-pad)*1.4)}
+body.k-view.vert .k-view-idle>b,body.k-view.vert .k-view-idle-t{white-space:normal}
+body.k-view.vert .k-view-idle::before{right:-20cqw;width:60cqw;height:60cqw}
+
+/* 測っている間は動きを外す（KKit.view.fit が付け外す。出てくる動きの途中は小さく見えて縮めそこねる。外したあと動きは頭から） */
+.k-fitting,.k-fitting *{animation:none!important;transition:none!important}
+
+/* ---------- 重ね表示型の /view/（k-view-ov）: 配信の画面の上に重ねる（ルーレット・カウンター・ビンゴなど） ----------
+   16:9 の箱は作らず、窓いっぱいを使う。背景は既定で透過（KKit.view({ ch, def: 'clear' })）。置き方は data-k-place（full・band・corner）。
+   字の下限は窓の幅の 2.19%（1920 幅の 1/3 で 14px）・縦型（body.vert か縦長の窓）は 3.9%。
+   <body class="k-view k-view-ov">
+     <div class="k-ov" data-k-place="full">…</div>
+     <div class="k-view-idle k-ov-idle" hidden><b>題字</b><p>まもなく始まります</p></div>
+     <div class="k-ov-credit">roulette.kkpwebninja.com</div>
+   </body>
+   字を映像の上でも読めるようにするなら .k-ov-ink（白字に墨のふち）か .k-ov-plate（生成りの面）。 */
+body.k-view.k-view-ov{height:100vh;background:transparent;
+  --k-ov-min:max(14px,2.19vw);--k-ov-s:max(16px,2.6vw);--k-ov-m:max(18px,3.4vw);--k-ov-l:max(22px,4.6vw);--k-ov-xl:max(28px,6.4vw);--k-ov-pad:max(8px,2vw)}
+[data-k-bg="cream"] body.k-view.k-view-ov{background:var(--k-kinari) url(img/d4-washi.webp) 0 0/420px auto}
+body.k-view.k-view-ov.vert{--k-ov-min:max(14px,3.9vw);--k-ov-s:max(16px,4.4vw);--k-ov-m:max(18px,5.2vw);--k-ov-l:max(22px,6.4vw);--k-ov-xl:max(28px,8.4vw);--k-ov-pad:max(8px,3vw)}
+@media (max-aspect-ratio:1/1){ body.k-view.k-view-ov{--k-ov-min:max(14px,3.9vw);--k-ov-s:max(16px,4.4vw);--k-ov-m:max(18px,5.2vw);--k-ov-l:max(22px,6.4vw);--k-ov-xl:max(28px,8.4vw);--k-ov-pad:max(8px,3vw)} }
+.k-ov{position:fixed;inset:0;box-sizing:border-box;padding:var(--k-ov-pad);container-type:size;display:flex;align-items:center;justify-content:center;gap:var(--k-ov-pad);overflow:hidden;font-size:var(--k-ov-min)}
+.k-ov[hidden]{display:none}
+.k-ov[data-k-place="band"]{top:auto;height:36vh;padding:1.5vh 2vw;justify-content:flex-start}
+.k-ov[data-k-place="corner"]{left:auto;top:auto;right:2vw;bottom:3vh;width:44vw;height:56vh;padding:0;flex-direction:column;align-items:flex-end;justify-content:flex-end}
+@media (max-aspect-ratio:1/1){
+  .k-ov[data-k-place="full"]{flex-direction:column}
+  .k-ov[data-k-place="band"]{height:30vh}
+  .k-ov[data-k-place="corner"]{width:70vw;height:44vh}
+}
+body.k-view-ov.vert .k-ov[data-k-place="full"]{flex-direction:column}
+.k-ov-ink{color:#fff;text-shadow:var(--k-outline),0 0 6px rgba(31,26,23,.6)}
+.k-ov-plate{box-sizing:border-box;padding:calc(var(--k-ov-pad)*.5) var(--k-ov-pad);background:var(--k-kinari) url(img/d4-washi.webp) 0 0/420px auto;border:max(3px,.25vw) solid var(--k-sumi);border-radius:max(6px,.6vw);color:var(--k-sumi)}
+.k-ov-credit{position:fixed;right:max(8px,.8vw);bottom:max(6px,.6vw);z-index:30;font-family:var(--k-body);font-size:var(--k-ov-min);font-weight:800;line-height:1.2;color:#fff;text-shadow:var(--k-outline);white-space:nowrap;pointer-events:none}
+.k-ov-credit.k-top{bottom:auto;top:max(6px,.6vw)}
+.k-ov-credit[hidden]{display:none}
+/* 重ね表示の待ち画面: 画面いっぱいにせず、真ん中に生成りの札を1枚 */
+body.k-view-ov .k-view-idle.k-ov-idle{position:fixed;inset:auto;left:50%;top:50%;bottom:auto;right:auto;transform:translate(-50%,-50%);width:min(80vw,900px);max-width:calc(100vw - 32px);padding:var(--k-ov-pad) calc(var(--k-ov-pad)*1.5);gap:calc(var(--k-ov-pad)*.4);border:max(3px,.25vw) solid var(--k-sumi);border-radius:max(6px,.6vw);text-align:left}
+body.k-view-ov .k-view-idle.k-ov-idle::before{display:none}
+body.k-view-ov .k-view-idle.k-ov-idle>b,.k-ov-idle .k-view-idle-t{font-size:var(--k-ov-xl);white-space:normal}
+body.k-view-ov .k-view-idle.k-ov-idle>p{font-size:var(--k-ov-l)}
+body.k-view-ov .k-view-idle.k-ov-idle>small{font-size:var(--k-ov-min)}
+body.k-view-ov .k-view-idle.k-ov-idle[hidden]{display:none}
+body.k-view-ov.k-idle .k-ov{visibility:hidden}   /* 待ち画面の間は中身を映さない（KKit.view の idle(true) で body に k-idle） */
 @media (prefers-reduced-motion:reduce){ body.k-view *,body.k-view *::before,body.k-view *::after{animation:none!important;transition:none!important} }
 
 /* ---------- ものさし: 予想が正解の近く（差3以内）のとき（k-ruler-hit） ----------
    .k-ruler に .k-ruler-hit を足すと、正解の印と「4」の数字を消して針だけを見せる（針が印と数字に重なって読めなくなるため。点は結果の判子で出す） */
 .k-ruler.k-ruler-hit .k-ruler-mark{opacity:0!important}
 .k-ruler.k-ruler-hit .k-ruler-z4>b{opacity:0}
+
+/* =====================================================================
+   遊びの部品（2026-10-22 第3波）: サイコロ・かるた・ビンゴの玉・ルーレット盤・ゲート・種類の絵
+   どれも左揃え・絵文字なし。動きは1回だけ（動きを減らす設定では止める）。
+   ===================================================================== */
+
+/* ---------- サイコロ（k-die）: KKit.die(要素, 目, { roll:true }) で SVG の目を描く ----------
+   大きさは --k-die-s（既定 96px）か width。1の目は朱で大きく（日本のサイコロ）。.k-die-shu＝目を全部朱／.k-die-plain＝1も墨 */
+.k-die{--k-die-s:96px;--k-die-ms:620ms;display:inline-block;flex:none;width:var(--k-die-s);aspect-ratio:1;line-height:0;vertical-align:middle;-webkit-user-select:none;user-select:none}
+.k-die>svg{display:block;width:100%;height:100%;overflow:visible}
+.k-die-roll{animation:k-die-roll var(--k-die-ms) cubic-bezier(.3,.7,.35,1) both}
+@keyframes k-die-roll{
+  0%{transform:translate(0,0) rotate(0)}
+  22%{transform:translate(-4%,-22%) rotate(-150deg) scale(.94)}
+  48%{transform:translate(3%,4%) rotate(-290deg) scale(1.02)}
+  68%{transform:translate(-1%,-6%) rotate(-345deg)}
+  84%{transform:translate(0,1%) rotate(-362deg)}
+  100%{transform:translate(0,0) rotate(-360deg)}
+}
+
+/* ---------- かるた（k-karuta）: 読み札と取り札（1文字） ----------
+   紙の地（生成り＋和紙）・墨の外ふち・朱の内ふち。文字は HTML。
+   <div class="k-karuta k-karuta-yomi">犬も歩けば棒に当たる</div>
+   <span class="k-karuta k-karuta-tori"><b>い</b></span>（伏せる＝.k-karuta-ura） */
+.k-karuta{position:relative;box-sizing:border-box;color:var(--k-sumi);background:#fffaf0 url(img/d4-washi.webp) 0 0/280px auto;border:var(--k-bw-s) solid var(--k-sumi);border-radius:8px;
+  box-shadow:inset 0 0 0 5px #fffaf0,inset 0 0 0 7px var(--k-shu),0 3px 0 -1px #d8c6a4,0 3px 0 1px var(--k-sumi)}
+.k-karuta::before{content:"";position:absolute;inset:0;border-radius:inherit;background:linear-gradient(180deg,rgba(255,255,255,.55),rgba(255,255,255,0) 40%,rgba(160,120,60,.05));pointer-events:none}
+.k-karuta-yomi{display:flex;align-items:center;justify-content:center;min-height:110px;padding:18px 22px;font-family:var(--k-head);font-weight:800;font-size:24px;line-height:1.55;letter-spacing:.04em;text-align:center;word-break:auto-phrase;text-wrap:balance;font-feature-settings:"palt" 1}
+.k-karuta-tori{--k-tori-s:76px;display:inline-grid;place-items:center;flex:none;width:var(--k-tori-s);aspect-ratio:5/7;vertical-align:middle}
+.k-karuta-tori>b{display:grid;place-items:center;width:78%;aspect-ratio:1;border:3px solid var(--k-shu);border-radius:50%;background:#fff;color:var(--k-shu);font-family:var(--k-head);font-weight:800;font-size:calc(var(--k-tori-s)*.46);line-height:1}
+/* 伏せた札（答えを見る前）: 朱の裏面に生成りの細い線。字は見せない */
+.k-karuta-ura{background:var(--k-shu);box-shadow:inset 0 0 0 5px var(--k-shu),inset 0 0 0 6.5px rgba(251,243,228,.75),0 3px 0 -1px #8e2a17,0 3px 0 1px var(--k-sumi)}
+.k-karuta-ura::before{background:radial-gradient(circle at 50% 50%,rgba(251,243,228,.22) 0 22%,transparent 23%)}
+.k-karuta-ura>b{visibility:hidden}
+.k-karuta-in{animation:k-karuta-in .35s cubic-bezier(.3,.9,.4,1) both}
+@keyframes k-karuta-in{0%{transform:translateY(-10px) rotate(-2deg);opacity:0}100%{transform:none;opacity:1}}
+
+/* ---------- ビンゴの玉（k-ball）: 艶と墨のふち。色は --k-ball-c か背景色 ----------
+   列の色: .k-ball-B 朱・-I 橙・-N 墨・-G 墨の淡・-O 朱の濃（白字 4.5:1 以上）。サイト側の background-color がある所はその色のまま艶だけ付く。
+   数字の白い丸を付けるなら中に <b>（.k-ball>b）。 */
+.k-ball{--k-ball-c:var(--k-shu);
+  --k-ball-gloss:radial-gradient(circle at 33% 27%,rgba(255,255,255,.85) 0 5%,rgba(255,255,255,.35) 12%,rgba(255,255,255,0) 30%),radial-gradient(circle at 50% 44%,rgba(255,255,255,0) 52%,rgba(0,0,0,.2) 78%,rgba(0,0,0,.32) 100%);
+  --k-ball-rim:inset 0 0 0 2px var(--k-sumi),inset 0 -3px 0 2px rgba(0,0,0,.1);
+  display:inline-grid;place-items:center;box-sizing:border-box;aspect-ratio:1;border-radius:50%;background-color:var(--k-ball-c);color:#fff;font-family:var(--k-bold);font-variant-numeric:tabular-nums;
+  background-image:var(--k-ball-gloss);box-shadow:var(--k-ball-rim)}
+/* サイト側の background（ショートハンド）や影が後から当たる所は、そのサイトの CSS で background-image:var(--k-ball-gloss); box-shadow:var(--k-ball-rim) を足す */
+.k-ball-B{--k-ball-c:#c93b23}.k-ball-I{--k-ball-c:#a94b0c}.k-ball-N{--k-ball-c:#1f1a17}.k-ball-G{--k-ball-c:#62564c}.k-ball-O{--k-ball-c:#86281a}
+.k-ball>b{display:grid;place-items:center;width:58%;aspect-ratio:1;border-radius:50%;background:#fffdf8;color:var(--k-sumi);box-shadow:inset 0 0 0 1.5px rgba(31,26,23,.35);font-weight:400;line-height:1}
+.k-ball-in{animation:k-ball-in .45s cubic-bezier(.3,1.4,.5,1) both}
+@keyframes k-ball-in{0%{transform:translateY(-30%) scale(.6);opacity:0}100%{transform:none;opacity:1}}
+
+/* ---------- ルーレット盤（k-wheel）: KKit.wheel(要素, { items }) が中を組み立てる ----------
+   区切りは朱・生成り・オレンジ・薄いオレンジの濃淡（字は白か墨で 4.5:1 以上）。中央に家紋（d4-mon）、上に墨の針。大きさは要素の width */
+.k-wheel{position:relative;box-sizing:border-box;width:300px;max-width:100%;aspect-ratio:1;padding:10px;border-radius:50%;background:var(--k-sumi);box-shadow:inset 0 0 0 4px #3a312b}
+.k-wheel::before{content:"";position:absolute;inset:4px;border-radius:50%;border:2px dashed rgba(251,243,228,.35);pointer-events:none}
+.k-wheel-disc{width:100%;height:100%;border-radius:50%;will-change:transform}
+.k-wheel-disc>svg{display:block;width:100%;height:100%}
+.k-wheel-t text{font-family:var(--k-head);font-weight:800;letter-spacing:.02em;font-feature-settings:"palt" 1}
+.k-wheel-hub{position:absolute;left:50%;top:50%;width:19%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;background:var(--k-kinari) url(img/d4-mon.webp) center/74% no-repeat;box-shadow:0 0 0 3px var(--k-sumi),0 0 0 6px var(--k-kinari),0 0 0 8px var(--k-sumi)}
+.k-wheel-pin{position:absolute;left:50%;top:-4%;width:13%;transform:translateX(-50%);z-index:2;line-height:0;pointer-events:none}
+.k-wheel-pin>svg{display:block;width:100%;height:auto}
+.k-wheel-win{stroke:#fffdf8;stroke-width:5;animation:k-wheel-win 1.1s ease-in-out 2}
+@keyframes k-wheel-win{50%{stroke:#ffd43b}}
+.k-wheel-pin.k-wheel-tick>svg{animation:k-wheel-tick .16s ease-out}
+@keyframes k-wheel-tick{40%{transform:rotate(-14deg)}}
+.k-wheel-pin>svg{transform-origin:50% 30%}
+.k-wheel-empty{position:absolute;left:12%;right:12%;top:62%;z-index:1;text-align:center;font-family:var(--k-head);font-weight:800;font-size:var(--k-wheel-empty,16px);line-height:1.3;color:var(--k-text-2);pointer-events:none}
+.k-wheel-empty[hidden]{display:none}
+@media (prefers-reduced-motion:reduce){.k-wheel-disc{transition:none!important}.k-wheel-win,.k-wheel-pin>svg{animation:none!important}}
+
+/* ---------- ゲート（k-gate）: のれんをくぐる門。絵は img/k-gate-noren・k-gate-post（Gemini で生成・字なし） ----------
+   HTML で使うとき: <div class="k-gate" style="--k-gate-c:#2f6fb0"><b>+1</b></div>（字は HTML で上に載せる）。
+   canvas のゲームは KKit.gateArt('kit/img/') で絵を読み、tint(色) で染めたのれんを drawImage する */
+.k-gate{--k-gate-c:var(--k-shu);position:relative;isolation:isolate;display:grid;place-items:center;box-sizing:border-box;width:200px;aspect-ratio:3.2/1;padding:8% 10% 0;background:url(img/k-gate-noren.webp) center/90% 100% no-repeat}
+.k-gate::before{content:"";position:absolute;inset:0 5%;background:var(--k-gate-c);-webkit-mask:url(img/k-gate-noren.webp) center/100% 100% no-repeat;mask:url(img/k-gate-noren.webp) center/100% 100% no-repeat;mix-blend-mode:multiply}
+.k-gate::after{content:"";position:absolute;inset:0;background:url(img/k-gate-post.webp) left top/6% 112% no-repeat,url(img/k-gate-post.webp) right top/6% 112% no-repeat}
+.k-gate>b{position:relative;z-index:1;color:#fff;font-family:var(--k-bold);font-weight:400;font-size:28px;line-height:1;text-shadow:var(--k-outline)}
+
+/* ---------- 種類の小さな絵（k-cat-ico）: 丸い枠に外部生成の絵（字なし）。絵は img/k-cat-*.webp ----------
+   <span class="k-cat-ico" style="--k-ico:url(kit/img/k-cat-beer.webp)"></span>（大きさは --k-ico-s・既定 44px） */
+.k-cat-ico{--k-ico-s:44px;display:inline-block;flex:none;box-sizing:border-box;width:var(--k-ico-s);height:var(--k-ico-s);border-radius:50%;border:var(--k-bw-s) solid var(--k-sumi);background:var(--k-ico) center/72% auto no-repeat,var(--k-kinari);vertical-align:middle}
+.k-cat-ico-sm{--k-ico-s:32px;border-width:1.5px}
