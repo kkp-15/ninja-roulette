@@ -8,6 +8,12 @@
 .stream-sw{display:flex;align-items:center;gap:8px;min-height:40px;font-weight:700;font-size:14px;cursor:pointer;color:var(--k-sumi,#1f1a17)}
 .stream-sw input{width:20px;height:20px;accent-color:var(--k-shu,#d9432a);flex:none}
 .stream-sw span{font-weight:400;font-size:14px;color:var(--k-text-2,#4a3f37)}
+/* 2026-10-21 ふつうと配信モードの見比べ（配信モード中は出さない） */
+.stream-cmp{margin:2px 0 4px 28px;display:grid;gap:2px}
+.stream-cmp div{display:grid;grid-template-columns:6.5em 1fr;gap:8px;align-items:baseline}
+.stream-cmp dt{font-weight:700;font-size:14px;color:var(--k-sumi,#1f1a17)}
+.stream-cmp dd{margin:0;font-size:14px;line-height:1.5;color:var(--k-text-2,#4a3f37)}
+html.stream .stream-cmp{display:none}
 .stream-off{margin-left:auto;min-height:34px;padding:2px 12px;border:2px solid var(--k-sumi,#1f1a17);border-radius:6px;background:var(--k-shu,#d9432a);color:#fff;font-weight:700;font-size:14px;cursor:pointer;box-shadow:3px 3px 0 var(--k-sumi,#1f1a17)}
 .stream-off:active{transform:translate(3px,3px);box-shadow:none}
 
