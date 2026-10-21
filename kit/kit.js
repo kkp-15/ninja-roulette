@@ -177,7 +177,8 @@
      .k-view-open[data-k-view][data-k-ch]  開く・URLをコピー・背景3択・OBS の1行を作る。開いたら 'k-view-open' の event
      KKit.view({ ch, def })         /view/ 側: 背景（?bg= ＞ 操作画面の選択 ＞ def〈既定 cream〉）を <html data-k-bg> に。idle(true/false) で待ち画面
                                     ?layout=v で body.vert（縦型 9:16）。背景は cream/green/clear/white/black/色（#rrggbb）
-     KKit.view.fit(箱, { min, step, drop, after })  箱の --f を下げて1画面に。縮めきっても入らなければ drop の行を順に外す。測る間は動きを止める
+     KKit.view.fit(箱, { min, step, drop, after, first, hide })  箱の --f を下げて1画面に。縮めきっても入らなければ drop の行を順に外す
+                                    （first: true で先に外す・hide: true で消さずに隠す）。測る間は動きを止める＝毎回呼ぶと動きが出直す
      KKit.view.refit(fn)            字のデータが後から届いた・窓の大きさが変わったときに fn を呼び直す
      KKit.viewBg.get(ch, def) / set(ch, 値) / css(値)  表示ページの背景の選択（操作画面と表示ページで共通のキー k-view-bg:<ch>）
      KKit.resume({ key, box, label, onResume, onDiscard, live, ttl })  続きから（既定12時間・この端末だけ）。選ぶまで live を止める
@@ -185,7 +186,8 @@
      KKit.twice(要素, { text, ms, when, ok, guard, settle })  回が消える操作の2回押し。when() が false なら1回で ok
                                     text は関数でもよい（場面ごとの文）。guard＝連打の2回目を数えない（既定400ms）・settle＝出た直後は効かない（既定500ms）
      KKit.twice.block(ms)           画面を切り替えた直後に呼ぶ: その間はどの twice も効かない（既定600ms）
-     KKit.fitText(要素, { min, max, lines })   字を縮めて lines 行（既定1）に収める。min（px）より小さくしない
+     KKit.fitText(要素, { min, max, lines })   字を縮めて lines 行（既定1）に収める。min（px）より小さくしない（縦型の表示ページでは min を窓の幅の比に＝KKit.view.minPx）
+     KKit.settle(要素, ms)          場面で入れ替わる普通のボタン: 出た直後 ms（既定400）の押しを捨てる
      KKit.streamTitle(要素, { key, onChange })  「〇〇の」タイトル欄（12字・空なら「みんな」・端末に覚える） */
   function streamParts() {
     var K = window.KKit = window.KKit || {};
@@ -299,7 +301,9 @@
     K.openView = function (o) {
       o = o || {};
       var vert = !!o.vert, wh = vert ? 'width=405,height=720' : 'width=1280,height=720';
-      var w = null; try { w = window.open(viewUrl(o), o.name || 'kView', 'popup=yes,' + wh); } catch (e) {}
+      // 別窓は同じブラウザなので背景は localStorage で届く。?bg= を付けると窓の背景が固定されて切り替えに付いてこないので付けない
+      // （?bg= は「URLをコピー」＝OBS のブラウザソース用だけ）。前の版で開いた窓（?bg= 付き）も、操作画面から開いた窓なら KKit.view が付いていく
+      var w = null; try { w = window.open(o.url || '/view/', o.name || 'kView', 'popup=yes,' + wh); } catch (e) {}
       if (w && o.ch && lives[o.ch]) setTimeout(function () { lives[o.ch].paint(); }, 600);
       return !!w;
     };
@@ -360,17 +364,33 @@
     K.view = function (o) {
       o = o || {};
       var ch = o.ch || '', q = new URLSearchParams(location.search), fixed = bgNorm(q.get('bg'));
+      // 操作画面から開いた窓（同じサイトの opener がある）は ?bg= で固定せず、操作画面の切り替えに付いていく。
+      // ?bg= で固定するのは、opener のない窓（OBS のブラウザソース・URL を貼って開いた窓）だけ
+      var fromOp = false; try { fromOp = !!(window.opener && window.opener !== window && window.opener.location.origin === location.origin); } catch (e) {}
+      if (fromOp) fixed = '';
+      var prevBg = null;
       function apply() {
         var b = fixed || bgOf(ch, o.def), isC = b.charAt(0) === '#';
         root.setAttribute('data-k-bg', isC ? 'color' : b);
         if (isC) root.style.setProperty('--k-view-bg', b); else root.style.removeProperty('--k-view-bg');
         call(o.onBg, b);
+        // 背景が変わると面の余白（クリーム以外は外側に 1cqw）が変わるので、refit に登録した描き直しを呼ぶ
+        if (prevBg !== null && prevBg !== b) refitAll();
+        prevBg = b;
       }
       apply();
       if (!fixed) window.addEventListener('storage', function (e) { if (e.key === 'k-view-bg:' + ch) apply(); });
-      // 縦型（9:16）: ?layout=v で body.vert と <html data-k-layout="v">
+      // 縦型（9:16）: ?layout=v で <html data-k-layout="v"> と body.vert を、その場で付ける（DOMContentLoaded を待たない。
+      // 本体の script が最初に描くときにはもう縦型＝描き直しが要らない）。head で呼ばれたときは body ができた瞬間に付ける
       var vert = o.vert != null ? !!o.vert : q.get('layout') === 'v';
-      if (vert) { root.setAttribute('data-k-layout', 'v'); ready(function () { document.body.classList.add('vert'); }); }
+      if (vert) {
+        root.setAttribute('data-k-layout', 'v');
+        var addV = function () { if (document.body) { document.body.classList.add('vert'); return true; } return false; };
+        if (!addV()) {
+          if (typeof MutationObserver === 'function') { var mo = new MutationObserver(function () { if (addV()) mo.disconnect(); }); mo.observe(root, { childList: true }); }
+          ready(addV);
+        }
+      }
       var stage = null, idleT = null;
       window.addEventListener('resize', function () { clearTimeout(idleT); idleT = setTimeout(function () { var t = stage && !stage.querySelector('.k-view-idle').hidden && stage.querySelector('.k-view-idle b,.k-view-idle-t'); if (t) K.fitText(t, { min: 42 }); }, 150); });
       return {
@@ -393,7 +413,10 @@
     /* --- 表示ページを1画面に収める手伝い ---
        箱（wrap）の CSS 変数 --f（既定）を 1 から下げて、はみ出さなくなるまで縮める（字は calc(… * var(--f)) で書いておく）。
        縮めきっても（min まで）入らないときは drop の行を順に外して縮め直す。drop は CSS セレクタか関数（何か外したら true を返す）。
-       測る間は .k-fitting を付けて動き（出てくるときの拡大など）を止める（動きの途中は小さく見えて縮めそこねる） */
+       測る間は .k-fitting を付けて動き（出てくるときの拡大など）を止める（動きの途中は小さく見えて縮めそこねる）。
+       ※ .k-fitting を外すと動きは頭から出直す。描き直しのたびに呼ぶと判子などの動きが毎回出直すので、中身が変わったときだけ呼ぶ
+       first: true … 縮める前に drop を外す（字の大きさを優先。外して入ればそこで終わり、まだ入らなければ縮める）
+       hide: true  … drop は消さずに .k-fit-hid で隠すだけ（id で描き直す要素が壊れない）。次の fit の最初に戻してから測り直す */
     function fitBox(box, fo) {
       box = $el(box); if (!box) return 1; fo = fo || {};
       var prop = fo.prop || '--f', min = fo.min || 0.4, step = fo.step || 0.04, f = 1;
@@ -402,24 +425,44 @@
         f = 1; box.style.setProperty(prop, '1');
         for (var i = 0; i < 40 && over() && f > min + 1e-6; i++) { f = Math.max(min, f - step); box.style.setProperty(prop, f.toFixed(3)); }
       }
+      function off(x) { if (fo.hide) x.classList.add('k-fit-hid'); else x.remove(); }
+      function dropOne(d) {
+        if (typeof d === 'function') return !!call(d, box, fo.hide);
+        var els = box.querySelectorAll(fo.hide ? d + ':not(.k-fit-hid)' : d); [].forEach.call(els, off); return els.length > 0;
+      }
       box.classList.add('k-fitting');
       try {
-        shrink();
-        (fo.drop || []).forEach(function (d) {
-          if (!over()) return;
-          if (typeof d === 'function') { if (call(d, box)) shrink(); return; }
-          var els = box.querySelectorAll(d); if (els.length) { [].forEach.call(els, function (x) { x.remove(); }); shrink(); }
-        });
+        if (fo.hide) [].forEach.call(box.querySelectorAll('.k-fit-hid'), function (x) { x.classList.remove('k-fit-hid'); });
+        f = 1; box.style.setProperty(prop, '1');
+        if (fo.first) {
+          (fo.drop || []).forEach(function (d) { if (over()) dropOne(d); });
+          shrink();
+        } else {
+          shrink();
+          (fo.drop || []).forEach(function (d) { if (over() && dropOne(d)) shrink(); });
+        }
         call(fo.after, f, box);
       } finally { box.classList.remove('k-fitting'); }
       box._kFit = f;
       return f;
     }
     K.view.fit = fitBox;
+    // 字の下限（px）を表示ページの大きさに合わせる。縦型（data-k-layout="v"）は窓の幅の比＝1080 幅でそのまま・405 幅で 0.375 倍（最低 14px）。
+    // 横（16:9）とふつうのページはそのまま。KKit.fitText の min もこれを通る（縦型の {min:42} は 405x720 で約16px）
+    K.view.minPx = function (px) {
+      px = +px || 14;
+      if (root.getAttribute('data-k-layout') !== 'v' || !document.body || !document.body.classList.contains('k-view')) return px;
+      var st = document.querySelector('.k-view-stage'), w = (st && st.clientWidth) || window.innerWidth || 1080;
+      return Math.max(14, Math.min(px, px * w / 1080));
+    };
     // 字のデータ（日本語は字ごとに分かれて届く）が後から届いたとき・窓の大きさが変わったときに fn を呼び直す
+    var refits = [];
+    function refitAll() { refits.forEach(function (later) { later(30); }); }
+    K.view.refitAll = refitAll;
     K.view.refit = function (fn, ro) {
       ro = ro || {}; var t = 0;
       var later = function (ms) { clearTimeout(t); t = setTimeout(function () { call(fn); }, ms); };
+      if (ro.bg !== false) refits.push(later);   // 背景が変わったときも呼び直す（KKit.view の背景の切り替え）
       if (document.fonts) {
         if (document.fonts.ready) document.fonts.ready.then(function () { later(0); });
         if (document.fonts.addEventListener) document.fonts.addEventListener('loadingdone', function () { later(ro.fontMs || 80); });
@@ -455,11 +498,42 @@
       return api;
     };
 
+    /* --- 出た直後は効かない（場面で入れ替わる普通のボタン） ---
+       KKit.settle(要素, ms)  隠れていた要素が出てから ms（既定 400）の間の押しを捨てる（前の場面の連打・ダブルクリックの2回目）。
+       要素はボタンでも、ボタンを入れる箱でもよい（箱なら中のどのボタンも）。戻り値の block(ms) で今から ms 効かなくする */
+    // 出た瞬間を知らせる。IntersectionObserver の知らせは次の描画まで遅れるので、押された時に「映っているのにまだ知らせが来ていない」なら
+    // その場で出たことにする（st.check()）。押しが出た瞬間と同じ frame でも捨てられる
+    function seen(el, onShow, onHide) {
+      var st = { gone: true };
+      st.check = function () { if (st.gone && el.getClientRects().length) { st.gone = false; call(onShow); } };
+      if (typeof IntersectionObserver !== 'function') return st;
+      new IntersectionObserver(function (es) {
+        es.forEach(function (x) {
+          var r = x.boundingClientRect, gone = !r.width && !r.height;   // 隠れていた（hidden・display:none）か。スクロールで外れただけなら数えない
+          if (x.isIntersecting) { if (st.gone) call(onShow); st.gone = false; }
+          else { if (gone) st.gone = true; call(onHide); }
+        });
+      }).observe(el);
+      return st;
+    }
+    K.settle = function (el, ms) {
+      el = $el(el); if (!el) return null;
+      if (el._kSettle) { el._kSettle.ms = ms == null ? 400 : ms; return el._kSettle; }
+      var api = el._kSettle = { ms: ms == null ? 400 : ms, until: 0 };
+      api.block = function (b) { api.until = Date.now() + (b == null ? api.ms : b); };
+      var st = seen(el, function () { api.block(); });
+      el.addEventListener('click', function (e) {
+        st.check();
+        if (Date.now() < api.until) { e.preventDefault(); e.stopImmediatePropagation(); }
+      }, true);
+      return api;
+    };
+
     /* --- 2回押し --- */
     var twBlock = 0;
     K.twice = function (el, o) {
       el = $el(el); if (!el) return; o = o || {};
-      var armed = false, t = 0, saved = '', shown = 0, armedAt = 0, blockTo = 0, txt = '', wasGone = true;
+      var armed = false, t = 0, saved = '', shown = 0, armedAt = 0, blockTo = 0, txt = '';
       var guard = o.guard == null ? 400 : o.guard, settle = o.settle == null ? 500 : o.settle;
       function disarm() {
         if (!armed) return; armed = false; clearTimeout(t);
@@ -467,18 +541,15 @@
         el.classList.remove('k-twice-on');
       }
       // 出た瞬間（場面が切り替わってボタンが現れた直後）を覚える。その直後の押しは前の場面の連打なので効かせない
-      if (typeof IntersectionObserver === 'function') new IntersectionObserver(function (es) {
-        es.forEach(function (x) {
-          var r = x.boundingClientRect, gone = !r.width && !r.height;   // 隠れていた（hidden・display:none）か。スクロールで外れただけなら数えない
-          if (x.isIntersecting) { if (wasGone) shown = Date.now(); wasGone = false; }
-          else { wasGone = gone; disarm(); }
-        });
-      }).observe(el);
+      var st = seen(el, function () { shown = Date.now(); }, disarm);
       el.addEventListener('click', function (e) {
         if (el.disabled) return;
+        st.check();
         var now = Date.now();
         if (now < twBlock || now < blockTo || (shown && now - shown < settle)) { e.preventDefault(); e.stopImmediatePropagation(); return; }
         if (o.when && !o.when()) { disarm(); call(o.ok, e); return; }
+        // 映っていないボタン（hidden・display:none の中）を JS から押した（el.click()）ときは 1回目として数えない
+        if (!el.getClientRects().length) { e.preventDefault(); e.stopImmediatePropagation(); return; }
         if (!armed) {
           armed = true; armedAt = now; saved = el.innerHTML;
           txt = String((typeof o.text === 'function' ? call(o.text, el) : o.text) || 'もう一度押すと決定');
@@ -499,7 +570,7 @@
       var lines = o.lines || 1;
       el.style.fontSize = '';
       if (lines === 1) { el.style.whiteSpace = 'nowrap'; el.style.overflow = 'hidden'; el.style.textOverflow = 'ellipsis'; }
-      var max = o.max || parseFloat(getComputedStyle(el).fontSize) || 16, min = Math.min(o.min || 14, max);
+      var max = o.max || parseFloat(getComputedStyle(el).fontSize) || 16, min = Math.min(K.view.minPx(o.min || 14), max);
       function fits() {
         if (el.scrollWidth > el.clientWidth) return false;
         if (lines > 1) {
@@ -750,7 +821,7 @@
     K.wheel = function (el, o) {
       el = $el(el); o = o || {};
       // items は文字か { label, weight }（weight＝マスの広さ・当たりやすさ。既定 1）
-      var W = { items: [], segs: [], angle: 0, el: el, spinning: false, opts: o, win: -1 }, R = 94, HUB = 27;   // HUB＝中央の家紋（ふちまで）の半径（盤の 200 単位で）
+      var W = { items: [], segs: [], angle: 0, el: el, spinning: false, opts: o, win: -1 }, R = 94, HUB = 20;   // HUB＝中央の家紋（ふちまで）の半径（盤の 200 単位で）。第5波で 27→20（字を置ける長さを増やす）
       el.classList.add('k-wheel'); el.innerHTML = '';
       var disc = document.createElement('div'); disc.className = 'k-wheel-disc'; el.appendChild(disc);
       var s = svg('svg', { viewBox: '-100 -100 200 200', 'aria-hidden': 'true', focusable: 'false' }, disc);
@@ -782,9 +853,10 @@
             var px2 = best(Math.max(h, len - h), 2, 16);
             if (px2 > px) { lines = [label.slice(0, h), label.slice(h)]; px = px2; }
           }
-          if (px < min) {   // 入らない: 1行で末尾を省く。1字も入らない細いマスは字を描かない
-            px = min; var keep = 0; while (keep < len && fits(px, keep + 2, 1)) keep++;
-            lines = keep < 1 ? [] : [label.length > keep ? label.slice(0, keep) + '…' : label];
+          if (px < min) {   // 入らない: 1行で末尾を省く。「…」の前に2字残らない細いマスは字を描かない（「1字＋…」は読めない）
+            px = min;
+            if (fits(px, len, 1)) lines = [label];
+            else { var keep = 0; while (keep < len - 1 && fits(px, keep + 2, 1)) keep++; lines = keep < 2 ? [] : [label.slice(0, keep) + '…']; }
           }
           while (t.firstChild) t.removeChild(t.firstChild);
           // 左半分は180度回して、外側から中心へ読む向きに（逆さまにしない）

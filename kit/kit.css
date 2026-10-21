@@ -543,16 +543,18 @@ body.k-view{margin:0;height:100vh;overflow:hidden;background:var(--k-kinari) url
 /* 黒の背景では面の外の墨の線が見えないので、生成りの細い線を足す */
 [data-k-bg="black"] .k-view-top,[data-k-bg="black"] .k-view-body,[data-k-bg="black"] .k-view-credit,[data-k-bg="black"] .k-view-idle{box-shadow:0 0 0 2px var(--k-kinari)}
 
-/* 縦型（9:16）: ?layout=v で KKit.view が body.vert を付ける。字の下限は 1080 幅の 1/3 で 14px（=3.9%） */
-body.k-view.vert .k-view-stage{width:min(100vw,56.25vh);height:min(177.78vw,100vh);
-  --k-v-min:max(42px,3.9cqw);--k-v-s:max(46px,4.4cqw);--k-v-m:max(54px,5.2cqw);--k-v-l:max(62px,6.4cqw);--k-v-xl:max(76px,8.4cqw);--k-v-credit:max(24px,3cqw);--k-v-pad:max(14px,3.4cqw)}
-body.k-view.vert .k-view-top{flex-wrap:wrap}
-body.k-view.vert .k-view-idle{padding:0 calc(var(--k-v-pad)*1.4)}
-body.k-view.vert .k-view-idle>b,body.k-view.vert .k-view-idle-t{white-space:normal}
-body.k-view.vert .k-view-idle::before{right:-20cqw;width:60cqw;height:60cqw}
+/* 縦型（9:16）: ?layout=v で KKit.view が body.vert と <html data-k-layout="v"> を付ける。
+   字は窓の幅の比（--k-v-min＝幅の 3.9%・最低 14px）。1080x1920 で 42px＝1/3 で 14px、405x720 の別窓で約 16px（2026-10-22 第5波: 42px 固定の下限をやめた） */
+:is(body.k-view.vert,[data-k-layout="v"] body.k-view) .k-view-stage{width:min(100vw,56.25vh);height:min(177.78vw,100vh);
+  --k-v-min:max(14px,3.9cqw);--k-v-s:max(15px,4.4cqw);--k-v-m:max(18px,5.2cqw);--k-v-l:max(21px,6.4cqw);--k-v-xl:max(25px,8.4cqw);--k-v-credit:max(10px,3cqw);--k-v-pad:max(8px,3.4cqw)}
+:is(body.k-view.vert,[data-k-layout="v"] body.k-view) .k-view-top{flex-wrap:wrap}
+:is(body.k-view.vert,[data-k-layout="v"] body.k-view) .k-view-idle{padding:0 calc(var(--k-v-pad)*1.4)}
+:is(body.k-view.vert,[data-k-layout="v"] body.k-view) :is(.k-view-idle>b,.k-view-idle-t){white-space:normal}
+:is(body.k-view.vert,[data-k-layout="v"] body.k-view) .k-view-idle::before{right:-20cqw;width:60cqw;height:60cqw}
 
 /* 測っている間は動きを外す（KKit.view.fit が付け外す。出てくる動きの途中は小さく見えて縮めそこねる。外したあと動きは頭から） */
 .k-fitting,.k-fitting *{animation:none!important;transition:none!important}
+.k-fit-hid{display:none!important}   /* KKit.view.fit の hide:true で外した行（消さずに隠すだけ。次の fit で戻してから測り直す） */
 
 /* ---------- 重ね表示型の /view/（k-view-ov）: 配信の画面の上に重ねる（ルーレット・カウンター・ビンゴなど） ----------
    16:9 の箱は作らず、窓いっぱいを使う。背景は既定で透過（KKit.view({ ch, def: 'clear' })）。置き方は data-k-place（full・band・corner）。
@@ -563,10 +565,11 @@ body.k-view.vert .k-view-idle::before{right:-20cqw;width:60cqw;height:60cqw}
      <div class="k-ov-credit">roulette.kkpwebninja.com</div>
    </body>
    字を映像の上でも読めるようにするなら .k-ov-ink（白字に墨のふち）か .k-ov-plate（生成りの面）。 */
-body.k-view.k-view-ov{height:100vh;background:transparent;
+body.k-view.k-view-ov{height:100vh;
   --k-ov-min:max(14px,2.19vw);--k-ov-s:max(16px,2.6vw);--k-ov-m:max(18px,3.4vw);--k-ov-l:max(22px,4.6vw);--k-ov-xl:max(28px,6.4vw);--k-ov-pad:max(8px,2vw)}
-[data-k-bg="cream"] body.k-view.k-view-ov{background:var(--k-kinari) url(img/d4-washi.webp) 0 0/420px auto}
-body.k-view.k-view-ov.vert{--k-ov-min:max(14px,3.9vw);--k-ov-s:max(16px,4.4vw);--k-ov-m:max(18px,5.2vw);--k-ov-l:max(22px,6.4vw);--k-ov-xl:max(28px,8.4vw);--k-ov-pad:max(8px,3vw)}
+/* 背景は上の [data-k-bg] の指定がそのまま効く（ここで background を書くと緑・白・黒・色が負ける）。data-k-bg が無い間だけ透過 */
+html:not([data-k-bg]) body.k-view.k-view-ov{background:transparent}
+body.k-view.k-view-ov:is(.vert,[data-k-layout="v"] *){--k-ov-min:max(14px,3.9vw);--k-ov-s:max(16px,4.4vw);--k-ov-m:max(18px,5.2vw);--k-ov-l:max(22px,6.4vw);--k-ov-xl:max(28px,8.4vw);--k-ov-pad:max(8px,3vw)}
 @media (max-aspect-ratio:1/1){ body.k-view.k-view-ov{--k-ov-min:max(14px,3.9vw);--k-ov-s:max(16px,4.4vw);--k-ov-m:max(18px,5.2vw);--k-ov-l:max(22px,6.4vw);--k-ov-xl:max(28px,8.4vw);--k-ov-pad:max(8px,3vw)} }
 .k-ov{position:fixed;inset:0;box-sizing:border-box;padding:var(--k-ov-pad);container-type:size;display:flex;align-items:center;justify-content:center;gap:var(--k-ov-pad);overflow:hidden;font-size:var(--k-ov-min)}
 .k-ov[hidden]{display:none}
@@ -577,14 +580,14 @@ body.k-view.k-view-ov.vert{--k-ov-min:max(14px,3.9vw);--k-ov-s:max(16px,4.4vw);-
   .k-ov[data-k-place="band"]{height:30vh}
   .k-ov[data-k-place="corner"]{width:70vw;height:44vh}
 }
-body.k-view-ov.vert .k-ov[data-k-place="full"]{flex-direction:column}
+body.k-view-ov:is(.vert,[data-k-layout="v"] *) .k-ov[data-k-place="full"]{flex-direction:column}
 .k-ov-ink{color:#fff;text-shadow:var(--k-outline),0 0 6px rgba(31,26,23,.6)}
 .k-ov-plate{box-sizing:border-box;padding:calc(var(--k-ov-pad)*.5) var(--k-ov-pad);background:var(--k-kinari) url(img/d4-washi.webp) 0 0/420px auto;border:max(3px,.25vw) solid var(--k-sumi);border-radius:max(6px,.6vw);color:var(--k-sumi)}
 .k-ov-credit{position:fixed;right:max(8px,.8vw);bottom:max(6px,.6vw);z-index:30;font-family:var(--k-body);font-size:var(--k-ov-min);font-weight:800;line-height:1.2;color:#fff;text-shadow:var(--k-outline);white-space:nowrap;pointer-events:none}
 .k-ov-credit.k-top{bottom:auto;top:max(6px,.6vw)}
 .k-ov-credit[hidden]{display:none}
 /* 重ね表示の待ち画面: 画面いっぱいにせず、真ん中に生成りの札を1枚 */
-body.k-view-ov .k-view-idle.k-ov-idle{position:fixed;inset:auto;left:50%;top:50%;bottom:auto;right:auto;transform:translate(-50%,-50%);width:min(80vw,900px);max-width:calc(100vw - 32px);padding:var(--k-ov-pad) calc(var(--k-ov-pad)*1.5);gap:calc(var(--k-ov-pad)*.4);border:max(3px,.25vw) solid var(--k-sumi);border-radius:max(6px,.6vw);text-align:left}
+body.k-view-ov .k-view-idle.k-ov-idle{position:fixed;inset:auto;left:50%;top:50%;bottom:auto;right:auto;transform:translate(-50%,-50%);width:max-content;min-width:min(60vw,900px);max-width:calc(100vw - 32px);padding:var(--k-ov-pad) calc(var(--k-ov-pad)*1.5);gap:calc(var(--k-ov-pad)*.4);border:max(3px,.25vw) solid var(--k-sumi);border-radius:max(6px,.6vw);text-align:left}
 body.k-view-ov .k-view-idle.k-ov-idle::before{display:none}
 body.k-view-ov .k-view-idle.k-ov-idle>b,.k-ov-idle .k-view-idle-t{font-size:var(--k-ov-xl);white-space:normal}
 body.k-view-ov .k-view-idle.k-ov-idle>p{font-size:var(--k-ov-l)}
@@ -655,7 +658,7 @@ body.k-view-ov.k-idle .k-ov{visibility:hidden}   /* 待ち画面の間は中身�
 .k-wheel-disc{width:100%;height:100%;border-radius:50%;will-change:transform}
 .k-wheel-disc>svg{display:block;width:100%;height:100%}
 .k-wheel-t text{font-family:var(--k-head);font-weight:800;letter-spacing:.02em;font-feature-settings:"palt" 1}
-.k-wheel-hub{position:absolute;left:50%;top:50%;width:19%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;background:var(--k-kinari) url(img/d4-mon.webp) center/74% no-repeat;box-shadow:0 0 0 3px var(--k-sumi),0 0 0 6px var(--k-kinari),0 0 0 8px var(--k-sumi)}
+.k-wheel-hub{position:absolute;left:50%;top:50%;width:13%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;background:var(--k-kinari) url(img/d4-mon.webp) center/76% no-repeat;box-shadow:0 0 0 2px var(--k-sumi),0 0 0 4px var(--k-kinari),0 0 0 6px var(--k-sumi)}
 .k-wheel-pin{position:absolute;left:50%;top:-4%;width:13%;transform:translateX(-50%);z-index:2;line-height:0;pointer-events:none}
 .k-wheel-pin>svg{display:block;width:100%;height:auto}
 .k-wheel-win{stroke:#fffdf8;stroke-width:5;animation:k-wheel-win 1.1s ease-in-out 2}

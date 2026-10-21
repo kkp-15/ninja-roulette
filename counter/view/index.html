@@ -21,11 +21,6 @@
    中身は 1920x1080 の舞台を作り、ウィンドウの大きさに合わせて縮める（どの大きさでもスクロールしない）。
    2026-10-22 枠は kit の重ね表示型 k-view-ov（.k-ov の中に 1920x1080 の舞台。置き方 band／corner は舞台の中で決める）。
    背景は kit の KKit.view（?bg= ＞ 操作画面の選択〈k-view-bg:kkp-counter〉＞ green）: green（既定・OBSのクロマキーで抜く）/ clear（透過）/ cream。待ち画面は k-ov-idle */
-/* kit b0046ef の足りない所の回避（kit を直したら消す）: k-view-ov の body{background:transparent} が緑・白・黒・色の背景と同じ強さで後にあり、透過になってしまう */
-[data-k-bg="green"] body.k-view.k-view-ov{background:#00b140}
-[data-k-bg="white"] body.k-view.k-view-ov{background:#fff}
-[data-k-bg="black"] body.k-view.k-view-ov{background:#000}
-[data-k-bg="color"] body.k-view.k-view-ov{background:var(--k-view-bg,#fbf3e4)}
 body.k-view{font-family:"M PLUS Rounded 1c","Hiragino Maru Gothic ProN","Hiragino Sans",sans-serif;color:var(--k-sumi)}
 .stage{position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:0 0}
 .tl{position:absolute;font-family:var(--k-bold);color:var(--k-sumi)}

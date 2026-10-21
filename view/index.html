@@ -18,11 +18,6 @@
 /* OBS のウィンドウキャプチャで取り込む表示ページ（別端末用のURLはブラウザソースでも動く）。操作ボタン・広告・説明文は映さない。
    2026-10-22 枠は kit の重ね表示型 k-view-ov（.k-ov[data-k-place] full／band 下の帯／corner 右下に小さく・縦長の窓と ?layout=v は縦に並ぶ）。
    背景は kit の KKit.view（?bg= ＞ 操作画面の選択〈k-view-bg:kkp-roulette〉＞ 透過）。盤は kit の KKit.wheel（wheel.js の make） */
-/* kit b0046ef の足りない所の回避（kit を直したら消す）: k-view-ov の body{background:transparent} が緑・白・黒・色の背景と同じ強さで後にあり、透過になってしまう */
-[data-k-bg="green"] body.k-view.k-view-ov{background:#00b140}
-[data-k-bg="white"] body.k-view.k-view-ov{background:#fff}
-[data-k-bg="black"] body.k-view.k-view-ov{background:#000}
-[data-k-bg="color"] body.k-view.k-view-ov{background:var(--k-view-bg,#fbf3e4)}
 .k-ov{gap:3vw}
 .k-ov[data-k-place="band"]{gap:2vw}
 .k-ov[data-k-place="corner"]{gap:1.5vh}
@@ -63,11 +58,7 @@
   var q = new URLSearchParams(location.search);
   var remote = q.has('items');   // 別端末モード: 項目はURLから。回す操作はこのページで
   var gremote = q.has('gacha');  // 別端末のお題ガチャ: パックはURLから。このページで引く
-  // 操作画面の「表示ページを開く」で開いた窓（名前で分かる）は、URL に ?bg= が付いていても操作画面の背景の切り替えに付いていく
-  // （kit の openView は既定と違う背景を ?bg= に載せる。?bg= があると KKit.view は背景を固定するので、ここで外す）
-  if (q.has('bg') && !remote && !gremote && window.name === 'kkp_roulette_view') {
-    q.delete('bg'); try { history.replaceState(null, '', location.pathname + (q.toString() ? '?' + q : '')); } catch (e) {}
-  }
+  // 操作画面から開いた窓は ?bg= が付いていても切り替えに付いていく（kit 97e144f の KKit.view が opener を見る）。opener のない窓は ?bg= で固定
   var V = KKit.view({ ch: 'kkp-roulette', def: 'clear', stage: 'body' });
   var wheel = K.make($('wheel'), { empty: remote ? '' : '操作ページで回すと出ます' });
   var settings = { layout: 'both', place: 'full', speed: 'normal', size: 2, ink: 'dark', credit: true, sound: false };
@@ -210,6 +201,8 @@
     // 盤の字は、1920x1080 を1/3に縮めて置いても14px相当（実寸42px）を下回らない（入らない字は「…」で省く・細いマスは字なし）。縦型は 1080x1920 が基準
     wheel.minPx(Math.max(14, 42 * (port ? Math.min(W / 1080, H / 1920) : Math.min(W / 1920, H / 1080))));
     wheel.resize(Math.max(120, Math.floor(s)));
+    // 縦長の窓で盤が上に寄ると、針の先（盤の上 4% はみ出す）が窓の上で切れる。その分だけ盤を下げる
+    document.querySelector('.wheelbox').style.paddingTop = port && p === 'full' && layout !== 'wheel' ? Math.ceil(Math.max(120, s) * 0.06) + 'px' : '';
     $('resbox').style.setProperty('--th', Math.max(16, th * scale()) + 'px');
   }
   fit();
