@@ -125,7 +125,20 @@
     ctx.setTransform(dpr, 0, 0, dpr, D / 2, D / 2);
     ctx.clearRect(-D, -D, D * 2, D * 2);
     ctx.rotate(-Math.PI / 2);
-    if (!n) { ctx.beginPath(); ctx.arc(0, 0, R, 0, TAU); ctx.fillStyle = '#fff6ea'; ctx.fill(); }
+    if (!n) {
+      ctx.beginPath(); ctx.arc(0, 0, R, 0, TAU); ctx.fillStyle = '#fff6ea'; ctx.fill();
+      // 項目が届く前の案内（表示ページだけ emptyText を入れる）。中心の飾りをよけて上下に2行・薄い墨
+      if (this.emptyText && this.emptyText.length) {
+        var shownE = this.canvas.getBoundingClientRect().width, zsE = shownE > 0 && this.size ? shownE / this.size : 1;
+        var epx = Math.max(R * 0.12, (this.minEff || 14) / zsE);
+        ctx.save(); ctx.rotate(Math.PI / 2 - (this.angle || 0));
+        ctx.font = '800 ' + epx.toFixed(1) + 'px ' + FONT; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.fillStyle = 'rgba(31,26,23,.66)';
+        ctx.fillText(this.emptyText[0], 0, -R * 0.42);
+        if (this.emptyText[1]) ctx.fillText(this.emptyText[1], 0, R * 0.42);
+        ctx.restore();
+      }
+    }
     var cols = [];
     for (i = 0; i < n; i++) {
       var sg = this.segs[i], col = colorOf(i, n); cols.push(col);
@@ -152,6 +165,7 @@
     var shown = this.canvas.getBoundingClientRect().width, zs = shown > 0 && this.size ? shown / this.size : 1;
     var minPx = this.minEff ? this.minEff / zs : 0;
     ctx.textBaseline = 'middle'; ctx.lineJoin = 'round';
+    var faceAng = this.angle || 0; this.faceAng = faceAng;
     for (i = 0; i < n; i++) {
       var sgm = this.segs[i], mid = (sgm.start + sgm.end) / 2, arc = (sgm.end - sgm.start);
       var chord = arc * R * 0.62;                       // 文字の位置での区画の高さ
@@ -167,10 +181,12 @@
       ctx.lineWidth = Math.max(2, fit.px * 0.24);
       ctx.strokeStyle = dark ? 'rgba(30,18,6,.9)' : '#ffffff';
       ctx.fillStyle = dark ? '#ffffff' : '#2b2b2b';
-      ctx.textAlign = 'right';
       var lh = fit.px * 1.08, y0 = -(fit.lines.length - 1) * lh / 2;
-      // 盤の左側（逆さまになる側）も読めるよう、文字は常に外側が右になる向き（回るので向きは毎回変わる）
-      for (var l = 0; l < fit.lines.length; l++) { ctx.strokeText(fit.lines[l], R * 0.9, y0 + l * lh); ctx.fillText(fit.lines[l], R * 0.9, y0 + l * lh); }
+      // 止まったときに盤の左側に来る字は逆さまになるので、180度回して外側から読む向きにする（2026-10-21）。
+      // 画面での向き = 盤の回転（this.angle）− 90度 ＋ マスの中心。回っている間は止まった位置で描き直す（spin の最後）
+      var flip = Math.cos(faceAng - Math.PI / 2 + mid) < -0.02, tx = R * 0.9;
+      if (flip) { ctx.rotate(Math.PI); ctx.textAlign = 'left'; tx = -R * 0.9; } else ctx.textAlign = 'right';
+      for (var l = 0; l < fit.lines.length; l++) { ctx.strokeText(fit.lines[l], tx, y0 + l * lh); ctx.fillText(fit.lines[l], tx, y0 + l * lh); }
       ctx.restore();
     }
     // 境目のピン（金属）
@@ -421,6 +437,7 @@
       if (t < 1) { requestAnimationFrame(frame); }
       else {
         self.spinning = false; self.angle = final; self.vel = 0;
+        self.buildFace();   // 止まった向きで字を描き直す（左側の字を逆さまにしない）
         self.win = self.resultAt(final); self.winT = performance.now();
         self.loop();
         if (done) done(self.win);

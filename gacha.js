@@ -119,6 +119,8 @@
     '.kg-dim{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 50%,rgba(20,12,4,0) 30%,rgba(20,12,4,.55) 100%);opacity:0;transition:opacity .35s}',
     '.kg-dim.on{opacity:1}',
     '.kg-tlw{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:0 3%}',
+    /* 帯（お題の部分）が舞台の縦の中央に来るよう、上の札の高さの半分だけ上げる（2026-10-21） */
+    '.kg-tlw>.tl{margin-top:-.8em}',
     /* 結果テロップ（番組のテロップ・ゲームの結果画面の型）: 斜めの帯・極太・太い縁取り・硬い影 */
     '.tl{font-family:' + MARU + ';font-size:var(--th,48px);width:100%;max-width:100%;filter:drop-shadow(.09em .11em 0 #2b2b2b);text-align:left}',
     '.tl-head{display:flex;align-items:flex-end;gap:.25em;margin:0 0 -.04em .35em;position:relative;z-index:1}',
@@ -153,21 +155,26 @@
   function telop(box, o) {
     injectCss();
     var len = String(o.text || '').length;
-    var t = el('div', 'tl ' + (o.rarity || '') + (o.band === 'dark' ? ' dark' : '') + (len > 30 ? ' l' : len > 18 ? ' m' : ''), box);
+    var t = el('div', 'tl ' + (o.rarity || '') + (o.band === 'dark' ? ' dark' : ''), box);
     t.style.setProperty('--c', o.rarity ? COLOR[o.rarity] : '#2b2b2b');
     if (o.rarity) t.style.setProperty('--g', METAL[o.rarity]);
     var head = el('div', 'tl-head', t);
     el('span', 'tl-tag', head).textContent = o.tag || LABEL[o.rarity] || '';
     if (o.packName) el('span', 'tl-sub', head).textContent = o.packName;
     var band = el('div', 'tl-band', t);
-    el('span', 'tl-txt', band).textContent = o.text;
+    var tx = el('span', 'tl-txt', band); tx.textContent = o.text;
+    // 長いお題は字を小さくする前に2行まで許す。2行に入らないときだけ1段ずつ小さく（2026-10-21）
+    try {
+      var lines = function () { var fs = parseFloat(getComputedStyle(tx).fontSize) || 16; return tx.offsetHeight / (fs * 1.26); };
+      if (tx.offsetHeight && lines() > 2.3) { t.classList.add('m'); if (lines() > 2.3) { t.classList.remove('m'); t.classList.add('l'); } }
+    } catch (e) { if (len > 30) t.classList.add('l'); else if (len > 18) t.classList.add('m'); }
     return t;
   }
   function cardHtml(box, o) { var w = el('div', 'kg-tlw', box); return telop(w, o); }
   // テロップの文字の大きさ（置き方ごと）。配信画面を1/4に縮めても読める大きさを下限にする
   function telopSize(w, h, place, scale) {
     var px = place === 'band' ? Math.min(w * 0.042, h * 0.2) : place === 'corner' ? Math.min(w * 0.072, h * 0.13) : Math.min(w * 0.05, h * 0.095);
-    return Math.max(16, px * (scale || 1));
+    return Math.max(20, px * (scale || 1));   // 2行まで許すので、小さい舞台でも20pxは下回らない
   }
 
   // container は position:relative の箱。opts: rarity, text, packName, fx('full'|'lite'|'off'), speed('short'|'normal'|'long'), sound, scale, onDone

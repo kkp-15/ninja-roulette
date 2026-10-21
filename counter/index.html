@@ -65,6 +65,7 @@ button{cursor:pointer}
 .narrow{max-width:760px}
 h1{font-size:21px;font-weight:700;margin:0;line-height:1.4}
 .lead{font-size:14px;margin:2px 0 10px;color:var(--sub)}
+.h1s{margin-left:1em}
 h2{font-size:19px;font-weight:700;margin:2.4rem 0 .6rem;line-height:1.4;scroll-margin-top:8px}
 h3{font-size:16.5px;font-weight:700;margin:1.4rem 0 .4rem;padding-left:.55rem;border-left:4px solid var(--accent);line-height:1.4}
 .note{font-size:14px;color:var(--sub)}
@@ -96,7 +97,12 @@ kbd{display:inline-block;padding:0 5px;font-family:inherit;font-size:14px;line-h
 /* ===== 配信カウンター（道具の部分）
    上＝配信中に見る・押すものだけ（数・＋1/−1・直前を戻す・罰ゲーム・表示ページ）。下＝設定をひとまとめ（最初は閉じる）。
    PC は上の部分を固定幅で組んで、画面の幅と高さに合わせて zoom で拡大縮小（スクロールなしで上が全部見える） ===== */
-.c-tool{display:grid;gap:16px 20px;margin:0 auto;align-items:start}
+.c-tool{display:grid;gap:16px 20px;margin:0 auto;align-items:stretch}
+.c-tool:not([data-lay="sp"]) .c-live{display:flex;flex-direction:column}
+.c-tool:not([data-lay="sp"]) .counters{flex:1;grid-auto-rows:1fr}
+.c-tool:not([data-lay="sp"]) .cnt{justify-content:space-between}
+.c-tool:not([data-lay="sp"]) .cnt-num{flex:1;align-items:center}
+.c-tool:not([data-lay="sp"]) .counters:not(.dense) .cnt-num b{font-size:76px}
 .c-tool[data-lay="wide"]{grid-template-columns:minmax(0,1fr) 330px}
 .c-tool[data-lay="mid"]{grid-template-columns:minmax(0,1fr) 270px}
 .c-tool[data-lay="sp"]{grid-template-columns:minmax(0,1fr);gap:12px}
@@ -141,8 +147,12 @@ kbd{display:inline-block;padding:0 5px;font-family:inherit;font-size:14px;line-h
 .bz-who{margin:0 0 8px;font-size:15px}
 .bz-who b{font-size:20px}
 .bz-draw{width:100%;min-height:62px;font-size:22px;letter-spacing:.04em}
-.bz-res{margin:0 0 10px;font-weight:800;font-size:19px;line-height:1.45}
-.bz-res .rar{display:inline-block;margin-right:6px;padding:0 7px;border:2px solid var(--k-sumi);border-radius:4px;color:#fff;font-family:var(--k-bold);font-weight:400;font-size:14px;line-height:1.6;vertical-align:3px;text-shadow:0 0 2px var(--k-sumi)}
+/* 罰ゲームの結果は kit の巻物（k-result）。字は側の列に収まる大きさに */
+.bz-res.k-result{margin:0 0 10px;padding:2px 0 4px}
+.bz-res.k-result small{margin:0 0 2px}
+.bz-res.k-result small span{font-weight:800;color:var(--k-sumi)}
+.bz-res.k-result b{font-family:var(--k-body);font-weight:900;font-size:20px;line-height:1.45;letter-spacing:.02em;word-break:auto-phrase;text-wrap:balance}
+.bz-res .rar{display:inline-block;margin-right:6px;font-variant-numeric:normal;padding:0 7px;border:2px solid var(--k-sumi);border-radius:4px;color:#fff;font-family:var(--k-bold);font-weight:400;font-size:14px;line-height:1.6;vertical-align:3px;text-shadow:0 0 2px var(--k-sumi)}
 .bz-res .rar:empty{display:none}
 .bz-btns{display:flex;flex-wrap:wrap;gap:8px}
 .bz-btns .k-btn-sub{flex:1 1 auto;min-height:42px;font-size:14px;padding:0 10px;box-shadow:var(--k-sh-s)}
@@ -156,11 +166,14 @@ kbd{display:inline-block;padding:0 5px;font-family:inherit;font-size:14px;line-h
 .c-view .flash{flex:1 1 100%;margin:0;font-size:14px;color:var(--k-shu);min-height:1.2em}
 
 /* 下: 設定（最初は閉じる） */
-.c-set{margin:22px 0 0;border:var(--k-bw) solid var(--k-sumi);border-radius:var(--k-r);background:var(--k-surface);box-shadow:var(--k-sh-l);padding:0}
-details.c-set:last-of-type{border-bottom:var(--k-bw) solid var(--k-sumi)}
-.c-set>summary{display:flex;align-items:center;gap:10px;min-height:52px;padding:6px 16px;font-family:var(--k-bold);font-weight:400;font-size:17px;letter-spacing:.06em;font-feature-settings:"palt" 1}
-.c-set>summary small{font-family:var(--k-body);font-size:14px;letter-spacing:0;color:var(--k-text-2)}
-.c-set[open]>summary{border-bottom:2px solid var(--k-line-soft)}
+/* 設定の帯は kit の k-fold（罫線＋右の＋／－）。見出しの「設定」は折らない（2026-10-21） */
+.c-set.k-fold{margin:22px 0 0;padding:0;border-top:var(--k-bw-s) solid var(--k-sumi);border-bottom:var(--k-bw-s) solid var(--k-sumi)}
+details.c-set.k-fold:last-of-type{border-bottom:var(--k-bw-s) solid var(--k-sumi)}
+.c-set>summary{gap:12px;padding:10px 4px;font-size:17px}
+.c-set-t{flex:none;white-space:nowrap;font-size:17px;letter-spacing:.06em}
+.c-set>summary small{flex:1 1 auto;min-width:0;font-family:var(--k-body);font-size:14px;letter-spacing:0;line-height:1.5;color:var(--k-text-2)}
+.c-set[open]>summary{border-bottom:1px solid var(--k-line-soft)}
+.c-set.k-fold>.set-grid{padding:16px 4px}
 .set-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px 28px;padding:16px}
 .set-grid section{min-width:0}
 .set-grid .blk+.blk{margin-top:16px}
@@ -208,7 +221,8 @@ details.c-set:last-of-type{border-bottom:var(--k-bw) solid var(--k-sumi)}
 .c-tool[data-lay="sp"] .cnt-btns{flex:none;gap:6px}
 .c-tool[data-lay="sp"] .cnt-btns .k-btn-main{width:92px;flex:none;min-height:54px;font-size:21px}
 .c-tool[data-lay="sp"] .cnt-btns .k-btn-sub{width:42px}
-.c-tool[data-lay="sp"] .batsu-mark{right:auto;left:-10px;top:-10px;width:34px;height:34px;font-size:15px}
+.c-tool[data-lay="sp"] .batsu-mark{right:auto;left:2px;top:50%;margin-top:-20px;width:40px;height:40px;font-size:18px}
+.c-tool[data-lay="sp"] .cnt.over .cnt-head .k-seal{visibility:hidden}
 .c-tool[data-lay="sp"] .c-z .k-panel{padding:8px 10px;box-shadow:var(--k-sh-s)}
 .c-tool[data-lay="sp"] .c-z h2.c-t{display:none}
 .c-tool[data-lay="sp"] #bzReach:not([hidden]){display:flex;align-items:center;gap:8px}
@@ -217,11 +231,12 @@ details.c-set:last-of-type{border-bottom:var(--k-bw) solid var(--k-sumi)}
 .c-tool[data-lay="sp"] .bz-draw{width:auto;flex:none;min-height:50px;font-size:17px;letter-spacing:.04em;padding:0 8px}
 .c-tool[data-lay="sp"] #bzShow .bz-who{margin:0 0 2px;font-size:14px}
 .c-tool[data-lay="sp"] .bz-res{margin:0 0 6px;font-size:16px}
+.c-tool[data-lay="sp"] .bz-res.k-result b{font-size:17px}
 .c-tool[data-lay="sp"] .bz-btns .k-btn-sub{min-height:40px;font-size:14px}
 .c-tool[data-lay="sp"] .c-z.on{position:sticky;bottom:0;z-index:20}
 .c-tool[data-lay="sp"] .c-view{display:none}
 @media(max-width:699px){
-  h1{font-size:17px;line-height:1.3}.h1s{display:block;font-size:14px;letter-spacing:0;color:var(--k-text-2)}.lead{display:none}
+  h1{font-size:17px;line-height:1.3}.h1s{display:block;margin-left:0;font-size:14px;letter-spacing:0;color:var(--k-text-2)}.lead{display:none}
   .site-in{padding:5px 12px}.site-nav{font-size:14px}.site-nav a{margin-left:10px}.site-nav .pc{display:none}
   .wrap{padding-top:6px}
   .set-grid{padding:12px;grid-template-columns:minmax(0,1fr)}
@@ -243,7 +258,7 @@ details.c-set:last-of-type{border-bottom:var(--k-bw) solid var(--k-sumi)}
 <div class="wrap">
 <header>
   <div class="fromstream" id="fromStream" hidden><p>配信で見たカウンターはこれです。縛りと名前を入れて「＋1」を押すだけ。登録なし・無料です。</p><button class="btn sm" id="fromStreamX" aria-label="閉じる">閉じる</button></div>
-  <h1>配信カウンター<span class="h1s">　縛り・NGワードのアウトを数えて配信画面に映す</span></h1>
+  <h1>配信カウンター<span class="h1s">縛り・NGワードのアウトを数えて配信画面に映す</span></h1>
   <p class="lead">言ってしまったら「＋1」。目標回数に届いたら罰ゲームを引けます。配信には「表示ページを開く」のウィンドウを映します。</p>
 </header>
 
@@ -269,8 +284,7 @@ details.c-set:last-of-type{border-bottom:var(--k-bw) solid var(--k-sumi)}
           <button type="button" class="k-btn k-btn-main bz-draw" id="drawBatsu">罰ゲームを引く</button>
         </div>
         <div id="bzShow" hidden>
-          <p class="bz-who"><b id="bzWho2"></b> の罰ゲーム</p>
-          <p class="bz-res"><span class="rar" id="bzRar"></span><span id="bzTxt"></span></p>
+          <div class="k-result bz-res"><small><span id="bzWho2"></span> の罰ゲーム</small><b><span class="rar" id="bzRar"></span><span id="bzTxt"></span></b></div>
           <div class="bz-btns">
             <button type="button" class="k-btn k-btn-sub" id="redraw">引き直す</button>
             <button type="button" class="k-btn k-btn-sub" id="hideShow">表示を消す</button>
@@ -287,8 +301,8 @@ details.c-set:last-of-type{border-bottom:var(--k-bw) solid var(--k-sumi)}
   </aside>
 </div>
 
-<details class="c-set" id="settings">
-  <summary>設定<small>項目・縛り・目標回数・罰ゲームの中身・表示の見た目・リセット・使い方</small></summary>
+<details class="c-set k-fold" id="settings">
+  <summary><span class="c-set-t">設定</span><small>項目・縛り・目標回数・罰ゲームの中身・表示の見た目・リセット・使い方</small></summary>
   <div class="set-grid">
     <section aria-labelledby="t-items">
       <h2 class="c-t" id="t-items">項目<small>1〜9個・数える人やもの</small></h2>

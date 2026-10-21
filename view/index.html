@@ -71,6 +71,7 @@ body{background:transparent;font-family:"M PLUS Rounded 1c","Hiragino Maru Gothi
   var K = window.KkpWheel, G = window.KkpGacha;
   var $ = function (id) { return document.getElementById(id); };
   var wheel = new K.Wheel($('wheel'));
+  if (!location.search || !new URLSearchParams(location.search).has('items')) wheel.emptyText = ['操作ページで', '回すと出ます'];   // 項目が届く前の盤に薄く出す
   wheel.setArt(K.ART);
   var q = new URLSearchParams(location.search);
   var remote = q.has('items');   // 別端末モード: 項目はURLから。回す操作はこのページで
@@ -213,7 +214,7 @@ body{background:transparent;font-family:"M PLUS Rounded 1c","Hiragino Maru Gothi
   window.addEventListener('resize', fit);
   fit();
   // 丸ゴシックの読み込みが終わったら盤面を描き直す（先に描くと細い代わりの字になる）
-  try { document.fonts.ready.then(function () { wheel.draw(); }); } catch (e) {}
+  try { document.fonts.ready.then(function () { wheel.buildFace(); wheel.draw(); }); } catch (e) {}
   kkpEvent('view_obs_open', { from: gremote ? 'gacha_remote' : remote ? 'remote' : 'local' });
 })();
 </script>

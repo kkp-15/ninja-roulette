@@ -102,9 +102,7 @@ body[data-bg="cream"]{background:var(--k-kinari) url(/kit/img/d4-washi.webp) 0 0
 .stage[data-many="1"] .tl-band .p .bm{width:84px;height:84px;font-size:42px;top:-60px}
 .stage[data-many="1"] .tl-corner .p{height:70px}
 .stage[data-many="1"] .tl-corner .p .big-out{font-size:62px}
-.fx-batsu .kin{position:absolute;width:240px;pointer-events:none}
-.fx-batsu .k1{left:-80px;top:-90px}
-.fx-batsu .k2{right:-90px;bottom:-80px;width:200px;transform:rotate(160deg)}
+.fx-batsu .item.one{white-space:nowrap}
 .fx-batsu.show .scr{animation:k-unroll .6s cubic-bezier(.2,.8,.2,1) both}
 /* 右上に小さく: 数の表（最大9行）と重ならないよう、罰ゲームとアウトの判子は左に寄せる */
 .stage[data-place="corner"] .fx-batsu{top:52%;left:50px;margin-left:0;width:1200px}
@@ -130,13 +128,11 @@ body[data-bg="cream"]{background:var(--k-kinari) url(/kit/img/d4-washi.webp) 0 0
   <div class="fx-out" id="fxOut" aria-hidden="true"><div class="hk">アウト</div><div class="who k-hd"><b id="outWho"></b><span id="outN"></span></div></div>
   <div class="fx-batsu" id="fxBatsu" aria-hidden="true">
     <div class="scr">
-      <img class="kin k1" src="/kit/img/d4-kin.webp" alt="">
       <span class="rar" id="bRar"></span>
       <span class="lab">罰ゲーム</span>
       <span class="nm" id="bWho"></span>
       <span class="sub" id="bSub"></span>
       <span class="item" id="bItem"></span>
-      <img class="kin k2" src="/kit/img/d4-kin.webp" alt="">
     </div>
   </div>
   <div class="credit" id="credit">roulette.kkpwebninja.com/counter</div>
@@ -242,8 +238,13 @@ body[data-bg="cream"]{background:var(--k-kinari) url(/kit/img/d4-washi.webp) 0 0
     clearTimeout(batsuT);
     if (key !== shownKey) { shownKey = key; fx.classList.remove('show', 'fadeout'); void fx.offsetWidth; }
     fx.classList.remove('fadeout'); fx.classList.add('show');
-    var it = $('bItem'); var fs = 72; it.style.fontSize = fs + 'px';
-    while (fs > 40 && it.scrollHeight > fs * 1.25 * 2 + 4) { fs -= 4; it.style.fontSize = fs + 'px'; }
+    // まず1行で入る大きさを探す（56pxまで）。入らなければ2行にして、文の切れ目で折る（変な所で改行しない）
+    var it = $('bItem'); var fs = 72; it.classList.add('one'); it.style.fontSize = fs + 'px';
+    while (fs > 56 && it.scrollWidth > it.clientWidth + 1) { fs -= 2; it.style.fontSize = fs + 'px'; }
+    if (it.scrollWidth > it.clientWidth + 1) {
+      it.classList.remove('one'); fs = 66; it.style.fontSize = fs + 'px';
+      while (fs > 40 && it.scrollHeight > fs * 1.25 * 2 + 4) { fs -= 2; it.style.fontSize = fs + 'px'; }
+    }
     shrink($('bWho'), 76, 40);
   }
 
