@@ -207,17 +207,17 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
 </div></div>
 <div class="wrap">
 <header>
-  <div class="fromstream" id="fromStream" hidden><p>配信で見たお題ガチャはこれです。パックを選んで「ガチャを回す」だけ。登録なし・無料で、自分の配信でもそのまま使えます。</p><button class="btn sm" id="fromStreamX" aria-label="閉じる">閉じる</button></div>
+  <div class="fromstream" id="fromStream" hidden><p>配信で見たお題ガチャはこれです。パックを選んで「ガチャを回す」だけ。登録なし・無料です。</p><button class="btn sm" id="fromStreamX" aria-label="閉じる">閉じる</button></div>
   <h1>お題ガチャ　雑談・二択・罰ゲーム・縛りをレア度つきで引く</h1>
-  <p class="lead">パックを選ぶ → ガチャを回す → 配信に映すなら <a href="#obs">OBS表示ページ</a> のウィンドウをOBSの「ウィンドウキャプチャ」で取り込みます。お題は330個、すべてこのサイトのオリジナルです。</p>
-  <p class="meta">更新日 2026年10月20日　選んだパック・自分のお題はこの端末にだけ残ります（送信しません）。</p>
+  <p class="lead">パックを選んでガチャを回す。配信に映すなら <a href="#obs">表示ページ</a> をOBSの「ウィンドウキャプチャ」で取り込みます。お題330個はすべてオリジナルです。</p>
+  <p class="meta">更新日 2026年10月20日　選んだパック・自分のお題はこの端末にだけ保存（送信なし）。</p>
 </header>
 
 <main>
 <div class="tool">
   <div class="col-stage">
     <div class="gstage" id="gstage">
-      <div class="gidle" id="gidle"><b>ここにお題が出ます</b>OBSに映す表示ページにも、同じ演出で出ます。</div>
+      <div class="gidle" id="gidle"><b>ここにお題が出ます</b>表示ページにも同じ演出で出ます。</div>
       <div class="gwheel" id="gwheel" hidden><canvas id="wheel" width="10" height="10" aria-label="ルーレット"></canvas></div>
     </div>
     <div class="res" id="res" hidden aria-live="polite">
@@ -257,29 +257,29 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
       <textarea id="my" spellcheck="false" placeholder="好きな配信者さんの話をする *SR
 最近のマイブーム"></textarea>
     </details>
-    <p class="rates">出る割合　<span class="tag t-N">N</span>55%　<span class="tag t-R">R</span>30%　<span class="tag t-SR">SR</span>12%　<span class="tag t-SSR">SSR</span>3%<br><span class="note">何回目でも同じ割合。同じお題はレア度ごとに一周するまで出ません。</span></p>
+    <p class="rates">出る割合　<span class="tag t-N">N</span>55%　<span class="tag t-R">R</span>30%　<span class="tag t-SR">SR</span>12%　<span class="tag t-SSR">SSR</span>3%<br><span class="note">同じお題は一周するまで出ません。</span></p>
   </div>
 </div>
 
 <div class="narrow">
 <h2 id="howto" class="k-hd">使い方（3段）</h2>
 <ol class="steps">
-  <li><b>1. 選ぶ</b><span>パックのボタンを押す（数字キー 1〜9 でも）。雑談なら「自分の話」「もしも」「二択」「リスナーに聞く」、ゲーム実況なら「縛り」、負けたら「罰ゲーム」。いくつでも混ぜられます。</span></li>
-  <li><b>2. 回す</b><span>「ガチャを回す」かスペースキー。札の印の色が N（銅）→ R（銀）→ SR（金）→ SSR（虹）と上がっていき、刀で斬れて中からお題が出ます。演出中にもう一度押すとスキップ。</span></li>
-  <li><b>3. 映す</b><span>下の「表示ページを開く」で開いたウィンドウを、OBSの「ウィンドウキャプチャ」で取り込むと、同じ演出が配信画面に出ます（操作ボタンや広告は映りません）。</span></li>
+  <li><b>1. 選ぶ</b><span>パックを押す（数字キー 1〜9 でも）。いくつでも混ぜられます。</span></li>
+  <li><b>2. 回す</b><span>「ガチャを回す」かスペースキー。もう一度押すと演出をとばせます。</span></li>
+  <li><b>3. 映す</b><span>下の「表示ページを開く」で開いたウィンドウを、OBSの「ウィンドウキャプチャ」で取り込みます。</span></li>
 </ol>
 
 <h2 id="obs" class="k-h2">OBSに映す（ウィンドウキャプチャ）</h2>
-<p>ルーレットと同じ表示ページを使います。このページと同じブラウザで表示ページを開き、そのウィンドウをOBSで取り込むと、この画面で回したガチャがそのまま出ます。</p>
+<p>ルーレットと同じ表示ページです。この画面で回したガチャがそのまま出ます（操作ボタンや広告は映りません）。</p>
 <div class="urlrow"><input type="text" id="viewUrl" readonly value="https://roulette.kkpwebninja.com/view/"><button class="btn" id="copyView">URLをコピー</button><a class="btn" id="openView" href="/view/" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;text-decoration:none;color:inherit">表示ページを開く</a></div>
 <ol>
-  <li>上の「表示ページを開く」で、このページと同じブラウザに表示ページを開きます（閉じたり、別のブラウザで開いたりすると届きません）。</li>
-  <li>OBSの「ソース」で「＋」→「ウィンドウキャプチャ」を選び、表示ページのウィンドウを選びます。効果音は、PCから出た音がOBSの「デスクトップ音声」として配信に乗ります。</li>
-  <li>ウィンドウキャプチャでは背景が透けないので、背景を抜くなら背景を「緑（クロマキー）」にして、OBSでそのソースにフィルタ「クロマキー」をかけます。背景・置き方（全画面・下の帯・右下に小さく）・文字の大きさは <a href="/#settings">ルーレットの設定</a> と共通です。</li>
+  <li>「表示ページを開く」で、同じブラウザに開きます（閉じると届きません）。</li>
+  <li>OBSの「ソース」で「＋」→「ウィンドウキャプチャ」を選び、表示ページのウィンドウを選びます。効果音は「デスクトップ音声」で乗ります。</li>
+  <li>背景を抜くなら、背景を「緑（クロマキー）」にし、OBSでフィルタ「クロマキー」をかけます。見た目は <a href="/#settings">ルーレットの設定</a> と共通です。</li>
 </ol>
-<p class="note">OBSの「ブラウザ」ソースはChromeなどとは別のブラウザとして動くので、この画面で回したガチャは届きません。下の「配信用のPCと操作する端末が別のとき」のURLなら表示ページだけで引けるので、ブラウザソースでも使えます。</p>
+<p class="note">OBSの「ブラウザ」ソースには届きません。使うなら下の「配信用のPCと操作する端末が別のとき」のURLを入れます。</p>
 <h3>配信用のPCと操作する端末が別のとき</h3>
-<p class="note">このURLを配信用PCで開くと、そのページ自体がガチャになります（クリックかスペースキーで回す・選んだパックはURLに入っています）。パックを変えたら作り直してください。</p>
+<p class="note">配信用PCで開くと、そのページだけでガチャを引けます（クリックかスペースキー）。パックを変えたらコピーし直します。</p>
 <div class="urlrow"><input type="text" id="remoteUrl" readonly><button class="btn" id="copyRemote">URLをコピー</button></div>
 
 <div class="kkp-ad" id="adHowto">
@@ -288,7 +288,7 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
 </div>
 
 <h2 id="list" class="k-h2">お題の一覧（チェックを外すと出なくなります）</h2>
-<p>どのパックも、YouTubeの雑談配信や切り抜きで盛り上がりやすい型（失敗談、もしも、究極の二択、ランキング、リスナーに聞く、即興、語尾やセリフの罰ゲーム、〇〇禁止の縛り）をもとに、文面はこのサイトで作りました。</p>
+<p>雑談配信で盛り上がりやすい型（失敗談・もしも・二択・ランキングなど）をもとに、文面はこのサイトで作りました。</p>
 <div id="olists"></div>
 <p class="note" style="margin-top:8px"><button class="btn sm" id="restoreOff">外したお題を全部戻す</button> <span id="offN"></span></p>
 
@@ -296,7 +296,7 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
 <ul>
   <li>入れていないもの: 体を張る・痛い・危ないこと、飲食の強要、本名や住所など個人情報を言わせること、性的な内容、見た目や属性をからかうこと、他人を巻き込むこと（電話・突撃など）、長時間の耐久。</li>
   <li>「リスナーに決めてもらう」ものは、配信者が候補から選ぶ形にしています。常識の範囲で。</li>
-  <li>縛りは遊ぶゲームに合わないことがあります。合わなければ遠慮なく引き直してください。</li>
+  <li>縛りがゲームに合わなければ、引き直してください。</li>
 </ul>
 
 <h2 id="faq" class="k-hd">よくある質問</h2>
@@ -308,7 +308,7 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
 <details><summary>配信や動画で使ってもいいですか</summary><p>はい。配信・録画・切り抜き・収益化に使えます。お題の文面を配信で読み上げるのも自由です。使うときは、<a href="https://kkpwebninja.com/otoiawase" target="_blank" rel="noopener">お問い合わせ</a>か X（<a href="https://x.com/kkp_webninja" target="_blank" rel="noopener">@kkp_webninja</a>）で一言いただけると助かります。ご要望があれば、優先してアップデートします。細かい条件は <a href="https://kkpwebninja.com/guidelines" target="_blank" rel="noopener">配信・動画でのご利用について</a> にまとめています。</p></details>
 
 <h2 class="k-hd">個人情報の扱い</h2>
-<p>選んだパック・自分のお題・出たお題の記録は、お使いのブラウザの中にだけ保存されます。サーバーには送りません。計測（Google アナリティクス）は「回した回数」「出たレア度」「選んだパックの名前」のような回数だけで、自分で書いたお題の中身は含みません。</p>
+<p>選んだパック・自分のお題・出たお題の記録は、このブラウザの中にだけ保存します。サーバーには送りません。計測（Google アナリティクス）は回した回数・出たレア度・パック名だけで、自分で書いたお題の中身は含みません。</p>
 </div>
 </main>
 </div>

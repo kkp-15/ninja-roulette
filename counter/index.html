@@ -242,9 +242,9 @@ details.c-set:last-of-type{border-bottom:var(--k-bw) solid var(--k-sumi)}
 </div></div>
 <div class="wrap">
 <header>
-  <div class="fromstream" id="fromStream" hidden><p>配信で見たカウンターはこれです。縛りと名前を入れて「＋1」を押すだけ。登録なし・無料で、自分の配信でもそのまま使えます。</p><button class="btn sm" id="fromStreamX" aria-label="閉じる">閉じる</button></div>
+  <div class="fromstream" id="fromStream" hidden><p>配信で見たカウンターはこれです。縛りと名前を入れて「＋1」を押すだけ。登録なし・無料です。</p><button class="btn sm" id="fromStreamX" aria-label="閉じる">閉じる</button></div>
   <h1>配信カウンター<span class="h1s">　縛り・NGワードのアウトを数えて配信画面に映す</span></h1>
-  <p class="lead">言ってしまったら、その項目の「＋1」。配信画面に「アウト」の判子が出て、目標回数に届いたら罰ゲームを引けます。映すのは「表示ページを開く」のウィンドウ（OBSのウィンドウキャプチャ）。</p>
+  <p class="lead">言ってしまったら「＋1」。目標回数に届いたら罰ゲームを引けます。配信には「表示ページを開く」のウィンドウを映します。</p>
 </header>
 
 <main>
@@ -354,20 +354,19 @@ details.c-set:last-of-type{border-bottom:var(--k-bw) solid var(--k-sumi)}
 <div class="narrow">
 <h2 id="howto" class="k-hd">使い方（3段）</h2>
 <ol class="steps">
-  <li><b>1. 決める</b><span>下の「設定」を開いて、縛り（例: 敬語禁止・「やばい」禁止）、項目（1〜9個。人の名前や数えるもの）、目標回数（1〜20回）を決めます。決めたら設定は閉じてかまいません。</span></li>
-  <li><b>2. 数える</b><span>言ってしまった人の「＋1」を押します。パソコンなら数字キーの 1〜9 でも。配信画面に「アウト」の判子と回数が出ます。押し間違えたら「直前を戻す」（<kbd>Z</kbd>）。</span></li>
-  <li><b>3. 罰ゲーム</b><span>目標回数に届くと、配信画面に「罰ゲーム」の巻物が出ます。「罰ゲームを引く」（<kbd>B</kbd>）で、お題ガチャの罰ゲーム（設定で「自分で書く」にすると書いたもの）から1つ引いて配信画面に出します。終わったら「表示を消す」（<kbd>Esc</kbd>）。</span></li>
+  <li><b>1. 決める</b><span>「設定」で縛り・項目（人の名前など）・目標回数を決めます。</span></li>
+  <li><b>2. 数える</b><span>言ってしまった人の「＋1」（数字キー 1〜9 でも）。間違えたら「直前を戻す」（<kbd>Z</kbd>）。</span></li>
+  <li><b>3. 罰ゲーム</b><span>届いたら「罰ゲームを引く」（<kbd>B</kbd>）。終わったら「表示を消す」（<kbd>Esc</kbd>）。</span></li>
 </ol>
-<p class="note">配信・動画で使うときは、<a href="https://kkpwebninja.com/otoiawase" target="_blank" rel="noopener">お問い合わせ</a>か X（<a href="https://x.com/kkp_webninja" target="_blank" rel="noopener">@kkp_webninja</a>）で一言いただけると助かります。ご要望があれば、優先してアップデートします。</p>
 
 <h2 id="obs" class="k-h2">OBSに映す（ウィンドウキャプチャ）</h2>
 <ol>
-  <li>「表示ページを開く」で、このページと同じブラウザに表示ページのウィンドウを開きます（閉じたり、別のブラウザで開いたりすると届きません）。</li>
+  <li>「表示ページを開く」で、同じブラウザに開きます（閉じると届きません）。</li>
   <li>OBSの「ソース」で「＋」→「ウィンドウキャプチャ」を選び、表示ページのウィンドウを選びます。</li>
-  <li>背景は「グリーンバック」のまま、OBSでそのソースにフィルタ「クロマキー」をかけると、数の帯だけがゲーム画面に重なります。置き方（下の帯・右上に小さく）と背景はこのページの「設定」で切り替えると、表示ページにすぐ届きます。</li>
-  <li>効果音はこのパソコンから鳴るので、OBSの「デスクトップ音声」で配信に乗ります。</li>
+  <li>背景は「グリーンバック」のまま、OBSでフィルタ「クロマキー」をかけると、数の帯だけが重なります。</li>
+  <li>効果音は「デスクトップ音声」で乗ります。</li>
 </ol>
-<p class="note">OBSの「ブラウザ」ソースはChromeなどとは別のブラウザとして動くので、この画面で押した数は届きません。ウィンドウキャプチャを使ってください。表示ページには操作ボタンも広告も出ません。</p>
+<p class="note">OBSの「ブラウザ」ソースには届きません。ウィンドウキャプチャを使ってください。表示ページに操作ボタンや広告は出ません。</p>
 
 <h2 id="faq" class="k-hd">よくある質問</h2>
 <details><summary>キーボードで数えられますか</summary><p>数字キーの <kbd>1</kbd>〜<kbd>9</kbd> でその項目に＋1、<kbd>Shift</kbd> を押しながら数字で −1、<kbd>Z</kbd> で直前を戻す、<kbd>B</kbd> で罰ゲームを引く、<kbd>Esc</kbd> で罰ゲームの表示を消します。名前や縛りを入力している間はキーは効きません（入力欄の外をクリックすると戻ります）。</p></details>
@@ -377,7 +376,7 @@ details.c-set:last-of-type{border-bottom:var(--k-bw) solid var(--k-sumi)}
 <details><summary>配信や動画で使ってもいいですか</summary><p>はい。配信・録画・切り抜き・収益化に使えます。許諾の申請はいりません。使うときは、<a href="https://kkpwebninja.com/otoiawase" target="_blank" rel="noopener">お問い合わせ</a>か X（<a href="https://x.com/kkp_webninja" target="_blank" rel="noopener">@kkp_webninja</a>）で一言いただけると助かります。ご要望があれば、優先してアップデートします。細かい条件は <a href="https://kkpwebninja.com/guidelines" target="_blank" rel="noopener">配信・動画でのご利用について</a> にまとめています。</p></details>
 
 <h2 class="k-hd">個人情報の扱い</h2>
-<p>縛り・名前・回数は、お使いのブラウザの中にだけ保存されます。サーバーには送りません。計測（Google アナリティクス）は「＋1を押した回数」「罰ゲームを引いた回数とレア度」のような回数だけで、名前や縛りの中身は含みません。</p>
+<p>縛り・名前・回数は、このブラウザの中にだけ保存します。サーバーには送りません。計測（Google アナリティクス）は＋1や罰ゲームの回数だけで、名前や縛りの中身は含みません。</p>
 <p class="note">効果音: <a href="https://soundeffect-lab.info/" target="_blank" rel="noopener">効果音ラボ</a>　ほかの道具: <a href="/">配信ルーレット</a>・<a href="/odai-gacha/">お題ガチャ</a></p>
 </div>
 

@@ -165,15 +165,15 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
 <div class="wrap">
 <header>
   <h1>配信ルーレット　お題・企画・視聴者名を貼って回す（OBS表示つき）</h1>
-  <p class="lead">1行に1つ項目を貼る → 回す → 配信に映すなら <a href="#obs">OBS表示ページ</a> のウィンドウをOBSの「ウィンドウキャプチャ」で取り込みます。</p>
-  <p class="meta">更新日 2026年10月20日　項目はこの端末にだけ残ります（送信しません）。ログイン不要・無料。</p>
+  <p class="lead">項目を1行に1つ貼って回す。配信に映すなら <a href="#obs">表示ページ</a> をOBSの「ウィンドウキャプチャ」で取り込みます。</p>
+  <p class="meta">更新日 2026年10月20日　項目はこの端末にだけ保存（送信なし）。登録不要・無料。</p>
 </header>
 
 <main>
-<div class="fromstream" id="fromStream" hidden><p>配信で見たルーレットはこれです。項目を1行に1つ入れて「回す」だけ。登録なし・無料で、自分の配信でもそのまま使えます。</p><button class="btn sm" id="fromStreamTry">例で回してみる</button><button class="btn sm" id="fromStreamX" aria-label="閉じる">閉じる</button></div>
+<div class="fromstream" id="fromStream" hidden><p>配信で見たルーレットはこれです。項目を入れて「回す」だけ。登録なし・無料です。</p><button class="btn sm" id="fromStreamTry">例で回してみる</button><button class="btn sm" id="fromStreamX" aria-label="閉じる">閉じる</button></div>
 <div class="tool">
   <div class="col-in">
-    <label class="lab" for="items">項目（1行に1つ。貼り付けOK。「名前*3」で当たりやすさ3倍）</label>
+    <label class="lab" for="items">項目（1行に1つ。「名前*3」で当たりやすさ3倍）</label>
     <textarea id="items" spellcheck="false" placeholder="最近ハマっていること
 今日のごはん
 視聴者さんに質問コーナー
@@ -187,7 +187,7 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
       <button class="btn sm" id="clear">全部消す</button>
     </div>
     <p class="count" id="count">項目を2つ以上入れると回せます。</p>
-    <p class="gacha-link">お題を考えるのが大変なら <a href="/odai-gacha/">お題ガチャ</a>（雑談・二択・罰ゲーム・縛りの330個をレア度つきで引く）</p>
+    <p class="gacha-link">お題に迷ったら <a href="/odai-gacha/">お題ガチャ</a>（330個から引く）</p>
   </div>
   <div class="col-wheel">
     <div class="stage"><canvas id="wheel" width="10" height="10" aria-label="ルーレット"></canvas></div>
@@ -212,21 +212,21 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
 <div class="narrow">
 <h2 id="howto" class="k-hd">使い方（3段）</h2>
 <ol class="steps">
-  <li><b>1. 項目を貼る</b><span>雑談のお題・企画名・視聴者名などを1行に1つ。メモ帳やコメント欄からまとめて貼り付けできます。「*3」のように付けると当たりやすさを変えられます。</span></li>
-  <li><b>2. 回す</b><span>「回す」ボタンかスペースキー。5秒ほどで止まり、止まる瞬間に手裏剣が当たったマスに刺さって、結果が大きく出ます（長さは設定の「演出の長さ」で短く・長くできます）。「当たった項目を次から外す」にチェックすると、同じ項目が続けて出ません。</span></li>
-  <li><b>3. 配信に映す</b><span>下の「表示ページを開く」で開いたウィンドウを、OBSの「ウィンドウキャプチャ」で取り込みます。この画面で回した結果が、配信画面にも同じ動きで出ます（操作ボタンや広告は映りません）。</span></li>
+  <li><b>1. 項目を貼る</b><span>お題・視聴者名などを1行に1つ。まとめて貼り付けできます。</span></li>
+  <li><b>2. 回す</b><span>「回す」かスペースキー。約5秒で止まり、結果が大きく出ます。</span></li>
+  <li><b>3. 配信に映す</b><span>下の「表示ページを開く」で開いたウィンドウを、OBSの「ウィンドウキャプチャ」で取り込みます。</span></li>
 </ol>
 
 <h2 id="obs" class="k-h2">OBSに映す（ウィンドウキャプチャ）</h2>
-<p>このページと同じブラウザで表示ページを開き、そのウィンドウをOBSで取り込みます。回す操作はこの画面で行い、表示ページには結果だけが出ます。</p>
+<p>回すのはこの画面。表示ページに操作ボタンや広告は映りません。</p>
 <div class="urlrow"><input type="text" id="viewUrl" readonly value="https://roulette.kkpwebninja.com/view/"><button class="btn" id="copyView">URLをコピー</button><a class="btn" id="openView" href="/view/" target="_blank" rel="noopener">表示ページを開く</a><span class="flash" id="copyMsg"></span></div>
 <ol>
-  <li>上の「表示ページを開く」で、このページと同じブラウザに表示ページを開きます（閉じたり、別のブラウザで開いたりすると届きません）。</li>
+  <li>「表示ページを開く」で、同じブラウザに開きます（閉じると届きません）。</li>
   <li>OBSの「ソース」で「＋」→「ウィンドウキャプチャ」を選び、表示ページのウィンドウを選びます。</li>
-  <li>ウィンドウキャプチャでは背景が透けないので、下の「設定」で背景を「緑（クロマキー）」にして、OBSでそのソースにフィルタ「クロマキー」をかけると背景を抜けます。そのままクリームなどの単色で映してもかまいません。位置と大きさはOBS側で調整してください。</li>
+  <li>背景を抜くなら、設定で背景を「緑（クロマキー）」にし、OBSでフィルタ「クロマキー」をかけます。</li>
 </ol>
-<p class="note">OBSの「ブラウザ」ソースにこのURLを入れる方法もありますが、OBSのブラウザソースはChromeなどとは別のブラウザとして動くので、この画面で回した結果は届きません。項目を載せた「別端末用のURL」（下の設定）なら表示ページだけで回せるので、ブラウザソースでも使えます。</p>
-<p class="note">背景の色、文字の大きさ、盤面と結果のどちらを出すかは下の「設定」で変えられます。変更はすぐ表示ページに反映されます。</p>
+<p class="note">OBSの「ブラウザ」ソースには届きません。使うなら設定の「別端末用のURL」を入れます。</p>
+<p class="note">背景・文字の大きさなどは下の「設定」で変えられます（すぐ反映）。</p>
 
 <div class="kkp-ad" id="adHowto">
   <div class="kkp-ad-label">広告</div>
@@ -247,7 +247,7 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
   <label><input type="radio" name="place" value="full" checked> 全画面</label>
   <label><input type="radio" name="place" value="band"> 下の帯</label>
   <label><input type="radio" name="place" value="corner"> 右下に小さく</label>
-  <div class="note">ゲーム画面の上に重ねるなら「下の帯」か「右下に小さく」。縦長の配信画面では自動で縦に並びます。</div>
+  <div class="note">ゲーム画面に重ねるなら「下の帯」か「右下に小さく」。</div>
 </td></tr>
 <tr><th>盤の光り方</th><td>
   <label><input type="radio" name="wfx" value="full" checked> 派手（電球が追いかけて光る・止まると点滅）</label>
@@ -257,7 +257,7 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
   <label><input type="radio" name="speed" value="short"> 短い（3秒ほど）</label>
   <label><input type="radio" name="speed" value="normal" checked> ふつう（5秒ほど）</label>
   <label><input type="radio" name="speed" value="long"> 長い（7秒ほど）</label>
-  <div class="note">止まる瞬間に手裏剣が飛んできて、当たったマスに刺さります。動きを減らす設定のパソコンでは、すぐ結果が出ます。</div>
+  <div class="note">止まる瞬間に手裏剣がマスに刺さります。</div>
 </td></tr>
 <tr><th>出すもの</th><td>
   <label><input type="radio" name="layout" value="both" checked> 盤面と結果</label>
@@ -273,14 +273,14 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
   <label><input type="radio" name="ink" value="dark" checked> オレンジ</label>
   <label><input type="radio" name="ink" value="light"> 黒</label>
 </td></tr>
-<tr><th>隅の表記</th><td><label><input type="checkbox" id="credit" checked> 右下に小さく「roulette.kkpwebninja.com」を出す</label><div class="note">視聴者が同じルーレットを探せるようにする表記です。外しても構いません。</div></td></tr>
+<tr><th>隅の表記</th><td><label><input type="checkbox" id="credit" checked> 右下に小さく「roulette.kkpwebninja.com」を出す</label><div class="note">視聴者が同じルーレットを探せる表記です。外してもかまいません。</div></td></tr>
 <tr><th>効果音</th><td>
   <label><input type="checkbox" id="sound"> この画面で鳴らす</label>
   <label><input type="checkbox" id="viewSound"> 表示ページ（OBS側）で鳴らす</label>
-  <div class="note">どちらも最初はオフ。音はブラウザで合成しているので音源ファイルの読み込みはありません。</div>
+  <div class="note">どちらも最初はオフです。</div>
 </td></tr>
 <tr><th>別端末用のURL</th><td>
-  <div class="note">配信用PCと操作する端末が別のときは、項目を載せたこのURLを配信用PCで開いてください（表示ページ側でスペースキーかクリックで回せます）。項目を変えたらURLを作り直します。このURLは表示ページだけで動くので、OBSの「ブラウザ」ソースに入れても使えます。</div>
+  <div class="note">配信用PCで開くと、そのページだけで回せます（OBSのブラウザソースでも可）。項目を変えたらコピーし直します。</div>
   <div class="urlrow"><input type="text" id="remoteUrl" readonly><button class="btn" id="copyRemote">URLをコピー</button></div>
 </td></tr>
 </table>
@@ -305,7 +305,7 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
 <details><summary>配信や動画で使ってもいいですか</summary><p>はい。個人・法人を問わず、配信・録画・切り抜き・収益化に使えます。使うときは、<a href="https://kkpwebninja.com/otoiawase" target="_blank" rel="noopener">お問い合わせ</a>か X（<a href="https://x.com/kkp_webninja" target="_blank" rel="noopener">@kkp_webninja</a>）で一言いただけると助かります。ご要望があれば、優先してアップデートします。細かい条件は <a href="https://kkpwebninja.com/guidelines" target="_blank" rel="noopener">配信・動画でのご利用について</a> にまとめています。</p></details>
 
 <h2 class="k-hd">個人情報の扱い</h2>
-<p>このページに入力した項目（お題・視聴者名など）は、お使いのブラウザの中にだけ保存されます。サーバーには送らず、運営者も見られません。計測（Google アナリティクス）は「回した回数」「表示ページを開いた回数」のような回数だけで、入力した文字は含みません。</p>
+<p>入力した項目（お題・視聴者名など）は、このブラウザの中にだけ保存します。サーバーには送らず、運営者も見られません。計測（Google アナリティクス）は回した回数などの回数だけで、入力した文字は含みません。</p>
 </div>
 </main>
 </div>

@@ -37,10 +37,10 @@
   function ui() {
     [].forEach.call(document.querySelectorAll('[data-stream-sw]'), function (box) {
       box.className += ' stream-sw-box';
-      box.innerHTML = '<label class="stream-sw"><input type="checkbox"> 配信モード<span>（広告なし・説明を畳んで大事な所を大きく）</span></label>'
+      box.innerHTML = '<label class="stream-sw"><input type="checkbox"> 配信モード<span>（広告なし・大きく表示）</span></label>'
         // 2026-10-21 ふつうと配信モードの見比べ（2行だけ。配信モード中＝遊ぶ画面では出さない）
-        + '<dl class="stream-cmp"><div><dt>ふつう</dt><dd>この画面で回して、みんなで見る／広告あり</dd></div>'
-        + '<div><dt>配信モード</dt><dd>PCで進めて OBS に映す（表示ページ）／広告なし／説明を畳んで大きく</dd></div></dl>';
+        + '<dl class="stream-cmp"><div><dt>ふつう</dt><dd>この画面をみんなで見る／広告あり</dd></div>'
+        + '<div><dt>配信モード</dt><dd>OBSに映す／広告なし／説明を畳む</dd></div></dl>';
       var c = box.querySelector('input'); c.checked = on;
       c.addEventListener('change', function () { set(c.checked); });
     });
