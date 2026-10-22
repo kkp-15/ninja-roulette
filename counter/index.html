@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>配信カウンター｜縛り・NGワードのアウトを数えてOBSに映す（無料・登録不要）</title>
-<meta name="description" content="配信の縛り・NGワードで言ってしまった回数を数えて、配信画面に「アウト」の判子と回数を出す無料ツール。1〜9項目・数字キーで＋1・目標回数で罰ゲームを引けます。OBSのウィンドウキャプチャで取り込み。登録不要。">
+<title>配信カウンター｜OBSで使える無料カウンター（縛り・NGワード・デス数を複数人分）</title>
+<meta name="description" content="OBSで使える無料の配信カウンター。縛り・NGワード・デス数などを最大9人（9項目）まで数え、配信画面に回数と「アウト」の判子を出します。数字キーで＋1、目標回数で罰ゲームを引けます。OBSのウィンドウキャプチャで取り込み・登録不要。">
 <link rel="canonical" href="https://roulette.kkpwebninja.com/counter/">
 <meta name="robots" content="index,follow,max-image-preview:large">
 <meta name="theme-color" content="#e2600f">
@@ -14,7 +14,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700;800;900&display=swap" rel="stylesheet">
-<meta property="og:title" content="配信カウンター｜縛り・NGワードのアウトを数えてOBSに映す">
+<meta property="og:title" content="配信カウンター｜OBSで使える無料カウンター（縛り・NGワード）">
 <meta property="og:description" content="＋1で配信画面に「アウト」の判子。目標回数で罰ゲームを引けます。1〜9項目・登録不要・無料。">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://roulette.kkpwebninja.com/counter/">
@@ -30,19 +30,22 @@
 {
   "@context":"https://schema.org",
   "@graph":[
-    {"@type":"WebApplication","@id":"https://roulette.kkpwebninja.com/counter/#app","name":"配信カウンター（配信ルーレット）","url":"https://roulette.kkpwebninja.com/counter/","applicationCategory":"UtilitiesApplication","operatingSystem":"Web","inLanguage":"ja","datePublished":"2026-10-20","dateModified":"2026-10-20","description":"ライブ配信の縛り・NGワードで言ってしまった回数を数え、配信画面に「アウト」の判子と回数を出す無料ツール。1〜9項目・数字キー対応・目標回数で罰ゲームを引ける。","offers":{"@type":"Offer","price":"0","priceCurrency":"JPY"},"author":{"@type":"Organization","name":"web忍者の砦"},"publisher":{"@type":"Organization","name":"web忍者の砦","url":"https://kkpwebninja.com/"}},
+    {"@type":"WebApplication","@id":"https://roulette.kkpwebninja.com/counter/#app","name":"配信カウンター（配信ルーレット）","url":"https://roulette.kkpwebninja.com/counter/","applicationCategory":"UtilitiesApplication","operatingSystem":"Web","inLanguage":"ja","datePublished":"2026-10-20","dateModified":"2026-10-22","description":"OBSで使える無料の配信カウンター。ライブ配信の縛り・NGワード・デス数などを最大9人（9項目）まで数え、配信画面に「アウト」の判子と回数を出す。数字キー対応・目標回数で罰ゲームを引ける。","offers":{"@type":"Offer","price":"0","priceCurrency":"JPY"},"author":{"@type":"Organization","name":"web忍者の砦"},"publisher":{"@type":"Organization","name":"web忍者の砦","url":"https://kkpwebninja.com/"}},
     {"@type":"FAQPage","@id":"https://roulette.kkpwebninja.com/counter/#faq","mainEntity":[
       {"@type":"Question","name":"配信画面にはどうやって映しますか","acceptedAnswer":{"@type":"Answer","text":"「表示ページを開く」で開いたウィンドウを、OBSの「ウィンドウキャプチャ」で取り込みます。背景は緑なので、OBSでそのソースにフィルタ「クロマキー」をかけると数だけが重なります。操作画面と同じブラウザで開いてください。"}},
-      {"@type":"Question","name":"キーボードで数えられますか","acceptedAnswer":{"@type":"Answer","text":"数字キーの1〜9でその項目に＋1、Shiftを押しながら数字で−1、Zで直前を戻す、Bで罰ゲームを引く、Escで罰ゲームの表示を消します。名前や縛りを入力している間はキーは効きません。"}},
-      {"@type":"Question","name":"罰ゲームはどこから出ますか","acceptedAnswer":{"@type":"Answer","text":"ふだんは同じサイトのお題ガチャの「罰ゲーム」パックから引きます。誰でもその場で安全にできるものだけで、レア度（N・R・SR・SSR）の割合もお題ガチャと同じです。お題ガチャで「今後出さない」にした罰ゲームは出ません。設定の「罰ゲームの中身」を「自分で書く」にすると、書いた罰ゲームから引きます。"}},
-      {"@type":"Question","name":"配信や動画で使ってもいいですか","acceptedAnswer":{"@type":"Answer","text":"はい。配信・録画・切り抜き・収益化に使えます。許諾の申請はいりません。使うときはお問い合わせかX（@kkp_webninja）で一言いただけると助かります。ご要望があれば、優先してアップデートします。"}}
+      {"@type":"Question","name":"コラボ相手など、複数人を別々に数えられますか","acceptedAnswer":{"@type":"Answer","text":"数えられます。設定の「項目」を1〜9個まで足し、人の名前を入れます。数字キーの 1〜9 がそれぞれの項目の＋1です。"}},
+      {"@type":"Question","name":"キーボードで数えられますか","acceptedAnswer":{"@type":"Answer","text":"数字キーの 1〜9 でその項目に＋1、Shift を押しながら数字で −1、Z で直前を戻す、B で罰ゲームを引く、Esc で罰ゲームの表示を消します。名前や縛りを入力している間はキーは効きません（入力欄の外をクリックすると戻ります）。"}},
+      {"@type":"Question","name":"罰ゲームはどこから出ますか","acceptedAnswer":{"@type":"Answer","text":"同じサイトの お題ガチャ の「罰ゲーム」パックから引きます。誰でもその場で安全にできるものだけで、レア度（N・R・SR・SSR）の割合もお題ガチャと同じです。お題ガチャで「今後出さない」にした罰ゲームは出ません。設定の「罰ゲームの中身」を「自分で書く」にすると、書いた罰ゲームから引きます。"}},
+      {"@type":"Question","name":"回数に届いたあとも数えられますか","acceptedAnswer":{"@type":"Answer","text":"数えられます。届いた人の札には「罰」の判子が付きます。罰ゲームが終わったら「0に戻す」でその人だけ0にできます。全員を0にするときは、設定の「全員の回数を0にする」を2回押します。"}},
+      {"@type":"Question","name":"縛り以外にも使えますか","acceptedAnswer":{"@type":"Answer","text":"使えます。NGワード、ゲームのデス数、「えー」と言った回数、勝ち負けの数など、人ごとに数えて画面に出したいものなら何でも。縛りの欄に好きな言葉を入れてください。"}},
+      {"@type":"Question","name":"配信や動画で使ってもいいですか","acceptedAnswer":{"@type":"Answer","text":"はい。配信・録画・切り抜き・収益化に使えます。許諾の申請はいりません。使うときは、お問い合わせか X（@kkp_webninja）で一言いただけると助かります。ご要望があれば、優先してアップデートします。細かい条件は 配信・動画でのご利用について にまとめています。"}}
     ]}
   ]
 }
 </script>
 <!-- 共通部品 D4（kkp-kit を kit/ にコピーしたもの。中は手で直さず kkp-kit 側で直して sync.sh） -->
 <!-- k-fonts:start -->
-<link href="https://fonts.googleapis.com/css2?family=Yuji+Syuku&family=RocknRoll+One&display=swap&text=-.%2F0123456789%3A%40BCEGLNORSUXZ_abcefghijklmnoprstw%C2%A9%C2%B7%E2%80%A6%E2%86%92%E2%88%92%E3%80%81%E3%80%82%E3%80%8C%E3%80%8D%E3%80%9C%E3%81%82%E3%81%84%E3%81%86%E3%81%88%E3%81%8A%E3%81%8B%E3%81%8C%E3%81%8D%E3%81%8F%E3%81%90%E3%81%91%E3%81%93%E3%81%94%E3%81%95%E3%81%97%E3%81%98%E3%81%99%E3%81%9B%E3%81%9D%E3%81%9F%E3%81%A0%E3%81%A1%E3%81%A3%E3%81%A4%E3%81%A6%E3%81%A7%E3%81%A8%E3%81%A9%E3%81%AA%E3%81%AB%E3%81%AE%E3%81%AF%E3%81%B0%E3%81%B3%E3%81%B6%E3%81%B8%E3%81%BB%E3%81%BE%E3%81%BF%E3%82%81%E3%82%82%E3%82%83%E3%82%84%E3%82%88%E3%82%89%E3%82%8A%E3%82%8B%E3%82%8C%E3%82%8F%E3%82%92%E3%82%93%E3%82%A2%E3%82%A3%E3%82%A4%E3%82%A6%E3%82%AB%E3%82%AC%E3%82%AD%E3%82%AF%E3%82%B0%E3%82%B2%E3%82%B3%E3%82%B5%E3%82%B6%E3%82%B7%E3%82%B8%E3%82%B9%E3%82%BB%E3%82%BD%E3%82%BF%E3%83%81%E3%83%83%E3%83%86%E3%83%87%E3%83%88%E3%83%89%E3%83%8A%E3%83%90%E3%83%91%E3%83%94%E3%83%95%E3%83%96%E3%83%97%E3%83%9A%E3%83%9C%E3%83%9D%E3%83%9E%E3%83%A0%E3%83%A3%E3%83%A9%E3%83%AA%E3%83%AB%E3%83%AC%E3%83%AD%E3%83%AF%E3%83%B3%E3%83%BB%E3%83%BC%E4%B8%80%E4%B8%8A%E4%B8%8B%E4%B8%8D%E4%B8%AD%E4%B8%B8%E4%B9%97%E4%BA%BA%E4%BB%8A%E4%BB%98%E4%BB%A5%E4%BB%B6%E4%BD%95%E4%BD%9C%E4%BD%BF%E4%BE%8B%E4%BF%9D%E4%BF%A1%E5%80%8B%E5%84%AA%E5%85%88%E5%85%A5%E5%85%A8%E5%85%B7%E5%87%BA%E5%88%86%E5%88%87%E5%88%A4%E5%88%A5%E5%88%A9%E5%89%8D%E5%89%B2%E5%8A%9B%E5%8A%A0%E5%8A%A9%E5%8A%B9%E5%8B%95%E5%8B%9D%E5%8C%96%E5%8F%82%E5%8F%8E%E5%8F%AF%E5%8F%B3%E5%90%88%E5%90%8C%E5%90%8D%E5%90%AB%E5%91%8A%E5%93%A1%E5%95%8F%E5%9B%9E%E5%A0%B1%E5%A0%B4%E5%A3%B0%E5%A4%96%E5%A5%BD%E5%AD%90%E5%AD%97%E5%AD%98%E5%AE%89%E5%AE%9A%E5%B0%8F%E5%B0%BE%E5%B1%8A%E5%B7%BB%E5%B8%AF%E5%BA%83%E5%BA%A6%E5%BC%95%E5%BE%8C%E5%BF%8D%E6%83%85%E6%88%BB%E6%89%B1%E6%8A%9C%E6%8A%BC%E6%93%8D%E6%95%AC%E6%95%B0%E6%96%99%E6%96%B0%E6%96%B9%E6%98%A0%E6%99%82%E6%99%AF%E6%9B%B8%E6%9B%BF%E6%9C%9B%E6%9C%AC%E6%9C%AD%E6%9D%A1%E6%9E%9C%E6%A8%99%E6%AC%84%E6%AD%A2%E6%AE%B5%E6%B1%BA%E6%B6%88%E6%B8%AC%E7%84%A1%E7%89%A9%E7%94%A8%E7%94%B3%E7%94%BB%E7%99%BB%E7%9B%8A%E7%9B%AE%E7%9B%B4%E7%A0%A6%E7%A4%BA%E7%A6%81%E7%B4%B0%E7%B5%82%E7%B6%9A%E7%B8%9B%E7%BD%AE%E7%BD%B0%E8%80%85%E8%83%8C%E8%87%AA%E8%8B%B1%E8%91%89%E8%A1%A8%E8%A6%81%E8%A6%8B%E8%A8%80%E8%A8%88%E8%A8%AD%E8%A8%B1%E8%AA%9E%E8%AA%B0%E8%AB%8B%E8%AB%BE%E8%B2%A0%E8%B3%AA%E8%B6%B3%E8%BA%AB%E9%80%81%E9%80%8F%E9%81%8E%E9%81%93%E9%81%95%E9%81%B8%E9%85%8D%E9%87%8D%E9%8C%B2%E9%96%89%E9%96%8B%E9%96%93%E9%9A%85%E9%9D%A2%E9%9F%B3%E9%A0%85%E9%A1%8C%E9%B3%B4%EF%BC%88%EF%BC%89%EF%BC%8B%EF%BC%9A%EF%BC%9F%EF%BD%9C" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Yuji+Syuku&family=RocknRoll+One&display=swap&text=-.%2F0123456789%3A%40BCEGLNORSUXZ_abcefghijklmnoprstw%C2%A9%C2%B7%E2%80%A6%E2%86%92%E2%88%92%E3%80%81%E3%80%82%E3%80%85%E3%80%8C%E3%80%8D%E3%80%9C%E3%81%82%E3%81%84%E3%81%86%E3%81%88%E3%81%8A%E3%81%8B%E3%81%8C%E3%81%8D%E3%81%8F%E3%81%90%E3%81%91%E3%81%93%E3%81%94%E3%81%95%E3%81%97%E3%81%98%E3%81%99%E3%81%9B%E3%81%9D%E3%81%9F%E3%81%A0%E3%81%A1%E3%81%A3%E3%81%A4%E3%81%A6%E3%81%A7%E3%81%A8%E3%81%A9%E3%81%AA%E3%81%AB%E3%81%AE%E3%81%AF%E3%81%B0%E3%81%B3%E3%81%B6%E3%81%B8%E3%81%BB%E3%81%BE%E3%81%BF%E3%82%81%E3%82%82%E3%82%83%E3%82%84%E3%82%88%E3%82%89%E3%82%8A%E3%82%8B%E3%82%8C%E3%82%8F%E3%82%92%E3%82%93%E3%82%A2%E3%82%A3%E3%82%A4%E3%82%A6%E3%82%AB%E3%82%AC%E3%82%AD%E3%82%AF%E3%82%B0%E3%82%B2%E3%82%B3%E3%82%B5%E3%82%B6%E3%82%B7%E3%82%B8%E3%82%B9%E3%82%BB%E3%82%BD%E3%82%BF%E3%83%81%E3%83%83%E3%83%86%E3%83%87%E3%83%88%E3%83%89%E3%83%8A%E3%83%90%E3%83%91%E3%83%94%E3%83%95%E3%83%96%E3%83%97%E3%83%9A%E3%83%9C%E3%83%9D%E3%83%9E%E3%83%A0%E3%83%A3%E3%83%A9%E3%83%AA%E3%83%AB%E3%83%AC%E3%83%AD%E3%83%AF%E3%83%B3%E3%83%BB%E3%83%BC%E4%B8%80%E4%B8%8A%E4%B8%8B%E4%B8%8D%E4%B8%AD%E4%B8%B8%E4%B9%97%E4%BA%BA%E4%BB%8A%E4%BB%98%E4%BB%A5%E4%BB%B6%E4%BD%95%E4%BD%9C%E4%BD%BF%E4%BE%8B%E4%BF%9D%E4%BF%A1%E5%80%8B%E5%84%AA%E5%85%88%E5%85%A5%E5%85%A8%E5%85%B7%E5%87%BA%E5%88%86%E5%88%87%E5%88%A4%E5%88%A5%E5%88%A9%E5%89%8D%E5%89%B2%E5%8A%9B%E5%8A%A0%E5%8A%A9%E5%8A%B9%E5%8B%95%E5%8B%9D%E5%8C%96%E5%8F%82%E5%8F%8E%E5%8F%AF%E5%8F%B3%E5%90%88%E5%90%8C%E5%90%8D%E5%90%AB%E5%91%8A%E5%93%A1%E5%95%8F%E5%9B%9E%E5%A0%B1%E5%A0%B4%E5%A3%B0%E5%A4%96%E5%A5%BD%E5%AD%90%E5%AD%97%E5%AD%98%E5%AE%89%E5%AE%9A%E5%B0%8F%E5%B0%BE%E5%B1%8A%E5%B7%BB%E5%B8%AF%E5%BA%83%E5%BA%A6%E5%BC%95%E5%BE%8C%E5%BF%8D%E6%83%85%E6%88%BB%E6%89%8B%E6%89%B1%E6%8A%9C%E6%8A%BC%E6%93%8D%E6%95%AC%E6%95%B0%E6%96%99%E6%96%B0%E6%96%B9%E6%98%A0%E6%99%82%E6%99%AF%E6%9B%B8%E6%9B%BF%E6%9C%9B%E6%9C%AC%E6%9C%AD%E6%9D%A1%E6%9E%9C%E6%A8%99%E6%AC%84%E6%AD%A2%E6%AE%B5%E6%B1%BA%E6%B6%88%E6%B8%AC%E7%84%A1%E7%89%A9%E7%94%A8%E7%94%B3%E7%94%BB%E7%99%BB%E7%9B%8A%E7%9B%AE%E7%9B%B4%E7%9B%B8%E7%A0%A6%E7%A4%BA%E7%A6%81%E7%B4%B0%E7%B5%82%E7%B6%9A%E7%B8%9B%E7%BD%AE%E7%BD%B0%E8%80%85%E8%83%8C%E8%87%AA%E8%8B%B1%E8%91%89%E8%A1%A8%E8%A4%87%E8%A6%81%E8%A6%8B%E8%A8%80%E8%A8%88%E8%A8%AD%E8%A8%B1%E8%AA%9E%E8%AA%B0%E8%AB%8B%E8%AB%BE%E8%B2%A0%E8%B3%AA%E8%B6%B3%E8%BA%AB%E9%80%81%E9%80%8F%E9%81%8E%E9%81%93%E9%81%95%E9%81%B8%E9%85%8D%E9%87%8D%E9%8C%B2%E9%96%89%E9%96%8B%E9%96%93%E9%9A%85%E9%9D%A2%E9%9F%B3%E9%A0%85%E9%A1%8C%E9%B3%B4%EF%BC%88%EF%BC%89%EF%BC%8B%EF%BC%9A%EF%BC%9F%EF%BD%9C" rel="stylesheet">
 <!-- k-fonts:end -->
 <link rel="stylesheet" href="/kit/kit.css?v=f58394c">
 <style>
@@ -261,8 +264,8 @@ details.c-set.k-fold:last-of-type{border-bottom:var(--k-bw-s) solid var(--k-sumi
 <div class="wrap">
 <header>
   <div class="fromstream" id="fromStream" hidden><p>配信で見たカウンターはこれです。縛りと名前を入れて「＋1」を押すだけ。登録なし・無料です。</p><button class="btn sm" id="fromStreamX" aria-label="閉じる">閉じる</button></div>
-  <h1>配信カウンター<span class="h1s">縛り・NGワードのアウトを数えて配信画面に映す</span></h1>
-  <p class="lead">言ってしまったら「＋1」。目標回数に届いたら罰ゲームを引けます。配信には「表示ページを開く」のウィンドウを映します。</p>
+  <h1>配信カウンター<span class="h1s">OBSで縛り・NGワードの回数を数えて配信画面に映す</span></h1>
+  <p class="lead">コラボの縛りやNGワード、言ってしまったら「＋1」。目標回数に届いたら罰ゲームを引けます。配信には「表示ページを開く」のウィンドウを映します。</p>
 </header>
 
 <main>
@@ -388,15 +391,17 @@ details.c-set.k-fold:last-of-type{border-bottom:var(--k-bw-s) solid var(--k-sumi
 <p class="note">OBSの「ブラウザ」ソースには届きません。ウィンドウキャプチャを使ってください。表示ページに操作ボタンは出ません。</p>
 
 <h2 id="faq" class="k-hd">よくある質問</h2>
+<details><summary>配信画面にはどうやって映しますか</summary><p>「表示ページを開く」で開いたウィンドウを、OBSの「ウィンドウキャプチャ」で取り込みます。背景は緑なので、OBSでそのソースにフィルタ「クロマキー」をかけると数だけが重なります。操作画面と同じブラウザで開いてください。</p></details>
+<details><summary>コラボ相手など、複数人を別々に数えられますか</summary><p>数えられます。設定の「項目」を1〜9個まで足し、人の名前を入れます。数字キーの <kbd>1</kbd>〜<kbd>9</kbd> がそれぞれの項目の＋1です。</p></details>
 <details><summary>キーボードで数えられますか</summary><p>数字キーの <kbd>1</kbd>〜<kbd>9</kbd> でその項目に＋1、<kbd>Shift</kbd> を押しながら数字で −1、<kbd>Z</kbd> で直前を戻す、<kbd>B</kbd> で罰ゲームを引く、<kbd>Esc</kbd> で罰ゲームの表示を消します。名前や縛りを入力している間はキーは効きません（入力欄の外をクリックすると戻ります）。</p></details>
-<details><summary>罰ゲームはどこから出ますか</summary><p>同じサイトの <a href="/odai-gacha/">お題ガチャ</a> の「罰ゲーム」パックから引きます。誰でもその場で安全にできるものだけで、レア度（N・R・SR・SSR）の割合もお題ガチャと同じです。お題ガチャで「今後出さない」にした罰ゲームは出ません。</p></details>
+<details><summary>罰ゲームはどこから出ますか</summary><p>同じサイトの <a href="/odai-gacha/">お題ガチャ</a> の「罰ゲーム」パックから引きます。誰でもその場で安全にできるものだけで、レア度（N・R・SR・SSR）の割合もお題ガチャと同じです。お題ガチャで「今後出さない」にした罰ゲームは出ません。設定の「罰ゲームの中身」を「自分で書く」にすると、書いた罰ゲームから引きます。</p></details>
 <details><summary>回数に届いたあとも数えられますか</summary><p>数えられます。届いた人の札には「罰」の判子が付きます。罰ゲームが終わったら「0に戻す」でその人だけ0にできます。全員を0にするときは、設定の「全員の回数を0にする」を2回押します。</p></details>
 <details><summary>縛り以外にも使えますか</summary><p>使えます。NGワード、ゲームのデス数、「えー」と言った回数、勝ち負けの数など、人ごとに数えて画面に出したいものなら何でも。縛りの欄に好きな言葉を入れてください。</p></details>
 <details><summary>配信や動画で使ってもいいですか</summary><p>はい。配信・録画・切り抜き・収益化に使えます。許諾の申請はいりません。使うときは、<a href="https://kkpwebninja.com/otoiawase" target="_blank" rel="noopener">お問い合わせ</a>か X（<a href="https://x.com/kkp_webninja" target="_blank" rel="noopener">@kkp_webninja</a>）で一言いただけると助かります。ご要望があれば、優先してアップデートします。細かい条件は <a href="https://kkpwebninja.com/guidelines" target="_blank" rel="noopener">配信・動画でのご利用について</a> にまとめています。</p></details>
 
 <h2 class="k-hd">個人情報の扱い</h2>
 <p>縛り・名前・回数は、このブラウザの中にだけ保存します。サーバーには送りません。計測（Google アナリティクス）は＋1や罰ゲームの回数だけで、名前や縛りの中身は含みません。</p>
-<p class="note">効果音: <a href="https://soundeffect-lab.info/" target="_blank" rel="noopener">効果音ラボ</a>　ほかの道具: <a href="/">配信ルーレット</a>・<a href="/odai-gacha/">お題ガチャ</a></p>
+<p class="note">効果音: <a href="https://soundeffect-lab.info/" target="_blank" rel="noopener">効果音ラボ</a>　ほかの道具: <a href="/">罰ゲームや順番を決める配信ルーレット</a>・<a href="/odai-gacha/">雑談のネタを引くお題ガチャ</a></p>
 </div>
 
 <div class="kkp-ad" id="adBottom">

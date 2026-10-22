@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>配信ルーレット｜OBSに映せる無料のお題・話題ルーレット（登録不要）</title>
-<meta name="description" content="雑談のお題・企画・視聴者名を貼って回すだけ。OBSのブラウザソースで透過表示できる専用ページつき。項目はこの端末にだけ保存、ログイン不要・無料。YouTube・Twitch・TikTokのライブ配信で使えます。">
+<title>配信ルーレット｜OBSで使える無料のお題ルーレット（雑談・企画・罰ゲーム）</title>
+<meta name="description" content="OBSで使える無料のルーレット。雑談のお題・企画・罰ゲーム・視聴者名を1行に1つ貼って回すだけ。表示ページをウィンドウキャプチャで取り込み、緑の背景はクロマキーで抜けます。登録不要、項目はこの端末にだけ保存。">
 <link rel="canonical" href="https://roulette.kkpwebninja.com/">
 <meta name="robots" content="index,follow,max-image-preview:large">
 <meta name="theme-color" content="#e2600f">
@@ -16,8 +16,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700;800;900&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&display=swap&text=NRS%E7%B5%90%E6%9E%9C%E6%AE%8B%E3%82%8A0123456789%2F" rel="stylesheet">
-<meta property="og:title" content="配信ルーレット｜OBSに映せる無料のお題・話題ルーレット">
-<meta property="og:description" content="お題・企画・視聴者名を貼って回すだけ。OBSで透過表示できる専用ページつき。登録不要・無料。">
+<meta property="og:title" content="配信ルーレット｜OBSで使える無料のお題ルーレット">
+<meta property="og:description" content="雑談のお題・企画・罰ゲーム・視聴者名を貼って回すだけ。OBSに映す表示ページつき。登録不要・無料。">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://roulette.kkpwebninja.com/">
 <meta property="og:site_name" content="配信ルーレット">
@@ -32,19 +32,24 @@
 {
   "@context":"https://schema.org",
   "@graph":[
-    {"@type":"WebApplication","@id":"https://roulette.kkpwebninja.com/#app","name":"配信ルーレット","url":"https://roulette.kkpwebninja.com/","applicationCategory":"UtilitiesApplication","operatingSystem":"Web","inLanguage":"ja","datePublished":"2026-10-15","dateModified":"2026-10-19","description":"ライブ配信の雑談のお題・企画・視聴者名を貼って回す無料のルーレット。OBSのブラウザソースで透過表示できる専用ページつき。項目は端末内にだけ保存、ログイン不要。","offers":{"@type":"Offer","price":"0","priceCurrency":"JPY"},"author":{"@type":"Organization","name":"web忍者の砦"},"publisher":{"@type":"Organization","name":"web忍者の砦","url":"https://kkpwebninja.com/"}},
+    {"@type":"WebApplication","@id":"https://roulette.kkpwebninja.com/#app","name":"配信ルーレット","url":"https://roulette.kkpwebninja.com/","applicationCategory":"UtilitiesApplication","operatingSystem":"Web","inLanguage":"ja","datePublished":"2026-10-15","dateModified":"2026-10-22","description":"OBSで使える無料のお題ルーレット。ライブ配信の雑談のお題・企画・罰ゲーム・視聴者名を貼って回す。OBSのウィンドウキャプチャで映す表示ページつき。項目は端末内にだけ保存、ログイン不要。","offers":{"@type":"Offer","price":"0","priceCurrency":"JPY"},"author":{"@type":"Organization","name":"web忍者の砦"},"publisher":{"@type":"Organization","name":"web忍者の砦","url":"https://kkpwebninja.com/"}},
     {"@type":"FAQPage","@id":"https://roulette.kkpwebninja.com/#faq","mainEntity":[
-      {"@type":"Question","name":"OBSで背景が透明になりません","acceptedAnswer":{"@type":"Answer","text":"ウィンドウキャプチャはウィンドウをそのまま映すので、背景は透けません。設定の背景を「緑（クロマキー）」にして、OBSでそのソースにフィルタ「クロマキー」をかけてください。別端末用のURLをブラウザソースに入れているときは、ページ側で背景を透過にしています。そのときは、ブラウザソースの「カスタムCSS」に body の背景色を指定する行が残っていると透過になりません。カスタムCSSを空にするか、設定の背景を「透過」に戻してください。"}},
-      {"@type":"Question","name":"配信用のPCと操作用のスマホが別の端末でも使えますか","acceptedAnswer":{"@type":"Answer","text":"同じ端末では自動で同期します。別の端末のときは、設定の「別端末用のURL」を使ってください。項目をURLに載せた表示ページを開けます（回す操作は表示ページ側で行います）。"}},
-      {"@type":"Question","name":"入力した視聴者名やお題はどこかに送られますか","acceptedAnswer":{"@type":"Answer","text":"送られません。項目はこのブラウザの中（localStorage）にだけ残り、「消す」で消せます。計測は回した回数など回数だけで、項目の中身は送りません。"}},
-      {"@type":"Question","name":"スマホでも使えますか","acceptedAnswer":{"@type":"Answer","text":"使えます。画面が縦に並ぶだけで、回す・除外・履歴は同じです。OBSで映す配信はPCが前提なので、PCの横画面に合わせて作っています。"}}
+      {"@type":"Question","name":"OBSで背景が透明になりません","acceptedAnswer":{"@type":"Answer","text":"ウィンドウキャプチャはウィンドウをそのまま映すので、背景は透けません。設定の背景を「緑（クロマキー）」にして、OBSでそのソースにフィルタ「クロマキー」をかけてください。別端末用のURLをブラウザソースに入れているときは、ページ側で背景を透過にしています。そのときは、ブラウザソースの「カスタムCSS」に body { background-color: ... } が残っていると透過になりません。カスタムCSSを空にするか、設定の背景を「透過」に戻してください。"}},
+      {"@type":"Question","name":"配信用のPCと操作するスマホが別でも使えますか","acceptedAnswer":{"@type":"Answer","text":"同じ端末・同じブラウザなら自動で同期します（タブをまたいで通信するだけで、サーバーは通りません）。OBSの「ブラウザ」ソースは別のブラウザなので、同じPCでも同期しません。別の端末のときは設定の「別端末用のURL」を配信用PCで開いてください。項目がURLに入っているので、そのページ側でスペースキーかクリックで回せます。"}},
+      {"@type":"Question","name":"入力した視聴者名やお題はどこかに送られますか","acceptedAnswer":{"@type":"Answer","text":"送られません。項目はこのブラウザの中（localStorage）にだけ残り、「全部消す」で消せます。計測は「回した回数」のような回数だけで、項目の中身は送りません。"}},
+      {"@type":"Question","name":"同じ項目ばかり出ます","acceptedAnswer":{"@type":"Answer","text":"「当たった項目を次から外す」にチェックを入れると、出た項目は候補から外れます。全部出し切ったら「外した項目を戻す」で最初からにできます。"}},
+      {"@type":"Question","name":"音が出ません","acceptedAnswer":{"@type":"Answer","text":"最初はオフです。設定の「効果音」を入れてください。ウィンドウキャプチャで映すときは、PCから出た音がOBSの「デスクトップ音声」として配信に乗ります。別端末用のURLをブラウザソースに入れているときは、ソースの「音声をOBSで制御する」をオンにし、「表示ページ（OBS側）で鳴らす」にもチェックを入れます。ブラウザの決まりで、ページを一度クリックするまで音が鳴らないことがあります。"}},
+      {"@type":"Question","name":"OBSのブラウザソースで使えますか","acceptedAnswer":{"@type":"Answer","text":"この画面の操作は、OBSのブラウザソースには届きません（OBSの中は別のブラウザのため）。ブラウザソースを使うなら、設定の「別端末用のURL」をコピーして入れてください。そのページだけで、スペースキーかクリックで回せます。ふだんは「表示ページを別ウィンドウで開く」を「ウィンドウキャプチャ」で取り込むのがかんたんです。"}},
+      {"@type":"Question","name":"雑談のお題が思いつきません","acceptedAnswer":{"@type":"Answer","text":"お題ガチャ を使うと、雑談・究極の二択・罰ゲーム・縛りなど330個から引けます。配信に映す表示ページはこのルーレットと共通です。"}},
+      {"@type":"Question","name":"スマホでも使えますか","acceptedAnswer":{"@type":"Answer","text":"使えます。画面が縦に並ぶだけで、回す・除外・履歴は同じです。配信に映す使い方はPCが前提なので、PCの横画面に合わせて作っています。"}},
+      {"@type":"Question","name":"配信や動画で使ってもいいですか","acceptedAnswer":{"@type":"Answer","text":"はい。個人・法人を問わず、配信・録画・切り抜き・収益化に使えます。使うときは、お問い合わせか X（@kkp_webninja）で一言いただけると助かります。ご要望があれば、優先してアップデートします。細かい条件は 配信・動画でのご利用について にまとめています。"}}
     ]}
   ]
 }
 </script>
 <!-- 共通部品 D4（kkp-kit を kit/ にコピーしたもの。中は手で直さず kkp-kit 側で直して sync.sh） -->
 <!-- k-fonts:start -->
-<link href="https://fonts.googleapis.com/css2?family=Yuji+Syuku&family=RocknRoll+One&display=swap&text=.0123456789BCLOPRSUbew%E2%80%A6%E3%80%81%E3%80%82%E3%81%82%E3%81%84%E3%81%86%E3%81%88%E3%81%8A%E3%81%8B%E3%81%8C%E3%81%8D%E3%81%8F%E3%81%93%E3%81%95%E3%81%97%E3%81%98%E3%81%99%E3%81%9B%E3%81%9F%E3%81%A0%E3%81%A3%E3%81%A4%E3%81%A6%E3%81%A7%E3%81%A8%E3%81%A9%E3%81%AA%E3%81%AB%E3%81%AE%E3%81%AF%E3%81%B0%E3%81%BE%E3%81%BF%E3%82%81%E3%82%82%E3%82%84%E3%82%88%E3%82%89%E3%82%8A%E3%82%8B%E3%82%8C%E3%82%8D%E3%82%92%E3%82%93%E3%82%A2%E3%82%A3%E3%82%A6%E3%82%AD%E3%82%AF%E3%82%B3%E3%82%B6%E3%82%B8%E3%82%B9%E3%82%BD%E3%83%81%E3%83%83%E3%83%88%E3%83%89%E3%83%94%E3%83%96%E3%83%97%E3%83%9A%E3%83%9B%E3%83%9D%E3%83%9E%E3%83%A0%E3%83%A3%E3%83%A9%E3%83%AA%E3%83%AB%E3%83%AC%E3%83%B3%E3%83%BB%E3%83%BC%E4%B8%80%E4%BA%BA%E4%BB%B6%E4%BC%81%E4%BD%9C%E4%BD%BF%E4%BE%8B%E4%BF%A1%E5%80%8B%E5%85%A5%E5%85%A8%E5%87%BA%E5%88%A5%E5%8A%9B%E5%8B%95%E5%8F%AF%E5%90%8C%E5%90%8D%E5%95%8F%E5%9B%9E%E5%A0%B1%E5%A4%96%E5%AE%9A%E5%BA%A6%E5%BF%8D%E6%83%85%E6%88%BB%E6%89%B1%E6%8A%BC%E6%93%8D%E6%96%B9%E6%98%8E%E6%98%A0%E6%99%AF%E6%AD%A2%E6%AE%B5%E6%B6%88%E7%94%A8%E7%94%BB%E7%99%BD%E7%9B%AE%E7%A0%A6%E7%A4%BA%E7%B7%91%E8%80%85%E8%81%B4%E8%83%8C%E8%89%B2%E8%A1%A8%E8%A6%8B%E8%A6%96%E8%A8%AD%E8%A8%B1%E8%B2%BC%E8%B3%AA%E9%80%81%E9%80%8F%E9%81%8E%E9%83%A8%E9%85%8D%E9%87%8D%E9%96%89%E9%96%8B%E9%9F%B3%E9%A0%85%E9%A1%8C%E9%BB%92%EF%BC%88%EF%BC%89" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Yuji+Syuku&family=RocknRoll+One&display=swap&text=.0123456789BCGLNOPRSUbew%E2%80%A6%E3%80%81%E3%80%82%E3%81%82%E3%81%84%E3%81%86%E3%81%88%E3%81%8A%E3%81%8B%E3%81%8C%E3%81%8D%E3%81%8F%E3%81%93%E3%81%95%E3%81%97%E3%81%98%E3%81%99%E3%81%9B%E3%81%9F%E3%81%A0%E3%81%A3%E3%81%A4%E3%81%A6%E3%81%A7%E3%81%A8%E3%81%A9%E3%81%AA%E3%81%AB%E3%81%AD%E3%81%AE%E3%81%AF%E3%81%B0%E3%81%BE%E3%81%BF%E3%82%81%E3%82%82%E3%82%84%E3%82%88%E3%82%89%E3%82%8A%E3%82%8B%E3%82%8C%E3%82%8D%E3%82%92%E3%82%93%E3%82%A2%E3%82%A3%E3%82%A6%E3%82%AD%E3%82%AF%E3%82%B2%E3%82%B3%E3%82%B6%E3%82%B8%E3%82%B9%E3%82%BD%E3%82%BF%E3%83%81%E3%83%83%E3%83%88%E3%83%89%E3%83%8D%E3%83%93%E3%83%94%E3%83%96%E3%83%97%E3%83%9A%E3%83%9B%E3%83%9C%E3%83%9D%E3%83%9E%E3%83%A0%E3%83%A3%E3%83%A9%E3%83%AA%E3%83%AB%E3%83%AC%E3%83%AD%E3%83%AF%E3%83%B3%E3%83%BB%E3%83%BC%E4%B8%80%E4%B8%8A%E4%BA%BA%E4%BB%B6%E4%BC%81%E4%BD%95%E4%BD%9C%E4%BD%BF%E4%BE%8B%E4%BF%A1%E5%80%8B%E5%85%A5%E5%85%A8%E5%85%AC%E5%87%BA%E5%88%87%E5%88%A5%E5%8A%9B%E5%8B%95%E5%8F%AF%E5%90%8C%E5%90%8D%E5%95%8F%E5%9B%9E%E5%A0%B1%E5%A4%96%E5%AE%9A%E5%B9%B3%E5%BA%A6%E5%BF%8D%E6%80%9D%E6%83%85%E6%88%BB%E6%89%B1%E6%8A%BC%E6%93%8D%E6%96%99%E6%96%B9%E6%98%8E%E6%98%A0%E6%99%AF%E6%9E%9A%E6%AD%A2%E6%AE%B5%E6%B1%BA%E6%B6%88%E7%84%A1%E7%94%A8%E7%94%BB%E7%95%AA%E7%99%BD%E7%9B%AE%E7%A0%A6%E7%A4%BA%E7%B7%91%E7%B7%9A%E7%B8%9B%E7%BD%B0%E8%80%85%E8%81%B4%E8%83%8C%E8%89%B2%E8%8D%B7%E8%A1%A8%E8%A6%8B%E8%A6%96%E8%A8%AD%E8%A8%B1%E8%AB%87%E8%B2%A0%E8%B2%BC%E8%B3%AA%E8%B6%B3%E9%80%81%E9%80%8F%E9%80%9F%E9%81%8E%E9%83%A8%E9%85%8D%E9%87%8D%E9%96%89%E9%96%8B%E9%9B%91%E9%9F%B3%E9%A0%85%E9%A0%86%E9%A1%8C%E9%BB%92%EF%BC%88%EF%BC%89" rel="stylesheet">
 <!-- k-fonts:end -->
 <link rel="stylesheet" href="/kit/kit.css?v=f58394c">
 <style>
@@ -167,9 +172,9 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
 </div></div>
 <div class="wrap">
 <header>
-  <h1>配信ルーレット　お題・企画・視聴者名を貼って回す（OBS表示つき）</h1>
-  <p class="lead">項目を1行に1つ貼って回す。配信に映すなら <a href="#obs">表示ページ</a> をOBSの「ウィンドウキャプチャ」で取り込みます。</p>
-  <p class="meta">更新日 2026年10月20日　項目はこの端末にだけ保存（送信なし）。登録不要・無料。</p>
+  <h1>配信ルーレット　OBSで使える無料のお題ルーレット</h1>
+  <p class="lead">雑談のお題・企画・罰ゲーム・視聴者名を1行に1つ貼って回す。配信に映すなら <a href="#obs">表示ページ</a> をOBSの「ウィンドウキャプチャ」で取り込みます。</p>
+  <p class="meta">更新日 2026年10月22日　項目はこの端末にだけ保存（送信なし）。登録不要・無料。</p>
 </header>
 
 <main>
@@ -213,6 +218,13 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
 </div>
 
 <div class="narrow">
+<h2 id="scene" class="k-hd">こんなときに</h2>
+<ul>
+  <li><b>雑談のネタが切れた</b>　話したいことを入れて回す。考えるのも大変なら <a href="/odai-gacha/">お題ガチャで雑談のネタを引く</a>。</li>
+  <li><b>罰ゲームや順番を公平に決めたい</b>　罰ゲームや視聴者名を入れて回す。「当たった項目を次から外す」で同じ人が続きません。</li>
+  <li><b>コラボの縛り・NGワード</b>　言ってしまった回数は <a href="/counter/">配信カウンターで数えて画面に出す</a>。</li>
+</ul>
+
 <h2 id="howto" class="k-hd">使い方（3段）</h2>
 <ol class="steps">
   <li><b>1. 項目を貼る</b><span>お題・視聴者名などを1行に1つ。まとめて貼り付けできます。</span></li>
@@ -298,6 +310,8 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
 <details><summary>入力した視聴者名やお題はどこかに送られますか</summary><p>送られません。項目はこのブラウザの中（localStorage）にだけ残り、「全部消す」で消せます。計測は「回した回数」のような回数だけで、項目の中身は送りません。</p></details>
 <details><summary>同じ項目ばかり出ます</summary><p>「当たった項目を次から外す」にチェックを入れると、出た項目は候補から外れます。全部出し切ったら「外した項目を戻す」で最初からにできます。</p></details>
 <details><summary>音が出ません</summary><p>最初はオフです。設定の「効果音」を入れてください。ウィンドウキャプチャで映すときは、PCから出た音がOBSの「デスクトップ音声」として配信に乗ります。別端末用のURLをブラウザソースに入れているときは、ソースの「音声をOBSで制御する」をオンにし、「表示ページ（OBS側）で鳴らす」にもチェックを入れます。ブラウザの決まりで、ページを一度クリックするまで音が鳴らないことがあります。</p></details>
+<details><summary>OBSのブラウザソースで使えますか</summary><p>この画面の操作は、OBSのブラウザソースには届きません（OBSの中は別のブラウザのため）。ブラウザソースを使うなら、設定の「別端末用のURL」をコピーして入れてください。そのページだけで、スペースキーかクリックで回せます。ふだんは「表示ページを別ウィンドウで開く」を「ウィンドウキャプチャ」で取り込むのがかんたんです。</p></details>
+<details><summary>雑談のお題が思いつきません</summary><p><a href="/odai-gacha/">お題ガチャ</a> を使うと、雑談・究極の二択・罰ゲーム・縛りなど330個から引けます。配信に映す表示ページはこのルーレットと共通です。</p></details>
 <details><summary>スマホでも使えますか</summary><p>使えます。画面が縦に並ぶだけで、回す・除外・履歴は同じです。配信に映す使い方はPCが前提なので、PCの横画面に合わせて作っています。</p></details>
 <details><summary>配信や動画で使ってもいいですか</summary><p>はい。個人・法人を問わず、配信・録画・切り抜き・収益化に使えます。使うときは、<a href="https://kkpwebninja.com/otoiawase" target="_blank" rel="noopener">お問い合わせ</a>か X（<a href="https://x.com/kkp_webninja" target="_blank" rel="noopener">@kkp_webninja</a>）で一言いただけると助かります。ご要望があれば、優先してアップデートします。細かい条件は <a href="https://kkpwebninja.com/guidelines" target="_blank" rel="noopener">配信・動画でのご利用について</a> にまとめています。</p></details>
 
