@@ -164,6 +164,7 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
 </style>
 <link rel="stylesheet" href="/d4.css">
 <link rel="stylesheet" href="/stream.css">
+<link rel="stylesheet" href="/rfx.css?v=20261023">
 </head>
 <body class="k-page">
 <div class="site"><div class="k-bg" aria-hidden="true"><img class="k-deco k-ninja" src="/kit/img/d4-ninja.webp" alt=""><img class="k-deco k-season k-season-momiji" src="/kit/img/d4-momiji.webp" alt=""></div><div class="site-in">
@@ -198,8 +199,16 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
     <p class="gacha-link">お題に迷ったら <a href="/odai-gacha/">お題ガチャ</a>（330個から引く）</p>
   </div>
   <div class="col-wheel">
+    <div class="rfx-modes" role="group" aria-label="使い方">
+      <button type="button" data-mode="odai" aria-pressed="true">お題</button>
+      <button type="button" data-mode="batsu" aria-pressed="false">罰ゲーム</button>
+      <button type="button" data-mode="name" aria-pressed="false">名前の抽選</button>
+      <button type="button" data-mode="order" aria-pressed="false">順番決め</button>
+      <button type="button" class="rfx-hype" id="hype" aria-pressed="false" title="次の1回だけ、止まりかけで止めて「どこに刺さる？」と聞きます">次の1回を盛り上げる</button>
+    </div>
     <div class="stage"><div id="wheel" role="img" aria-label="ルーレット"></div></div>
     <button class="spin k-btn k-btn-main k-btn-big" id="spin" disabled>回す</button>
+    <p class="rfx-mode-note" id="modeNote"></p>
     <p class="keys"><kbd>Space</kbd>か<kbd>Enter</kbd>で回す　OBSに映すなら <a href="#obs">表示ページのURL</a></p>
     <div data-stream-sw></div>
     <div class="result" aria-live="polite">
@@ -228,7 +237,7 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
 <h2 id="howto" class="k-hd">使い方（3段）</h2>
 <ol class="steps">
   <li><b>1. 項目を貼る</b><span>お題・視聴者名などを1行に1つ。まとめて貼り付けできます。</span></li>
-  <li><b>2. 回す</b><span>「回す」かスペースキー。約5秒で止まり、結果が大きく出ます。</span></li>
+  <li><b>2. 回す</b><span>「回す」かスペースキー。手裏剣が刺さったマスが当たりです。お題は約3秒で決まります。</span></li>
   <li><b>3. 配信に映す</b><span>下の「表示ページを別ウィンドウで開く」で開いたウィンドウを、OBSの「ウィンドウキャプチャ」で取り込みます。</span></li>
 </ol>
 
@@ -259,13 +268,13 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
   <div class="note">ゲーム画面に重ねるなら「下の帯」か「右下に小さく」。</div>
 </td></tr>
 <tr><th>盤の光り方</th><td>
-  <label><input type="radio" name="wfx" value="full" checked> 派手（針が揺れる・止まると当たりのマスが光る）</label>
-  <label><input type="radio" name="wfx" value="lite"> 控えめ（揺らさない・光らせない）</label>
+  <label><input type="radio" name="wfx" value="full" checked> 派手（止まると当たりのマスが光る）</label>
+  <label><input type="radio" name="wfx" value="lite"> 控えめ（光らせない）</label>
 </td></tr>
 <tr><th>演出の長さ</th><td>
-  <label><input type="radio" name="speed" value="short"> 短い（3秒ほど）</label>
-  <label><input type="radio" name="speed" value="normal" checked> ふつう（5秒ほど）</label>
-  <label><input type="radio" name="speed" value="long"> 長い（7秒ほど）</label>
+  <label><input type="radio" name="speed" value="short"> 短い（0.75倍）</label>
+  <label><input type="radio" name="speed" value="normal" checked> ふつう（お題 約3秒・罰ゲーム 約4秒・名前の抽選 約4秒・順番決め 約2秒）</label>
+  <label><input type="radio" name="speed" value="long"> 長い（1.2倍）</label>
   <div class="note">止まる瞬間に手裏剣がマスに刺さります。</div>
 </td></tr>
 <tr><th>出すもの</th><td>
@@ -328,7 +337,8 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
   <div class="uf-c">© 2025-2026 web忍者の砦</div>
 </footer>
 <script>kkpLoadAds();</script>
-<script src="/wheel.js"></script>
+<script src="/wheel.js?v=20261023"></script>
+<script src="/rfx.js?v=20261023"></script>
 <script>
 (function () {
   'use strict';
@@ -337,11 +347,24 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
   var LS = { text: 'kkp_roulette_text', set: 'kkp_roulette_settings', ex: 'kkp_roulette_excluded', hist: 'kkp_roulette_history', msg: 'kkp_roulette_msg', state: 'kkp_roulette_state' };
   var ORIGIN = 'https://roulette.kkpwebninja.com';
   var SAMPLE = '最近ハマっていること\n今日のごはん\n視聴者さんに質問コーナー\n子どものころの夢\n最近の失敗談\n歌ってみた*2\n休憩（5分）';
+  // 使い方ごとの例（「例を入れる」）
+  var SAMPLES = {
+    odai: SAMPLE,
+    batsu: '変顔で10秒\nモノマネ1つ\n語尾に「にゃ」を5分\n★激辛ソースをひと口\n一発ギャグ\nセーフ（なし）*2\n★全力で歌う',
+    name: 'たろう\nはなこ\nゆうき\nみさき\nけんた\nあおい\nそうた\nりん',
+    order: 'るはね\nにあ\nもも\nゲストさん'
+  };
+  var MODE_NOTE = {
+    odai: '速く回って約2.6秒で決まります（何回回してもだれない長さ）',
+    batsu: '項目の頭に★を付けると「きつい罰」。★に近づくと盤のまわりが赤くなります',
+    name: '全員同じ見せ方で公平に。当選者は名前を大きく出します（当たった人は次から外す）',
+    order: '当たった順に1番・2番…と並びます（当たった項目は自動で外す）'
+  };
 
   function load(k, d) { try { var v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } }
   function save(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { /* 保存できなくても動く */ } }
 
-  var settings = Object.assign({ layout: 'both', place: 'full', wfx: 'full', speed: 'normal', size: 2, ink: 'dark', credit: true, sound: false, viewSound: false, exclude: false }, load(LS.set, {}));
+  var settings = Object.assign({ layout: 'both', place: 'full', wfx: 'full', speed: 'normal', size: 2, ink: 'dark', credit: true, sound: false, viewSound: false, exclude: false, mode: 'odai' }, load(LS.set, {}));
   // 2026-10-22 背景は kit の背景の選択（KKit.viewBg・k-view-bg:kkp-roulette。透過・白・クリーム・緑・黒・色）に。
   // 前の版の設定（settings.bg / bgColor）は最初の1回だけ移す（透過→clear・#ffffff→white・#fff6ea→cream・#00b140→green・#000000→black・ほかの色はそのまま）
   var BGCH = 'kkp-roulette';
@@ -380,7 +403,7 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
     wheel.setItems(pool);
     var n = pool.length;
     $('count').textContent = n < 2 ? '項目を2つ以上入れると回せます。' : n + '件の候補' + (excluded.length ? '（' + excluded.length + '件を外しています）' : '');
-    $('spin').disabled = n < 2 || wheel.spinning;
+    $('spin').disabled = n < 2;
     $('exN').textContent = excluded.length;
     $('restore').hidden = excluded.length === 0;
     $('remoteUrl').value = ORIGIN + '/view/?' + remoteQuery();
@@ -399,39 +422,70 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
     saveTimer = setTimeout(function () { save(LS.text, $('items').value); pushState(); }, 300);
   });
   $('items').addEventListener('paste', function () { kkpEvent('items_paste'); });
-  $('sample').addEventListener('click', function () { $('items').value = SAMPLE; excluded = []; save(LS.ex, excluded); $('items').dispatchEvent(new Event('input')); });
+  $('sample').addEventListener('click', function () { $('items').value = SAMPLES[settings.mode] || SAMPLE; orderList = []; excluded = []; save(LS.ex, excluded); $('items').dispatchEvent(new Event('input')); });
   $('clear').addEventListener('click', function () {
     if (!$('items').value.trim() || confirm('項目・外した項目・履歴をこの端末から消します。よいですか？')) {
       $('items').value = ''; excluded = []; history = []; save(LS.ex, excluded); save(LS.hist, history); renderHist();
       $('items').dispatchEvent(new Event('input'));
     }
   });
-  $('restore').addEventListener('click', function () { excluded = []; save(LS.ex, excluded); readItems(); pushState(); });
+  $('restore').addEventListener('click', function () { excluded = []; save(LS.ex, excluded); orderList = []; KkpRfx.clearOrder(document.body); send({ t: 'rorder', list: [] }); readItems(); pushState(); });
   $('exclude').addEventListener('change', function () { settings.exclude = this.checked; save(LS.set, settings); });
 
   // 回す
   wheel.onTick = function () { if (settings.sound) K.sound('tick'); };
   // 角度は度（kit の KKit.wheel）。表示ページへも度で送る（u:'deg'。前の版はラジアン）。止まる角度は W.pick（当たりは weight どおり）
+  // 2026-10-23 手裏剣が刺さったマスが当たり（rfx.js）。当たりは weight どおりに先に決め、予告と盤の回り方はあとから選ぶ。
+  // 段取り（plan）を丸ごと表示ページへ送る＝表示ページも同じ結果・同じ演出。演出中に押す（Space）と飛ばす
+  var rctl = null, rplan = null, hype = false, orderList = [];
+  // 使い方（お題・罰ゲーム・名前の抽選・順番決め）。初期は「お題」（このサイトでいちばん多い使い方）
+  function setMode(m) {
+    if (!KkpRfx.MODES[m]) m = 'odai';
+    settings.mode = m; save(LS.set, settings);
+    [].forEach.call(document.querySelectorAll('.rfx-modes button[data-mode]'), function (b) { b.setAttribute('aria-pressed', b.getAttribute('data-mode') === m ? 'true' : 'false'); });
+    $('modeNote').textContent = MODE_NOTE[m] || '';
+    if (m === 'name' && !settings.exclude) { settings.exclude = true; $('exclude').checked = true; save(LS.set, settings); }
+    orderList = []; KkpRfx.clearOrder(document.body); send({ t: 'rorder', list: [] });
+    wheel.W.el.setAttribute('data-rfx-mode', m);
+  }
+  [].forEach.call(document.querySelectorAll('.rfx-modes button[data-mode]'), function (b) { b.addEventListener('click', function () { if (!(rctl && rctl.playing())) setMode(b.getAttribute('data-mode')); }); });
+  $('hype').addEventListener('click', function () { hype = !hype; this.setAttribute('aria-pressed', hype ? 'true' : 'false'); });
+  function goYama() { if (rctl && rctl.waiting()) { rctl.go(); send({ t: 'rgo', id: rplan.id }); } }
   function spin() {
+    if (rctl && rctl.waiting()) { goYama(); return; }
+    if (rctl && rctl.playing()) { rctl.skip(); send({ t: 'rskip', id: rplan.id }); return; }
     if (wheel.spinning || pool.length < 2) return;
-    var from = wheel.angle, final = wheel.pick(5 + Math.floor(Math.random() * 2)), dur = K.spinDur(settings.speed);
-    var id = Date.now();
-    $('spin').disabled = true;
+    var mode = settings.mode || 'odai';
+    var p = KkpRfx.plan(wheel.W, { mode: mode, speed: settings.speed, hype: hype, order: orderList });
+    if (!p) return;
+    rplan = p; hype = false; $('hype').setAttribute('aria-pressed', 'false');
+    $('spin').textContent = '飛ばす'; $('spin').classList.add('rfx-skip');
     $('rtxt').className = 'r-txt wait'; $('rtxt').textContent = '回っています…';
-    send({ t: 'spin', u: 'deg', items: pool, from: from, final: final, dur: dur, id: id, settings: viewSettings() });
-    kkpEvent('spin');
-    wheel.spin(from, final, dur, function (idx) {
-      var label = pool[idx] ? pool[idx].label : '';
-      $('rtxt').className = 'r-txt'; $('rtxt').textContent = label;
-      if (settings.sound) K.sound('done');
-      history.unshift({ l: label, t: Date.now() });
-      history = history.slice(0, 20); save(LS.hist, history); renderHist();
-      kkpEvent('result');
-      showResultAd();
-      if (settings.exclude && pool.length > 1) { excluded.push(label); save(LS.ex, excluded); }
-      readItems();
-      save(LS.state, { t: 'state', items: pool, settings: viewSettings(), result: label });
-    }, { host: $('wheel').parentNode, speed: settings.speed, sound: settings.sound ? K.sound : null });
+    // final は「前の版の表示ページ」（plan を知らない）向け: 針（真上）の下に当たりのマスが来る角度。新しい表示ページは plan をなぞる
+    send({ t: 'spin', u: 'deg', items: pool, from: p.from, final: p.hitA - p.phi, dur: p.dur, id: p.id, plan: p, settings: viewSettings() });
+    kkpEvent('spin', { mode: mode, hype: p.hype ? 1 : 0 });
+    rctl = KkpRfx.play({ wheel: wheel, host: $('wheel').parentNode, party: document.body, kusuAt: $('wheel'), sound: settings.sound,
+      onYama: function (on) { $('spin').textContent = on ? '進む' : '飛ばす'; $('spin').classList.toggle('rfx-go', on); },
+      onAutoGo: function () { send({ t: 'rgo', id: p.id }); },   // 押さなければ6秒で自動で進む（表示ページにも知らせる）
+      onFake: function () { $('rtxt').className = 'r-txt wait'; $('rtxt').textContent = 'セーフ…？'; },
+      onResult: function (idx) {
+        var label = pool[idx] ? pool[idx].label : '';
+        $('spin').textContent = '回す'; $('spin').classList.remove('rfx-skip', 'rfx-go');
+        var pre = mode === 'order' ? (p.order ? p.order.length : 1) + '番：' : mode === 'batsu' ? '罰ゲーム：' : mode === 'name' ? '当選：' : '';
+        $('rtxt').className = 'r-txt' + (p.star ? ' star' : ''); $('rtxt').textContent = pre + label;
+        history.unshift({ l: label, t: Date.now() });
+        history = history.slice(0, 20); save(LS.hist, history); renderHist();
+        kkpEvent('result', { mode: mode });
+        showResultAd();
+        if ((settings.exclude || mode === 'order') && pool.length > 1) { excluded.push(label); save(LS.ex, excluded); }
+        if (mode === 'order' && p.order) {
+          orderList = p.order.slice();
+          readItems();
+          // 残り1つは自動で最後に
+          if (pool.length === 1) { orderList.push(pool[0].label); excluded.push(pool[0].label); save(LS.ex, excluded); readItems(); setTimeout(function () { KkpRfx.orderList(document.body, orderList, orderList.length); send({ t: 'rorder', list: orderList, full: 1 }); }, 900); }
+        } else readItems();
+        save(LS.state, { t: 'state', items: pool, settings: viewSettings(), result: label });
+      } }, p);
   }
   $('spin').addEventListener('click', spin);
   document.addEventListener('keydown', function (e) {
@@ -524,7 +578,9 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
       var rl = Math.min(52, Math.max(28, window.innerWidth * 0.026)) * 1.25;   // 結果の文字（回す前の小さい字ではなく、結果が出たときの大きさ）
       // 配信モードのスイッチ（配信モード中だけ数える。ふつうの画面は前と同じ大きさの盤）
       var sw = col.querySelector('[data-stream-sw]'), swH = sw && sw.offsetHeight && document.documentElement.classList.contains('stream') ? sw.offsetHeight + 8 : 0;
-      var below = $('spin').offsetHeight + 14 + (keys ? keys.offsetHeight + 12 : 0) + swH + Math.max(res.offsetHeight, rl * 2 + 64) + 24;
+      // 2026-10-23 盤の下の使い方の一言も数える（使い方の切り替えは盤の上なので top に入っている）
+      var mn = $('modeNote'), rfxH = mn && mn.offsetHeight ? mn.offsetHeight + 4 : 0;
+      var below = $('spin').offsetHeight + 14 + (keys ? keys.offsetHeight + 12 : 0) + swH + rfxH + Math.max(res.offsetHeight, rl * 2 + 64) + 24;
       h = Math.max(150, window.innerHeight - top - below);   // 960x540 の配信モードでも「直前の結果」まで入るよう、盤は150pxまで縮める
     }
     wheel.resize(Math.max(150, Math.floor(Math.min(w, h))));
@@ -555,6 +611,7 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
   applySettingsToForm();
   fit();
   readItems();
+  setMode(settings.mode || 'odai');
   renderHist();
   pushState();
 })();

@@ -79,6 +79,7 @@
   function make(el, o) {
     o = o || {}; injectCss();
     var W = KKit.wheel(el, { items: [], minPx: o.minPx || 14, empty: o.empty || '' });
+    if (window.KkpRfx) W.el.classList.add('rfx-on');   // 2026-10-23 針は使わない（手裏剣が刺さったマスが当たり）
     var key = '', fx = 'full', star = null;
     var R = {
       W: W, el: W.el, onTick: null,
@@ -93,6 +94,7 @@
       var k = JSON.stringify((items || []).map(function (it) { return [it.label, it.weight]; }));
       if (k === key) return;
       key = k; W.set(items || []);
+      if (window.KkpRfx) KkpRfx.tagStars(R);   // ★のマスのふちを金に（rfx.js）
     };
     R.resize = function (px) { px = Math.max(80, Math.floor(px)); W.el.style.width = W.el.style.height = px + 'px'; W.relayout(); };
     R.minPx = function (px) { if (W.opts.minPx !== px) { W.opts.minPx = px; W.relayout(); } };

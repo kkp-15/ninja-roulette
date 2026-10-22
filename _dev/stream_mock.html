@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex">
+<title>配信画面の見本（確認用）</title>
+<link rel="icon" href="/favicon.png">
+<style>
+/* 確認用: 配信の画面（ゲーム画面＋立ち絵）の右上に、表示ページを小さく重ねる。1280x720＝1920x1080 の 2/3 */
+html,body{margin:0;height:100%;overflow:hidden;background:#20324a}
+.game{position:absolute;inset:0;background:linear-gradient(180deg,#7cc4f0 0%,#bfe6f7 55%,#7fbf62 55%,#5c9e45 100%)}
+.game .hill{position:absolute;bottom:45%;border-radius:50% 50% 0 0;background:#9fd27a}
+.game .road{position:absolute;left:0;right:0;bottom:12%;height:14%;background:#c8a26a}
+.game .hud{position:absolute;left:18px;top:16px;display:flex;gap:10px}
+.game .hud i{display:block;width:150px;height:16px;border:3px solid #1f1a17;border-radius:8px;background:linear-gradient(90deg,#e2483a 70%,#fff 70%)}
+.game .hud i+i{background:linear-gradient(90deg,#3f8ee2 45%,#fff 45%)}
+.tachie{position:absolute;right:40px;bottom:0;width:220px;height:300px;border-radius:110px 110px 0 0;background:#fff3e0;box-shadow:0 0 0 4px #1f1a17;display:grid;place-items:center;font:800 22px 'Hiragino Sans',sans-serif;color:#8a7a6c}
+.frame{position:absolute;right:14px;top:14px;width:720px;height:405px;border:0;background:transparent}
+.label{position:absolute;left:18px;bottom:14px;padding:4px 12px;border-radius:8px;background:rgba(31,26,23,.7);color:#fff;font:700 15px "Hiragino Sans",sans-serif}
+</style>
+</head>
+<body>
+<div class="game">
+  <div class="hill" style="left:-5%;width:45%;height:22%"></div>
+  <div class="hill" style="left:30%;width:50%;height:28%"></div>
+  <div class="road"></div>
+  <div class="hud"><i></i><i></i></div>
+</div>
+<div class="tachie">立ち絵</div>
+<iframe class="frame" src="/view/?kkptest=1" allowtransparency="true"></iframe>
+<div class="label">配信画面の見本（ゲーム画面の右上にルーレットを小さく重ねた形）</div>
+</body>
+</html>

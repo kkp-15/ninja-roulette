@@ -1,0 +1,105 @@
+/* 手裏剣が刺さったマスが当たりの演出（rfx.js 第3版）。kit に移すときは .rfx- を .k-yk- に。
+   点滅は名前の当選と★の罰の1回だけ（0.5秒）。字は小さく置いても読める太さと縁取り。 */
+.rfx-host{position:relative}
+.k-wheel.rfx-on .k-wheel-pin{display:none}
+.k-wheel.rfx-on .k-wheel-disc{position:relative}
+.k-wheel.rfx-on{transform-origin:50% 50%;container-type:inline-size}
+/* ★のマス（罰ゲームのきつい罰）: ふちを赤く太く */
+.k-wheel[data-rfx-mode="batsu"] .rfx-starcell{stroke:#d9432a;stroke-width:3.6}
+.k-wheel.rfx-won-star .k-wheel-win{stroke:#ffd43b;stroke-width:6}
+
+/* 手裏剣: 銀＝お題・順番 / 赤＝罰ゲーム / 金＝名前の抽選（Gemini で作った絵・字なし） */
+.rfx-sh{position:absolute;width:var(--s,60px);aspect-ratio:1;left:0;top:0;transform:translate(-50%,-50%);pointer-events:none;z-index:6;
+  background:url(/kit/img/fx-shuriken.webp) center/100% 100% no-repeat;filter:drop-shadow(3px 3px 0 rgba(31,26,23,.45))}
+.rfx-sh[data-c="red"]{background-image:url(/img/fx/fx-shuriken-red.webp)}
+.rfx-sh[data-c="gold"]{background-image:url(/img/fx/fx-shuriken-gold.webp)}
+.rfx-stuck{z-index:3;filter:drop-shadow(2px 2px 0 rgba(31,26,23,.5))}
+.rfx-hold{z-index:7}
+
+/* 狙いの輪（手裏剣が刺さる所） */
+.rfx-aim{position:absolute;width:var(--a,70px);aspect-ratio:1;left:0;top:0;transform:translate(-50%,-50%);border-radius:50%;pointer-events:none;z-index:5;
+  border:4px solid #fffdf8;box-shadow:0 0 0 3px #1f1a17,inset 0 0 0 3px #1f1a17}
+.rfx-aim::before,.rfx-aim::after{content:"";position:absolute;left:50%;top:-18%;bottom:-18%;width:4px;margin-left:-2px;background:#1f1a17}
+.rfx-aim::after{transform:rotate(90deg)}
+.rfx-ring{position:absolute;width:var(--a,80px);aspect-ratio:1;left:0;top:0;border-radius:50%;pointer-events:none;z-index:6;border:6px solid #c9ced6}
+.rfx-ring[data-c="red"]{border-color:#f04a3a}
+.rfx-ring[data-c="gold"]{border-color:#ffc21a;box-shadow:0 0 20px rgba(255,194,26,.8)}
+
+/* マスの番号（盤のふち・止まっても逆さにしない）。★のマスは赤 */
+.rfx-num{position:absolute;z-index:2;width:9%;aspect-ratio:1;min-width:18px;transform:translate(-50%,-50%) rotate(var(--rfx-a,0deg));display:grid;place-items:center;border-radius:50%;
+  background:#fffdf8;color:#1f1a17;box-shadow:0 0 0 2px #1f1a17;font-family:"M PLUS Rounded 1c","Hiragino Maru Gothic ProN",sans-serif;font-weight:900;font-size:max(11px,4.2cqw);line-height:1;pointer-events:none}
+.k-wheel[data-rfx-mode="batsu"] .rfx-num.star{background:#d9432a;color:#fff}
+
+/* 罰ゲーム: ★が狙いに近づくと盤のまわりが赤く（ゆっくり・点滅しない） */
+.rfx-host.rfx-danger .k-wheel{box-shadow:inset 0 0 0 4px #3a312b,0 0 0 6px rgba(217,67,42,.55),0 0 36px 10px rgba(217,67,42,.45);transition:box-shadow .5s}
+
+/* 盛り上げの待ち（「どこに刺さる？ コメントで番号を予想！」） */
+.rfx-nen{position:absolute;left:50%;top:max(10px,3vh);z-index:58;pointer-events:none;transform:translate(-50%,0);min-width:min(60vw,640px);padding:.45em 1.2em .55em;border-radius:14px;text-align:center;
+  background:#fffdf8;box-shadow:0 0 0 4px #1f1a17,0 0 0 8px #ffd24a,6px 8px 0 8px rgba(31,26,23,.25);font-family:"M PLUS Rounded 1c","Hiragino Maru Gothic ProN",sans-serif;color:#1f1a17}
+.rfx-nen.fixed{position:fixed}
+.rfx-nen.at{transform:translate(-50%,-50%);min-width:0;width:min(31vw,400px);padding:.4em .7em .5em}
+.rfx-nen-t{display:block;font-weight:900;font-size:max(26px,4.4vw);line-height:1.15;color:#d9432a;letter-spacing:.04em}
+.rfx-nen-s{font-weight:800;font-size:max(16px,2.4vw);margin-top:.15em}
+.rfx-nen-bar{margin:.45em auto 0;height:10px;border-radius:5px;background:#eadfcc;overflow:hidden}
+.rfx-nen-fill{height:100%;background:linear-gradient(90deg,#f39a1e,#d9432a);transform-origin:0 50%}
+
+/* 名前の抽選: 当選の札 */
+.rfx-wincard{position:absolute;left:50%;top:45%;z-index:4;transform:translate(-50%,-50%);padding:.4em .9em .5em;border-radius:16px;text-align:center;max-width:90%;
+  background:#fffdf8;box-shadow:0 0 0 5px #1f1a17,0 0 0 11px #ffd24a,8px 10px 0 11px rgba(31,26,23,.25);font-family:"M PLUS Rounded 1c","Hiragino Maru Gothic ProN",sans-serif;color:#1f1a17}
+.rfx-wc-h{display:inline-block;padding:.05em .7em;border-radius:999px;background:#d9432a;color:#fff;font-weight:900;font-size:max(18px,2.4vw);letter-spacing:.2em}
+.rfx-wc-n{display:block;margin-top:.12em;font-weight:900;font-size:max(34px,5.6vw);line-height:1.15;word-break:auto-phrase}
+.rfx-wc-s{font-weight:800;font-size:max(16px,2vw);color:#b97c00}
+/* 罰ゲーム: 判子の札 */
+.rfx-batsu{position:absolute;left:50%;top:45%;z-index:57;transform:translate(-50%,-50%) rotate(-6deg);padding:.3em .8em .4em;border:.14em solid #c93b23;border-radius:.3em;text-align:center;max-width:90%;
+  background:rgba(255,253,248,.96);box-shadow:inset 0 0 0 .05em #c93b23,6px 8px 0 rgba(31,26,23,.25);font-family:"M PLUS Rounded 1c","Hiragino Maru Gothic ProN",sans-serif;color:#c93b23;font-size:max(16px,2.6vw)}
+.rfx-batsu.fixed{position:fixed}
+.rfx-bt-h{display:block;font-weight:900;font-size:2.2em;line-height:1.1;letter-spacing:.04em}
+.rfx-bt-n{display:block;margin-top:.1em;font-weight:900;font-size:1.6em;color:#1f1a17;word-break:auto-phrase}
+.rfx-batsu.star{font-size:max(18px,3vw);background:#fff3ee}
+/* まさかの1マス: 「セーフ…？」 */
+.rfx-safe{position:absolute;left:70%;top:40%;z-index:57;transform:translate(-50%,-50%);padding:.15em .6em;border-radius:12px;background:#1f1a17;color:#fff;font-family:"M PLUS Rounded 1c","Hiragino Maru Gothic ProN",sans-serif;font-weight:900;font-size:max(26px,3.6vw)}
+.rfx-safe.fixed{position:fixed}
+/* 順番決め: 右側の表 */
+.rfx-order{position:absolute;right:max(10px,1.2vw);top:50%;transform:translateY(-50%);z-index:55;min-width:min(38vw,420px);max-height:90%;overflow:hidden;padding:.4em .7em .5em;border-radius:12px;
+  background:rgba(255,253,248,.95);box-shadow:0 0 0 3px #1f1a17,4px 4px 0 3px rgba(31,26,23,.25);font-family:"M PLUS Rounded 1c","Hiragino Maru Gothic ProN",sans-serif;color:#1f1a17;font-size:max(16px,3.2vw)}
+.rfx-order.fixed{position:fixed}
+.rfx-order-h{display:block;font-weight:900;font-size:.85em;color:#8a5a1a;letter-spacing:.2em;margin-bottom:.15em}
+.rfx-order-ol{list-style:none;margin:0;padding:0;display:grid;gap:.12em}
+.rfx-order-li{display:flex;gap:.5em;align-items:baseline;font-weight:900;line-height:1.25}
+.rfx-order-li.new{color:#d9432a}
+.rfx-order-n{flex:none;min-width:2.6em;padding:0 .3em;border-radius:6px;background:#1f1a17;color:#fff;text-align:center;font-size:.8em}
+.rfx-order.full .rfx-order-h::after{content:"　決まり！";color:#d9432a}
+
+/* 祝い（名前の当選）: 光は後ろ、札と紙吹雪は前。点滅はこの1回だけ */
+.rfx-party{position:absolute;inset:0;pointer-events:none;z-index:50;overflow:hidden}
+.rfx-party.fixed{position:fixed}
+.rfx-party-bg{position:absolute;inset:0;pointer-events:none;z-index:-1;overflow:hidden}
+.rfx-party-bg.fixed{position:fixed}
+.rfx-party-glow{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 45%,rgba(255,244,196,.92) 0%,rgba(255,206,90,.7) 45%,rgba(255,170,40,.45) 80%,rgba(255,150,30,.3) 100%);opacity:0}
+.rfx-party-flash{position:absolute;inset:0;background:#fffbe8;opacity:0;pointer-events:none}
+.rfx-party-rays{position:absolute;left:50%;top:45%;width:160vmax;height:160vmax;transform:translate(-50%,-50%);opacity:0;
+  background:repeating-conic-gradient(from 0deg,rgba(255,206,70,.8) 0deg 6deg,rgba(255,246,214,.55) 6deg 9deg,rgba(255,246,214,0) 9deg 22.5deg);-webkit-mask:radial-gradient(circle,transparent 4%,#000 12%,#000 38%,transparent 62%);mask:radial-gradient(circle,transparent 4%,#000 12%,#000 38%,transparent 62%)}
+.rfx-conf{position:absolute;top:0;width:var(--c);aspect-ratio:1;background:#ffcf3a;border-radius:2px}
+.rfx-conf[data-k="kin"]{background:url(/img/fx/fx-kin-flake.webp) center/contain no-repeat}
+.rfx-conf[data-k="momiji"]{background:url(/kit/img/d4-momiji.webp) center/contain no-repeat;width:calc(var(--c) * 1.5)}
+.rfx-conf[data-k="red"]{background:#e2483a;aspect-ratio:.55}
+.rfx-conf[data-k="orange"]{background:#f39a1e;aspect-ratio:.55}
+.rfx-conf[data-k="cream"]{background:#fff3d6;aspect-ratio:.55;box-shadow:0 0 0 1px rgba(31,26,23,.2)}
+
+/* 操作画面: 使い方の切り替え・盛り上げボタン・回すボタンの状態 */
+.rfx-modes{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:0 0 8px}
+.rfx-modes button{min-height:44px;padding:0 14px;border:2px solid #1f1a17;border-radius:8px;background:#fff;font:inherit;font-weight:700;font-size:15px;cursor:pointer}
+.rfx-modes button[data-mode][aria-pressed="true"]{background:#1f1a17;color:#fff}
+.rfx-modes .rfx-hype{min-height:44px;margin:0;padding:0 14px;border:2px dashed #d9432a;border-radius:8px;background:#fff;color:#c93b23;font:inherit;font-weight:700;font-size:15px;cursor:pointer}
+.rfx-modes .rfx-hype[aria-pressed="true"]{border-style:solid;background:#d9432a;color:#fff}
+.rfx-mode-note{margin:4px 0 0;font-size:14px;color:#5c534b;text-align:center}
+.spin.rfx-skip{background:#fff;color:#1f1a17}
+.spin.rfx-go{background:#ffd24a;color:#1f1a17}
+.result .r-txt.star{color:#b3261e}
+@media (prefers-reduced-motion:reduce){.rfx-party-rays,.rfx-conf{display:none}}
+/* 配信モードでは使い方の一言を畳む（映さない・1画面に収める） */
+html.stream .rfx-mode-note{display:none}
+@media (max-height:620px){html.stream .col-wheel .keys{display:none}html.stream .rfx-modes{margin:0 0 2px;gap:4px}html.stream .col-wheel [data-stream-sw]{margin-top:0}}
+/* 配信モード: 使い方の切り替えは細く（盤を大きく） */
+html.stream .rfx-modes{margin:0 0 4px;gap:4px}
+html.stream .rfx-modes button{min-height:36px;padding:0 10px;font-size:14px}
