@@ -910,6 +910,13 @@
       };
       // from → to（度）を ms かけて回す。速さの形は表（K.wheel.ease）なので、同じ from・to・ms なら別の窓でも同じ所に止まる
       // so: onTick(番号)＝針がマスの境目を越えたとき・onFrame(t, 経過ms)・ease(t)。止まると done(番号)
+      // 針がマスの境目でぴくっと動く。クラスの付け直し（void offsetWidth）はページ全体の配置の計算をやり直させ、
+      // スマホ（特にデスクトップ表示・配信モード）で回転がガタつくので、Web Animations で針の絵だけを動かす（2026-10-22）
+      var pinAnim = null;
+      function tickPin() {
+        var g = pin.firstElementChild; if (!g || reduce) return;
+        if (g.animate) { if (pinAnim) pinAnim.cancel(); pinAnim = g.animate([{ transform: 'none' }, { transform: 'rotate(-14deg)', offset: 0.4 }, { transform: 'none' }], { duration: 160, easing: 'ease-out' }); }
+      }
       W.spin = function (from, to, ms, done, so) {
         so = so || {}; if (raf) cancelAnimationFrame(raf);
         var ez = so.ease || wEase, t0 = null, lastSeg = W.at(from);
@@ -924,7 +931,7 @@
           W.angle = from + (to - from) * ez(t); rot(W.angle);
           call(so.onFrame, t, ts - t0);
           var sg = W.at(W.angle);
-          if (sg !== lastSeg) { lastSeg = sg; pin.classList.remove('k-wheel-tick'); void pin.offsetWidth; pin.classList.add('k-wheel-tick'); call(so.onTick || W.onTick, sg); }
+          if (sg !== lastSeg) { lastSeg = sg; tickPin(); call(so.onTick || W.onTick, sg); }
           if (t < 1) raf = requestAnimationFrame(frame); else end();
         }
         raf = requestAnimationFrame(frame);
