@@ -45,10 +45,10 @@
   function ui() {
     [].forEach.call(document.querySelectorAll('[data-stream-sw]'), function (box) {
       box.className += ' stream-sw-box';
-      box.innerHTML = '<label class="stream-sw"><input type="checkbox"> 配信モード<span>（広告なし・大きく表示）</span></label>'
+      box.innerHTML = '<label class="stream-sw"><input type="checkbox"> 配信モード<span>（大きく表示）</span></label>'
         // 2026-10-21 ふつうと配信モードの見比べ（2行だけ。配信モード中＝遊ぶ画面では出さない）
-        + '<dl class="stream-cmp"><div><dt>ふつう</dt><dd>この画面をみんなで見る／広告あり</dd></div>'
-        + '<div><dt>配信モード</dt><dd>OBSに映す／広告なし／説明を畳む</dd></div></dl>';
+        + '<dl class="stream-cmp"><div><dt>ふつう</dt><dd>この画面をみんなで見る</dd></div>'
+        + '<div><dt>配信モード</dt><dd>OBSに映す／説明を畳む</dd></div></dl>';
       var c = box.querySelector('input'); c.checked = on;
       c.addEventListener('change', function () { set(c.checked); });
     });
@@ -61,7 +61,7 @@
       viewRow(bar);
       if (bar) {
         var b = document.createElement('button');
-        b.type = 'button'; b.className = 'stream-off'; b.textContent = '配信モード中（広告なし）・終える';
+        b.type = 'button'; b.className = 'stream-off'; b.textContent = '配信モード中・終える';
         b.addEventListener('click', function () { set(false); });
         bar.appendChild(b);
       }
