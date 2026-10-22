@@ -737,7 +737,15 @@
       return h;
     }
 
-    K.fx = { slash: slash, shuriken: shuriken, clear: clear, ms: ms, speed: k, reduce: !!reduce };
+    // 刀・手裏剣の絵は、最初に使う瞬間に読み込み・展開すると止まる直前にカクつく（2026-10-22 ルーレット）。手が空いたときに先に読んでおく
+    function warm() {
+      if (reduce || warm.done) return; warm.done = true;
+      var sc = [].slice.call(document.scripts).filter(function (x) { return /\/kit\/kit\.js(\?|$)/.test(x.src); })[0];
+      var base = sc ? sc.src.replace(/kit\.js(\?.*)?$/, '') : '/kit/';
+      ['fx-shuriken.webp', 'fx-katana.webp'].forEach(function (f) { var im = new Image(); im.decoding = 'async'; im.src = base + 'img/' + f; if (im.decode) im.decode().catch(function () {}); });
+    }
+    (window.requestIdleCallback || function (f) { setTimeout(f, 1200); })(warm);
+    K.fx = { slash: slash, shuriken: shuriken, clear: clear, ms: ms, speed: k, reduce: !!reduce, warm: warm };
   }
 
   /* ===== 遊びの部品（2026-10-22 第3波）: サイコロ・ルーレット盤・ゲートの絵 =====
