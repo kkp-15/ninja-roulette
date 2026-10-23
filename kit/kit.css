@@ -519,14 +519,14 @@ body.k-view{margin:0;height:100vh;overflow:hidden;background:var(--k-kinari) url
 [data-k-bg="white"] body.k-view{background:#fff}
 [data-k-bg="black"] body.k-view{background:#000}
 [data-k-bg="color"] body.k-view{background:var(--k-view-bg,#fbf3e4)}
-.k-view-stage{--k-v-min:max(42px,2.3cqw);--k-v-s:max(46px,2.8cqw);--k-v-m:max(54px,3.6cqw);--k-v-l:max(62px,4.6cqw);--k-v-xl:max(76px,6.4cqw);--k-v-credit:max(24px,1.8cqw);--k-v-pad:max(16px,2.4cqw);
+.k-view-stage{--k-v-min:max(42px,2.3cqw);--k-v-s:max(46px,2.8cqw);--k-v-m:max(54px,3.6cqw);--k-v-l:max(62px,4.6cqw);--k-v-xl:max(76px,6.4cqw);--k-v-credit:var(--k-v-min);--k-v-pad:max(16px,2.4cqw);
   position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(100vw,177.78vh);height:min(56.25vw,100vh);container-type:size;overflow:hidden;display:flex;flex-direction:column;box-sizing:border-box}
 .k-view-top{flex:none;display:flex;align-items:center;gap:var(--k-v-pad);box-sizing:border-box;padding:calc(var(--k-v-pad)*.4) var(--k-v-pad);border-bottom:max(3px,.25cqw) solid var(--k-sumi);font-family:var(--k-head);font-weight:800;font-size:var(--k-v-min);line-height:1.2;min-width:0}
 .k-view-top>*{min-width:0}
 .k-view-body{position:relative;flex:1 1 auto;min-height:0;box-sizing:border-box;padding:calc(var(--k-v-pad)*.4) var(--k-v-pad);display:flex;flex-direction:column}
-.k-view-credit{flex:none;box-sizing:border-box;height:calc(var(--k-v-credit)*1.6);padding:0 var(--k-v-pad);display:flex;align-items:center;justify-content:flex-end;font-family:var(--k-body);font-size:var(--k-v-credit);font-weight:700;line-height:1;color:var(--k-text-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.k-view-credit{flex:none;box-sizing:border-box;height:calc(var(--k-v-credit)*1.4);padding:0 var(--k-v-pad);display:flex;align-items:center;justify-content:flex-end;font-family:var(--k-body);font-size:var(--k-v-credit);font-weight:700;line-height:1;color:var(--k-text-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 /* 待ち画面: 題字・まもなく始まります・1行・薄い地（配信者向けの説明は出さない） */
-.k-view-idle{position:absolute;left:0;right:0;top:0;bottom:calc(var(--k-v-credit)*1.6);z-index:20;display:flex;flex-direction:column;justify-content:center;gap:calc(var(--k-v-pad)*.6);box-sizing:border-box;padding:0 calc(var(--k-v-pad)*2.4);background:var(--k-kinari) url(img/d4-washi.webp) 0 0/420px auto}
+.k-view-idle{position:absolute;left:0;right:0;top:0;bottom:calc(var(--k-v-credit)*1.4);z-index:20;display:flex;flex-direction:column;justify-content:center;gap:calc(var(--k-v-pad)*.6);box-sizing:border-box;padding:0 calc(var(--k-v-pad)*2.4);background:var(--k-kinari) url(img/d4-washi.webp) 0 0/420px auto}
 .k-view-idle::before{content:"";position:absolute;right:-4cqw;top:50%;width:46cqh;height:46cqh;transform:translateY(-50%);background:url(img/d4-mon.webp) center/contain no-repeat;opacity:.06;pointer-events:none}
 .k-view-idle>b,.k-view-idle-t{display:block;font-family:var(--k-head);font-weight:800;font-size:var(--k-v-xl);line-height:1.2;letter-spacing:.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .k-view-idle>p{margin:0;font-family:var(--k-bold);font-size:var(--k-v-l);line-height:1.25;color:var(--k-shu)}
@@ -539,14 +539,14 @@ body.k-view{margin:0;height:100vh;overflow:hidden;background:var(--k-kinari) url
 [data-k-bg]:not([data-k-bg="cream"]) .k-view-body,
 [data-k-bg]:not([data-k-bg="cream"]) .k-view-credit{background:var(--k-kinari) url(img/d4-washi.webp) 0 0/420px auto;border:max(3px,.25cqw) solid var(--k-sumi);border-radius:max(6px,.6cqw)}
 [data-k-bg]:not([data-k-bg="cream"]) .k-view-credit{align-self:flex-end}
-[data-k-bg]:not([data-k-bg="cream"]) .k-view-idle{inset:max(8px,1cqw) max(8px,1cqw) calc(var(--k-v-credit)*1.6 + max(14px,1.8cqw));border:max(3px,.25cqw) solid var(--k-sumi);border-radius:max(6px,.6cqw)}
+[data-k-bg]:not([data-k-bg="cream"]) .k-view-idle{inset:max(8px,1cqw) max(8px,1cqw) calc(var(--k-v-credit)*1.4 + max(14px,1.8cqw));border:max(3px,.25cqw) solid var(--k-sumi);border-radius:max(6px,.6cqw)}
 /* 黒の背景では面の外の墨の線が見えないので、生成りの細い線を足す */
 [data-k-bg="black"] .k-view-top,[data-k-bg="black"] .k-view-body,[data-k-bg="black"] .k-view-credit,[data-k-bg="black"] .k-view-idle{box-shadow:0 0 0 2px var(--k-kinari)}
 
 /* 縦型（9:16）: ?layout=v で KKit.view が body.vert と <html data-k-layout="v"> を付ける。
    字は窓の幅の比（--k-v-min＝幅の 3.9%・最低 14px）。1080x1920 で 42px＝1/3 で 14px、405x720 の別窓で約 16px（2026-10-22 第5波: 42px 固定の下限をやめた） */
 :is(body.k-view.vert,[data-k-layout="v"] body.k-view) .k-view-stage{width:min(100vw,56.25vh);height:min(177.78vw,100vh);
-  --k-v-min:max(14px,3.9cqw);--k-v-s:max(15px,4.4cqw);--k-v-m:max(18px,5.2cqw);--k-v-l:max(21px,6.4cqw);--k-v-xl:max(25px,8.4cqw);--k-v-credit:max(10px,3cqw);--k-v-pad:max(8px,3.4cqw)}
+  --k-v-min:max(14px,3.9cqw);--k-v-s:max(15px,4.4cqw);--k-v-m:max(18px,5.2cqw);--k-v-l:max(21px,6.4cqw);--k-v-xl:max(25px,8.4cqw);--k-v-credit:var(--k-v-min);--k-v-pad:max(8px,3.4cqw)}
 :is(body.k-view.vert,[data-k-layout="v"] body.k-view) .k-view-top{flex-wrap:wrap}
 :is(body.k-view.vert,[data-k-layout="v"] body.k-view) .k-view-idle{padding:0 calc(var(--k-v-pad)*1.4)}
 :is(body.k-view.vert,[data-k-layout="v"] body.k-view) :is(.k-view-idle>b,.k-view-idle-t){white-space:normal}
