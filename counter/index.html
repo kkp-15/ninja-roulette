@@ -35,7 +35,7 @@
       {"@type":"Question","name":"配信画面にはどうやって映しますか","acceptedAnswer":{"@type":"Answer","text":"「表示ページを開く」で開いたウィンドウを、OBSの「ウィンドウキャプチャ」で取り込みます。背景は緑なので、OBSでそのソースにフィルタ「クロマキー」をかけると数だけが重なります。操作画面と同じブラウザで開いてください。"}},
       {"@type":"Question","name":"コラボ相手など、複数人を別々に数えられますか","acceptedAnswer":{"@type":"Answer","text":"数えられます。設定の「項目」を1〜9個まで足し、人の名前を入れます。数字キーの 1〜9 がそれぞれの項目の＋1です。"}},
       {"@type":"Question","name":"キーボードで数えられますか","acceptedAnswer":{"@type":"Answer","text":"数字キーの 1〜9 でその項目に＋1、Shift を押しながら数字で −1、Z で直前を戻す、B で罰ゲームを引く、Esc で罰ゲームの表示を消します。名前や縛りを入力している間はキーは効きません（入力欄の外をクリックすると戻ります）。"}},
-      {"@type":"Question","name":"罰ゲームはどこから出ますか","acceptedAnswer":{"@type":"Answer","text":"同じサイトの お題ガチャ の「罰ゲーム」パックから引きます。誰でもその場で安全にできるものだけで、レア度（N・R・SR・SSR）の割合もお題ガチャと同じです。お題ガチャで「今後出さない」にした罰ゲームは出ません。設定の「罰ゲームの中身」を「自分で書く」にすると、書いた罰ゲームから引きます。"}},
+      {"@type":"Question","name":"罰ゲームはどこから出ますか","acceptedAnswer":{"@type":"Answer","text":"同じサイトの お題ガチャ の「罰ゲーム」パックから6つを選んで盤に並べ、手裏剣が刺さったマスが罰ゲームです。6つはどれも同じ確率で当たります（レア度は使いません）。誰でもその場で安全にできるものだけです。お題ガチャで「今後出さない」にした罰ゲームは出ません。設定の「罰ゲームの中身」を「自分で書く」にすると、書いた罰ゲームから引きます。行の頭か最後に「★」を付けた罰ゲームは盤のふちが赤くなり、手裏剣の狙いに近づくと盤のまわりが赤く光ります。"}},
       {"@type":"Question","name":"回数に届いたあとも数えられますか","acceptedAnswer":{"@type":"Answer","text":"数えられます。届いた人の札には「罰」の判子が付きます。罰ゲームが終わったら「0に戻す」でその人だけ0にできます。全員を0にするときは、設定の「全員の回数を0にする」を2回押します。"}},
       {"@type":"Question","name":"縛り以外にも使えますか","acceptedAnswer":{"@type":"Answer","text":"使えます。NGワード、ゲームのデス数、「えー」と言った回数、勝ち負けの数など、人ごとに数えて画面に出したいものなら何でも。縛りの欄に好きな言葉を入れてください。"}},
       {"@type":"Question","name":"配信や動画で使ってもいいですか","acceptedAnswer":{"@type":"Answer","text":"はい。配信・録画・切り抜き・収益化に使えます。許諾の申請はいりません。使うときは、お問い合わせで一言いただけると助かります。ご要望があれば、優先してアップデートします。細かい条件は 配信・動画でのご利用について にまとめています。"}}
@@ -254,6 +254,23 @@ details.c-set.k-fold:last-of-type{border-bottom:var(--k-bw-s) solid var(--k-sumi
 .set-grid .stream-sw span{flex:1 1 100%;padding-left:28px}
 .bz-src{margin:8px 0 0;font-size:14px;line-height:1.55;color:var(--k-text-2)}
 </style>
+<link rel="stylesheet" href="/rfx.css?v=20261023b">
+<style>
+/* 2026-10-23 試作: 罰ゲームを引く演出（rfx.js・ルーレットの「罰ゲーム」と同じ見せ方）。数える札の上に重ねて出す（zoom の外＝画面に固定） */
+.cz-spin{position:fixed;z-index:40;background:rgba(255,250,240,.95);border:3px solid var(--k-sumi);border-radius:12px;box-shadow:6px 6px 0 rgba(31,26,23,.25);overflow:hidden;font-size:16px;line-height:1.3}
+.cz-spin[hidden]{display:none}
+#czHost{position:absolute}
+.cz-spin .rfx-batsu{font-size:max(15px,calc(var(--czu) * 3.2))}
+.cz-spin .rfx-nen-t{font-size:max(18px,calc(var(--czu) * 4))}
+.cz-spin .rfx-nen-s{font-size:max(14px,calc(var(--czu) * 2.1))}
+.bz-row{display:flex;gap:8px;align-items:stretch}
+.bz-row .bz-draw{flex:1;min-width:0;width:auto}
+.bz-hype{flex:none;width:6.6em;min-height:44px;padding:0 4px;border:2px dashed #d9432a;border-radius:8px;background:#fff;color:#c93b23;font:inherit;font-weight:700;font-size:max(14px,calc(14.2px / var(--z,1)));line-height:1.25;cursor:pointer}
+.bz-hype[aria-pressed="true"]{border-style:solid;background:#d9432a;color:#fff}
+.c-tool[data-lay="sp"] #bzReach .bz-row{flex:none}
+.c-tool[data-lay="sp"] .bz-hype{width:5.6em;font-size:13px}
+#bzSpinBox .bz-who{margin:0 0 8px}
+</style>
 <link rel="stylesheet" href="/stream.css">
 </head>
 <body class="k-page">
@@ -288,7 +305,12 @@ details.c-set.k-fold:last-of-type{border-bottom:var(--k-bw-s) solid var(--k-sumi
         <div id="bzIdle"><p class="bz-idle">目標回数に届くと、ここで罰ゲームを引けます。</p></div>
         <div id="bzReach" hidden>
           <p class="bz-who"><b id="bzWho"></b> が <span id="bzN"></span>回アウト</p>
-          <button type="button" class="k-btn k-btn-main bz-draw" id="drawBatsu">罰ゲームを引く</button>
+          <div class="bz-row"><button type="button" class="k-btn k-btn-main bz-draw" id="drawBatsu">罰ゲームを引く</button>
+          <button type="button" class="rfx-hype bz-hype" id="bzHype" aria-pressed="false" title="次の1回だけ、止まりかけで止めて「どの罰になる？」と聞きます（3秒で自動で進む）">次の1回を<br>盛り上げる</button></div>
+        </div>
+        <div id="bzSpinBox" hidden>
+          <p class="bz-who"><b id="bzWho3"></b> の罰ゲームを決めています</p>
+          <button type="button" class="k-btn k-btn-main bz-draw" id="bzSkip">飛ばす</button>
         </div>
         <div id="bzShow" hidden>
           <div class="k-result k-result-long bz-res"><small><span id="bzWho2"></span> の罰ゲーム</small><b><span class="rar" id="bzRar"></span><span id="bzTxt"></span></b></div>
@@ -394,7 +416,7 @@ details.c-set.k-fold:last-of-type{border-bottom:var(--k-bw-s) solid var(--k-sumi
 <details><summary>配信画面にはどうやって映しますか</summary><p>「表示ページを開く」で開いたウィンドウを、OBSの「ウィンドウキャプチャ」で取り込みます。背景は緑なので、OBSでそのソースにフィルタ「クロマキー」をかけると数だけが重なります。操作画面と同じブラウザで開いてください。</p></details>
 <details><summary>コラボ相手など、複数人を別々に数えられますか</summary><p>数えられます。設定の「項目」を1〜9個まで足し、人の名前を入れます。数字キーの <kbd>1</kbd>〜<kbd>9</kbd> がそれぞれの項目の＋1です。</p></details>
 <details><summary>キーボードで数えられますか</summary><p>数字キーの <kbd>1</kbd>〜<kbd>9</kbd> でその項目に＋1、<kbd>Shift</kbd> を押しながら数字で −1、<kbd>Z</kbd> で直前を戻す、<kbd>B</kbd> で罰ゲームを引く、<kbd>Esc</kbd> で罰ゲームの表示を消します。名前や縛りを入力している間はキーは効きません（入力欄の外をクリックすると戻ります）。</p></details>
-<details><summary>罰ゲームはどこから出ますか</summary><p>同じサイトの <a href="/odai-gacha/">お題ガチャ</a> の「罰ゲーム」パックから引きます。誰でもその場で安全にできるものだけで、レア度（N・R・SR・SSR）の割合もお題ガチャと同じです。お題ガチャで「今後出さない」にした罰ゲームは出ません。設定の「罰ゲームの中身」を「自分で書く」にすると、書いた罰ゲームから引きます。</p></details>
+<details><summary>罰ゲームはどこから出ますか</summary><p>同じサイトの <a href="/odai-gacha/">お題ガチャ</a> の「罰ゲーム」パックから6つを選んで盤に並べ、手裏剣が刺さったマスが罰ゲームです。6つはどれも同じ確率で当たります（レア度は使いません）。誰でもその場で安全にできるものだけです。お題ガチャで「今後出さない」にした罰ゲームは出ません。設定の「罰ゲームの中身」を「自分で書く」にすると、書いた罰ゲームから引きます。行の頭か最後に「★」を付けた罰ゲームは盤のふちが赤くなり、手裏剣の狙いに近づくと盤のまわりが赤く光ります。</p></details>
 <details><summary>回数に届いたあとも数えられますか</summary><p>数えられます。届いた人の札には「罰」の判子が付きます。罰ゲームが終わったら「0に戻す」でその人だけ0にできます。全員を0にするときは、設定の「全員の回数を0にする」を2回押します。</p></details>
 <details><summary>縛り以外にも使えますか</summary><p>使えます。NGワード、ゲームのデス数、「えー」と言った回数、勝ち負けの数など、人ごとに数えて画面に出したいものなら何でも。縛りの欄に好きな言葉を入れてください。</p></details>
 <details><summary>配信や動画で使ってもいいですか</summary><p>はい。配信・録画・切り抜き・収益化に使えます。許諾の申請はいりません。使うときは、<a href="https://kkpwebninja.com/otoiawase" target="_blank" rel="noopener">お問い合わせ</a>で一言いただけると助かります。ご要望があれば、優先してアップデートします。細かい条件は <a href="https://kkpwebninja.com/guidelines" target="_blank" rel="noopener">配信・動画でのご利用について</a> にまとめています。</p></details>
@@ -418,8 +440,11 @@ details.c-set.k-fold:last-of-type{border-bottom:var(--k-bw-s) solid var(--k-sumi
   <div class="uf-c">© 2025-2026 web忍者の砦</div>
 </footer>
 <script>kkpLoadAds();</script>
-<script src="/gacha.js"></script>
+<div class="cz-spin rfx-legendmode" id="czSpin" hidden aria-hidden="true"><div id="czAnc" style="position:absolute;pointer-events:none"></div><div id="czMid" style="position:absolute;pointer-events:none"></div><div class="cz-host" id="czHost"><div id="czWheel"></div></div></div>
+<script src="/gacha.js?v=20261023b"></script>
 <script src="/odai-gacha/packs.js"></script>
+<script src="/wheel.js?v=20261023b"></script>
+<script src="/rfx.js?v=20261023b"></script>
 <script>
 (function () {
   'use strict';
@@ -589,36 +614,118 @@ details.c-set.k-fold:last-of-type{border-bottom:var(--k-bw-s) solid var(--k-sumi
   var seen = load(LS.seen, []); if (!Array.isArray(seen)) seen = [];
   function myList() { return S.myBatsu.split(/\r?\n/).map(function (s) { return s.trim().slice(0, 80); }).filter(Boolean); }
   var lastMy = '';
+  /* ---- 罰ゲームを引く演出（2026-10-23 試作・rfx.js・ルーレットの「罰ゲーム」と同じ見せ方） ----
+     候補6つ（お題ガチャの罰ゲームパックのまだ出ていないものから・自分で書いたものから）を盤に並べ、手裏剣が刺さったマスが罰ゲーム。どのマスも同じ確率。
+     2026-10-23 ユーザー判断: 罰ゲームにレア度は使わない。赤くするのは配信者が自分で「★」を付けた罰だけ（ルーレットの「罰ゲーム」と同じ意味）。
+     ★のマスは盤のふちが赤く、狙いに近づくと盤のまわりが赤くなる（「やめて」）。★のすぐ手前で止まる「セーフ」はある。
+     判子「罰ゲーム決定！」まで約3.4秒（D 2900・まさかの1マスはなし）。重い罰でも判子を大きくしない・揺らさない（calm）。札は「○○ の罰ゲーム」だけ（からかう言葉は足さない）。
+     段取り（plan）を表示ページへ送る＝表示ページも同じ結果・同じ見せ方。結果（S.show）は回し始めに送る＝前の版の表示ページにも同じ結果が出る */
+  var RF = window.KkpRfx, KW = window.KkpWheel;
+  var czWheel = RF && KW ? KW.make($('czWheel'), { minPx: 12 }) : null;
+  var bctl = null, bHype = false, czT = 0;
+  function spinning() { return !!(bctl && bctl.playing()); }
+  function shuffle(c) { for (var a = c.length - 1; a > 0; a--) { var b = Math.floor(Math.random() * (a + 1)), t = c[a]; c[a] = c[b]; c[b] = t; } return c; }
+  function candidates() {
+    if (S.bz === 'my' && myList().length) {
+      var L = myList(), c = L.length > 1 ? L.filter(function (t) { return t !== lastMy; }) : L.slice();
+      return shuffle(c).slice(0, 6).map(function (t) { return { raw: t, text: t.replace(/^\s*[★☆]\s*|\s*[★☆]\s*$/g, '') || t, star: !!(RF && RF.isStar(t)) }; });
+    }
+    if (!pool.length) return [];
+    // まだ出ていないものから6つ（足りなければ出たものも混ぜる）。レア度は見ない
+    var fresh = shuffle(pool.filter(function (it) { return seen.indexOf(it.id) < 0; })), out = fresh.slice(0, 6);
+    if (out.length < 6) out = out.concat(shuffle(pool.filter(function (it) { return out.indexOf(it) < 0; })).slice(0, 6 - out.length));
+    return out.map(function (it) { return { id: it.id, text: it.text, star: !!(RF && RF.isStar(it.text)) }; });
+  }
+  function commit(w) {
+    if (w.id) {
+      if (!pool.some(function (it) { return it.id !== w.id && seen.indexOf(it.id) < 0; })) seen = [];   // 全部出たら最初に戻す
+      seen.push(w.id); store(LS.seen, seen);
+    } else lastMy = w.raw;
+  }
+  // 数える札の上に重ねる（PC は数える札の範囲・スマホは画面の上から罰ゲームの帯の上まで）。盛り上げのときは盤を左に寄せ、右に待ちの札
+  function openSpin(hype) {
+    clearTimeout(czT);
+    var box = $('czSpin'), lay = tool.dataset.lay, r;
+    if (lay === 'sp') { var zr = $('cz').getBoundingClientRect(); r = { left: 8, top: 8, right: window.innerWidth - 8, bottom: Math.min(window.innerHeight, zr.top) - 8 }; }
+    else { var lr = tool.querySelector('.c-live').getBoundingClientRect(); r = { left: lr.left, top: Math.max(8, lr.top), right: lr.right, bottom: Math.min(window.innerHeight - 8, lr.bottom) }; }
+    var w = Math.max(240, r.right - r.left), h = Math.max(240, r.bottom - r.top);
+    box.style.left = r.left + 'px'; box.style.top = r.top + 'px'; box.style.width = w + 'px'; box.style.height = h + 'px';
+    box.style.setProperty('--czu', (Math.min(w, h * 1.6) / 100) + 'px');
+    try { box.getAnimations().forEach(function (a) { a.cancel(); }); } catch (e) {}   // 消える途中なら止める（onfinish を呼ばない）
+    box.hidden = false;
+    czWheel.resize(Math.min(w, h) * 0.8);   // 仮の大きさ（項目を入れてから sideLayout で決める）
+  }
+  // 盤（左）＋凡例（右・番号と中身。盤の字は短く切れるので出さない）＋盛り上げの待ちの札（凡例の下）。スマホは縦に並べる
+  var czLg = null;
+  function czLayout(items, hype) {
+    var box = $('czSpin'), w = parseFloat(box.style.width), h = parseFloat(box.style.height);
+    if (czLg) czLg.el.remove();
+    czLg = RF.legend(box, items);
+    RF.sideLayout({ rect: { x: 0, y: 0, w: w, h: h }, host: $('czHost'), R: czWheel, legend: czLg, anchor: $('czAnc'), mid: $('czMid'), font: tool.dataset.lay === 'sp' ? 14 : 16, hype: hype });
+  }
+  // 結果が出て横の列が伸びると、数える札も伸びる。重ねた面の下だけ伸ばす（盤は動かさない）
+  function czGrow() {
+    var box = $('czSpin'); if (box.hidden || tool.dataset.lay === 'sp') return;
+    var lr = tool.querySelector('.c-live').getBoundingClientRect(), top = parseFloat(box.style.top) || 0;
+    box.style.height = Math.max(parseFloat(box.style.height) || 0, Math.min(window.innerHeight - 8, lr.bottom) - top) + 'px';
+  }
+  function closeSpin(now) {
+    clearTimeout(czT);
+    var box = $('czSpin');
+    var end = function () { box.hidden = true; try { box.getAnimations().forEach(function (a) { a.cancel(); }); } catch (e) {} if (bctl) { bctl.destroy(); bctl = null; } renderBatsu(); };
+    if (now || reduce) { end(); return; }
+    try { box.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 300, fill: 'forwards' }).onfinish = function () { end(); }; } catch (e) { end(); }
+  }
   function drawBatsu(i) {
     takeResume();
-    var text = '', r = '';
-    if (S.bz === 'my' && myList().length) {
-      var L = myList(), c = L.filter(function (t) { return t !== lastMy; }); if (!c.length) c = L;
-      text = c[Math.floor(Math.random() * c.length)]; lastMy = text;
-    } else {
-      if (!G || !pool.length) return;
-      var dd = G.draw(pool, seen); if (!dd) return;
-      if (dd.resetR) seen = G.clearRarity(pool, seen, dd.resetR);
-      seen.push(dd.item.id); store(LS.seen, seen);
-      text = dd.item.text; r = dd.item.r;
+    if (spinning()) return;
+    var cands = candidates(); if (!cands.length) return;
+    var p = null;
+    if (czWheel && cands.length >= 2) {
+      if (bctl) { bctl.destroy(); bctl = null; }
+      openSpin(bHype && !reduce);
+      czWheel.setItems(cands.map(function (c) { return { label: (c.star ? '★' : '') + c.text, weight: 1 }; }));
+      czLayout(czWheel.items, bHype && !reduce);
+      p = RF.plan(czWheel.W, { mode: 'batsu', speed: 'normal', hype: bHype, D: 2900, noFake: true, calm: true });
     }
-    S.show = { i: i, text: text, r: r, id: Date.now() };
+    var w = p ? cands[p.win] : cands[Math.floor(Math.random() * cands.length)];
+    commit(w);
+    S.show = { i: i, text: w.text, r: '', id: p ? p.id : Date.now() };   // レア度は出さない
     S.reach = -1;
-    snd('draw'); kkpEvent('counter_batsu', { mode: 'draw', rarity: r || 'my' });
-    renderBatsu(); send({ k: 'batsu', i: i });
+    kkpEvent('counter_batsu', { mode: 'draw', src: S.bz, star: w.star ? 1 : 0, hype: p && p.hype ? 1 : 0 });
+    bHype = false; $('bzHype').setAttribute('aria-pressed', 'false');
+    if (!p) { snd('draw'); renderBatsu(); send({ k: 'batsu', i: i }); return; }
+    send({ k: 'spin', i: i, plan: p, items: czWheel.items.map(function (it) { return { label: it.label, weight: 1 }; }) });
+    bctl = RF.play({ wheel: czWheel, host: $('czHost'), party: $('czSpin'), kusuAt: $('czMid'), yamaAt: p.hype ? $('czAnc') : null,
+      sound: !!S.sound, who: nm(i),
+      onYama: function () { renderBatsu(); },
+      onAutoGo: function () { send({ k: 'rgo', id: p.id }); },   // 押さなければ3秒で自動で進む（表示ページにも知らせる）
+      onResult: function (idx) { if (czLg) czLg.mark(idx); renderBatsu(); czT = setTimeout(function () { closeSpin(); }, 1800); } }, p);
+    renderBatsu();
   }
+  function skipSpin() {
+    if (!spinning()) return;
+    var id = S.show ? S.show.id : 0;
+    if (bctl.waiting()) { bctl.go(); send({ k: 'rgo', id: id }); }
+    else { bctl.skip(); send({ k: 'rskip', id: id }); }
+    renderBatsu();
+  }
+  $('bzSkip').onclick = skipSpin;
+  $('bzHype').onclick = function () { bHype = !bHype; this.setAttribute('aria-pressed', bHype ? 'true' : 'false'); };
   $('drawBatsu').onclick = function () { if (S.reach >= 0) drawBatsu(S.reach); };
-  $('redraw').onclick = function () { if (S.show) drawBatsu(S.show.i); };
+  $('redraw').onclick = function () { if (S.show && !spinning()) drawBatsu(S.show.i); };
   $('hideShow').onclick = hideShow;
-  function hideShow() { if (!S.show && S.reach < 0) return; S.show = null; S.reach = -1; renderBatsu(); send({ k: 'hide' }); }
+  function hideShow() { if (bctl) closeSpin(true); if (!S.show && S.reach < 0) return; S.show = null; S.reach = -1; renderBatsu(); send({ k: 'hide' }); }
   $('zeroOne').onclick = function () {
-    var i = S.show ? S.show.i : -1; if (i < 0) return;
+    var i = S.show ? S.show.i : -1; if (i < 0 || spinning()) return;
     var prev = S.counts[i]; if (prev > 0) { S.counts[i] = 0; hist.push({ i: i, d: -prev }); }
     S.show = null; S.reach = -1; renderNums(); renderBatsu(); send({ k: 'hide' });
   };
   function renderBatsu() {
-    var r = S.reach >= 0 && S.reach < S.n, s = S.show && S.show.i < S.n ? S.show : null;
-    $('bzIdle').hidden = r || !!s; $('bzReach').hidden = !r; $('bzShow').hidden = !s || r;
+    var r = S.reach >= 0 && S.reach < S.n, s = S.show && S.show.i < S.n ? S.show : null, sp = spinning();
+    $('bzIdle').hidden = r || !!s; $('bzReach').hidden = !r || sp; $('bzShow').hidden = !s || r || sp; $('bzSpinBox').hidden = !sp;
+    czGrow();
+    if (sp) { $('bzWho3').textContent = s ? nm(s.i) : ''; $('bzSkip').textContent = bctl.waiting() ? '進む' : '飛ばす'; $('bzSkip').classList.toggle('rfx-go', bctl.waiting()); }
     $('cz').classList.toggle('on', r || !!s);
     if (r) { $('bzWho').textContent = nm(S.reach); $('bzN').textContent = S.counts[S.reach]; }
     if (s) {
@@ -635,8 +742,8 @@ details.c-set.k-fold:last-of-type{border-bottom:var(--k-bw-s) solid var(--k-sumi
     myIn.hidden = S.bz !== 'my';
     var n = myList().length;
     $('bzSrc').textContent = S.bz === 'my'
-      ? (n ? '書いた ' + n + '個から引きます（同じものが2回続けては出ません）。' : '1行に1つ書いてください。書くまでは、お題ガチャの罰ゲームから引きます。')
-      : 'お題ガチャの「罰ゲーム」' + pool.length + '個から引きます（レア度の割合も同じ。誰でもその場で安全にできるものだけ）。';
+      ? (n ? '書いた ' + n + '個' + (n > 6 ? 'から6つ' : '') + 'を盤に並べます（どれも同じ確率。頭か最後に★を付けると赤いマス）。' : '1行に1つ書いてください。書くまでは、お題ガチャの罰ゲームから引きます。')
+      : 'お題ガチャの「罰ゲーム」' + pool.length + '個から6つを盤に並べます（どれも同じ確率・誰でもその場で安全にできるものだけ）。';
   }
   [].forEach.call(bzTabs.children, function (b) { b.onclick = function () { S.bz = b.dataset.v; renderBz(); store(LS.set, S); if (S.bz === 'my') myIn.focus(); }; });
   var myT = 0;
@@ -647,6 +754,7 @@ details.c-set.k-fold:last-of-type{border-bottom:var(--k-bw-s) solid var(--k-sumi
   $('undo').onclick = undo;
   // 全員0は2回押し（kit の KKit.twice。1回目で「もう一度押すと全員0に」・3秒で戻る）
   KKit.twice('#reset', { text: 'もう一度押すと全員0に', ok: function () {
+    if (bctl) closeSpin(true);
     for (var j = 0; j < MAX; j++) S.counts[j] = 0;
     hist = []; S.reach = -1; S.show = null;
     renderNums(); renderBatsu(); send({ k: 'hide' });
@@ -679,7 +787,8 @@ details.c-set.k-fold:last-of-type{border-bottom:var(--k-bw-s) solid var(--k-sumi
     var m = /^(Digit|Numpad)([1-9])$/.exec(e.code || '');
     if (m) { e.preventDefault(); add(parseInt(m[2], 10) - 1, e.shiftKey ? -1 : 1, 'key'); return; }
     if (e.code === 'KeyZ') { e.preventDefault(); undo(); }
-    else if (e.code === 'KeyB') { e.preventDefault(); if (S.reach >= 0) drawBatsu(S.reach); else if (S.show) drawBatsu(S.show.i); }
+    else if (e.code === 'KeyB') { e.preventDefault(); if (spinning()) skipSpin(); else if (S.reach >= 0) drawBatsu(S.reach); else if (S.show) drawBatsu(S.show.i); }
+    else if (e.code === 'Space' && spinning() && !(t && t.tagName === 'BUTTON')) { e.preventDefault(); skipSpin(); }
     else if (e.key === 'Escape') hideShow();
   });
 

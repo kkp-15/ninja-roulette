@@ -14,6 +14,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Yuji+Syuku&family=RocknRoll+One&display=swap&text=.%2F0123456789BNORSabceijklmnoprtuw%E3%80%81%E3%81%8C%E3%81%8F%E3%81%93%E3%81%98%E3%81%99%E3%81%A7%E3%81%A8%E3%81%AA%E3%81%AB%E3%81%BE%E3%82%82%E3%82%8A%E3%82%92%E3%82%A2%E3%82%A6%E3%82%AB%E3%82%B2%E3%82%B6%E3%82%B8%E3%82%BF%E3%83%88%E3%83%96%E3%83%9A%E3%83%A0%E3%83%A9%E3%83%B3%E3%83%BC%E4%BD%9C%E4%BF%A1%E5%87%BA%E5%90%8C%E5%9B%9E%E5%A7%8B%E6%93%8D%E6%95%B0%E7%94%BB%E7%9B%AE%E7%A4%BA%E7%B8%9B%E7%BD%B0%E8%A1%A8%E9%85%8D%E9%96%8B%E9%9D%A2%EF%BC%88%EF%BC%89" rel="stylesheet">
 <!-- k-fonts:end -->
 <link rel="stylesheet" href="/kit/kit.css?v=d2e3ac7">
+<link rel="stylesheet" href="/rfx.css?v=20261023b">
 <script src="/kit/kit.js?v=d2e3ac7"></script>
 <script src="/ga.js"></script>
 <style>
@@ -113,6 +114,12 @@ body.k-view{font-family:"M PLUS Rounded 1c","Hiragino Maru Gothic ProN","Hiragin
 .bump{animation:bump .45s cubic-bezier(.3,1.4,.5,1)}
 .fadeout{transition:opacity .4s;opacity:0}
 @media (prefers-reduced-motion:reduce){.bump,.fx-out.show .hk,.fx-out.show .who,.fx-batsu.show .scr{animation:none}}
+/* 2026-10-23 試作: 罰ゲームを引く演出（rfx.js・操作画面から段取り plan が届いたら同じようになぞる）。舞台（1920x1080 を縮めたもの）の外に重ねる＝窓の px で置く */
+.cspin{position:fixed;inset:0;z-index:20;pointer-events:none}
+.cspin[hidden]{display:none}
+#cspinHost{position:absolute}
+#cspinAnc,#cspinMid{position:absolute;pointer-events:none}
+.cspin #cWheel .k-wheel-t text{font-weight:900}
 </style>
 </head>
 <body class="k-view k-view-ov">
@@ -132,8 +139,11 @@ body.k-view{font-family:"M PLUS Rounded 1c","Hiragino Maru Gothic ProN","Hiragin
   </div>
 </div>
 </div>
+<div class="cspin rfx-legendmode" id="cspin" hidden aria-hidden="true"><div id="cspinAnc"></div><div id="cspinMid"></div><div id="cspinHost"><div id="cWheel"></div></div></div>
 <div class="k-view-idle k-ov-idle" hidden><b>配信カウンター</b><p>まもなく始まります</p><small>操作画面（配信カウンター）を同じブラウザで開くと、ここに数が出ます</small></div>
 <div class="k-ov-credit k-top" id="credit">roulette.kkpwebninja.com/counter</div>
+<script src="/wheel.js?v=20261023b"></script>
+<script src="/rfx.js?v=20261023b"></script>
 <script>
 (function () {
   'use strict';
@@ -222,10 +232,57 @@ body.k-view{font-family:"M PLUS Rounded 1c","Hiragino Maru Gothic ProN","Hiragin
     clearTimeout(fx._hT); fx.classList.remove('show', 'fadeout'); void fx.offsetWidth; fx.classList.add('show');
     clearTimeout(batsuT); batsuT = setTimeout(function () { if (!S.show) hideFx(fx); }, 3200);
   }
+  // 罰ゲームを引く演出（rfx.js）: 操作画面の段取り（plan）をなぞる。決まるまでは巻物を出さない（hold）。判子のあと 1.8秒で巻物へ
+  var RF = window.KkpRfx, KW = window.KkpWheel;
+  var cw = RF && KW ? KW.make($('cWheel'), { minPx: 14 }) : null, vctl = null, vid = 0, hold = 0, revT = 0;
+  // 盤（左）＋凡例（右）＋盛り上げの待ちの札（凡例の下）。下の帯なら帯の上の空き・右上に小さくなら表の左の空きに置く
+  var vLg = null;
+  function layoutSpin(items, hype) {
+    var W = window.innerWidth, H = window.innerHeight, fs = Math.max(14, 42 * Math.min(W / 1920, H / 1080));   // 1920x1080 を1/3に縮めても14px相当
+    if (vLg) vLg.el.remove();
+    vLg = RF.legend($('cspin'), items);
+    var o = { host: $('cspinHost'), R: cw, legend: vLg, anchor: $('cspinAnc'), mid: $('cspinMid'), font: fs, hype: hype };
+    if (stage.dataset.place === 'corner') {
+      // 右上の表の下まで横に広く使う（凡例は表より下）。入らない（人数が多く表が長い）ときは表の左の空きだけで
+      var cr = stage.querySelector('.tl-corner').getBoundingClientRect();
+      o.rect = { x: W * 0.02, y: H * 0.05, w: W * 0.96, h: H * 0.9 }; o.lgMinY = cr.bottom + H * 0.02;
+      if (RF.sideLayout(o) > H * 0.96) { o.lgMinY = 0; o.rect = { x: W * 0.02, y: H * 0.05, w: Math.max(W * 0.45, cr.left - W * 0.04), h: H * 0.9 }; RF.sideLayout(o); }
+    } else {
+      var sr = stage.getBoundingClientRect(), br = stage.querySelector('.tl-band').getBoundingClientRect(), top = Math.max(0, sr.top) + H * 0.03;
+      o.rect = { x: W * 0.02, y: top, w: W * 0.96, h: Math.max(H * 0.35, br.top - top - H * 0.03) };
+      RF.sideLayout(o);
+    }
+    cw.minPx(fs);
+  }
+  function unfade(L) { try { L.getAnimations().forEach(function (a) { a.cancel(); }); } catch (e) {} }
+  function stopSpin() { clearTimeout(revT); if (vctl) { vctl.destroy(); vctl = null; } hold = 0; $('cspin').hidden = true; unfade($('cspin')); }
+  function startSpin(f) {
+    var p = f.plan;
+    stopSpin(); hold = p.id; vid = p.id;
+    $('fxBatsu').classList.remove('show', 'drawn'); $('fxOut').classList.remove('show');
+    var L = $('cspin'); L.hidden = false; L.style.opacity = '';
+    cw.resize(Math.min(window.innerWidth, window.innerHeight) * 0.5);
+    cw.setItems(f.items);
+    layoutSpin(cw.items, p.hype);
+    vctl = RF.play({ wheel: cw, host: $('cspinHost'), party: L, kusuAt: $('cspinMid'), yamaAt: p.hype ? $('cspinAnc') : null, sound: false, isView: true, who: nm(f.i),
+      onResult: function (idx) { if (vLg) vLg.mark(idx); if (q.get('kkptest') === '1') (window.__rfxLog = window.__rfxLog || []).push(cw.items[idx] ? cw.items[idx].label : ''); clearTimeout(revT); revT = setTimeout(reveal, 1800); } }, p);
+  }
+  function reveal() {
+    var L = $('cspin'), my = vid;
+    hold = 0;   // 巻物を出してよい（盤は消えながら、巻物が開く）
+    showPersist();
+    var end = function () { if (vid !== my || hold) return; if (vctl) { vctl.destroy(); vctl = null; } L.hidden = true; unfade(L); };
+    if (reduce) { end(); return; }
+    try { L.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 300, fill: 'forwards' }).onfinish = end; } catch (e) { end(); }
+  }
   // 引いた罰ゲームは、操作画面で「表示を消す」まで出したまま
   var shownKey = '';
   function showPersist() {
     var fx = $('fxBatsu'), s = S.show;
+    if (hold > 0) {   // 演出の途中
+      if (s && s.id === hold) { fx.classList.remove('show', 'drawn'); return; }
+      stopSpin();     // 消された・別の罰ゲームに変わった
+    }
     if (!s) { if (fx.classList.contains('drawn')) { shownKey = ''; hideFx(fx); } return; }
     var key = s.id + '';
     $('bWho').textContent = nm(s.i);
@@ -251,8 +308,13 @@ body.k-view{font-family:"M PLUS Rounded 1c","Hiragino Maru Gothic ProN","Hiragin
     if (m.id && m.id === lastId) return;
     lastId = m.id || lastId;
     S = m.s; V.idle(false);
+    var f = m.fx;
+    if (f && f.k === 'spin' && f.plan && f.items && cw && S.show && S.show.id === f.plan.id) hold = f.plan.id;   // 先に止めておく（render の中で巻物を出さない）
     render();
-    var f = m.fx; if (!f) return;
+    if (!f) return;
+    if (f.k === 'spin') { if (hold === (f.plan && f.plan.id)) startSpin(f); return; }
+    if (f.k === 'rskip') { if (vctl && f.id === vid) vctl.skip(); return; }
+    if (f.k === 'rgo') { if (vctl && f.id === vid) vctl.go(); return; }
     if (f.k === 'out') { bump(f.i); showOut(f.i); }
     else if (f.k === 'reach') { bump(f.i); showReach(f.i); }
     else if (f.k === 'minus') bump(f.i);

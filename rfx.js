@@ -9,7 +9,11 @@
      名前の抽選 選ばれた人がうれしい・公平に見える    約4.2秒  あと少しの細工はしない（★なし・全員同じ見せ方）。当選の札に名前を大きく＋くす玉と紙吹雪
      順番決め  テンポ・当たったら外して続ける       約2.0秒  当たりは自動で外す。右に「1番 ○○・2番 ○○…」が増えていく。残り1つは自動で最後に
      ＋「次の1回を盛り上げる」（操作画面のボタン・1回だけ）: 止まりかけで止まり「どこに刺さる？ コメントで予想！」。
-       配信者が「進む」かSpaceで進む。押さなければ6秒で自動（この待ちは8秒に数えない）。チャットの取り込みはしない。
+       配信者が「進む」かSpaceで進む。押さなければ3秒で自動（この待ちは8秒に数えない）。チャットの取り込みはしない。
+
+   ■ 同じサイトのほかの道具でも使う（2026-10-23 試作）
+     お題ガチャ（/odai-gacha/・gacha.js）: SSR のときだけ celebrate（一度だけの淡い光・紙吹雪）。「次の1回を盛り上げる」は nenBox。
+     配信カウンター（/counter/）: 罰ゲームを引くとき plan＋play を mode 'batsu' で使う（D: 2900＝判子まで約3.4秒・noFake＝まさかなし・calm＝重い罰でも見せ方を大きくしない・ctx.who＝だれの罰か）。
 
    ■ 当たりの決め方（前と同じ）
    1) まず当たりを weight どおりに抽選する（演出はあとから選ぶ＝公平さは今と同じ）。
@@ -22,7 +26,7 @@
      ほかの使い方では ★ は字として出すだけ（見せ方は変えない）。
 
    ■ 光: 点滅は名前の抽選の当選と★の罰の1回だけ（0.5秒）。ほかは 0.5秒以上かけて明るく→戻す。動きを減らす設定では、回さずに結果だけ出す。
-   kit に移す部品（KKit.yokoku 案）: aim / hold / yama（待ちの札）/ winCard（当選の札）/ batsuCard / orderList / party / shurikenEl / sound。
+   kit に移す部品（KKit.yokoku 案）: aim / hold / nenBox（待ちの札）/ winCard（当選の札）/ batsuCard / orderList / celebrate / shurikenEl / sound。
    ルーレット固有なのは plan の角度の逆算と play の段取りだけ。 */
 (function () {
   'use strict';
@@ -71,11 +75,12 @@
     var F = /[?&]kkptest=1\b/.test(location.search) && window.__rfxForce || null;   // 確認用: { win, revive, near }
     if (F && F.win != null && F.win < n) i = F.win;
     var mode = MODES[o.mode] ? o.mode : 'odai', L = LEN[mode], k = SPK[o.speed] || 1;
-    var win = i, p = { v: 3, mode: mode, win: win, label: items[win].label, k: k, hype: !!o.hype };
+    if (o.D) L = { D: o.D, stall: L.stall, creep: L.creep };   // 長さだけ変える（配信カウンターの罰ゲーム: 約3.6秒以内に判子まで）
+    var win = i, p = { v: 3, mode: mode, win: win, label: items[win].label, k: k, hype: !!o.hype, calm: !!o.calm };
     p.star = mode === 'batsu' && isStar(items[win].label);
     // まさかの1マス（罰ゲームの ★ だけ）
     p.fake = -1;
-    if (p.star && (F && F.revive != null ? F.revive : rnd() < 0.08)) {
+    if (p.star && !o.noFake && (F && F.revive != null ? F.revive : rnd() < 0.08)) {
       var cand = [(win + 1) % n, (win - 1 + n) % n].filter(function (jj) { return jj !== win && !isStar(items[jj].label); });
       if (cand.length) p.fake = cand[0];
     }
@@ -167,6 +172,94 @@
   }
   function clearOrder(party) { var b = party && party.querySelector(':scope > .rfx-order'); if (b) b.remove(); }
 
+  /* ---------- 使い回す部品（ルーレット・お題ガチャ・配信カウンターで共通） ----------
+     celebrate(parent, o)  祝い: 一度だけの淡い光（0.5秒）・後ろの光と放射・前に紙吹雪。o: { ms（全体の長さ・既定3000）, flash, glow, rays（false で出さない）, n（紙吹雪の数）, inner(pa, A)（札を紙吹雪の下に差し込む） }
+                           戻り値 { pa, bg, nodes, anims, remove() }。parent が document.body なら画面に固定
+     nenBox(parent, 題, 小さい字)  盛り上げの待ちの札（「どこに刺さる？」＋残り時間の棒）。置き場所と出し方は呼ぶ側
+     legend(parent, items) / sideLayout(o)  凡例（番号と中身の一覧）と、盤＋凡例＋待ちの札の置き方（下の説明） */
+  function confettiIn(pa, n, A) {
+    var Wd = pa.clientWidth || window.innerWidth, H = pa.clientHeight || window.innerHeight;
+    for (var i = 0; i < n; i++) {
+      var c = mk('rfx-conf', pa), x = ((i * 61) % 100) / 100 * Wd, s = Math.max(9, Math.min(Wd, H) * 0.022) * (0.7 + ((i * 17) % 10) / 15);
+      c.setAttribute('data-k', ['kin', 'momiji', 'red', 'orange', 'cream', 'kin'][i % 6]);
+      c.style.left = x + 'px'; c.style.setProperty('--c', s + 'px');
+      A(c, [{ transform: 'translate(0,-' + s * 2 + 'px) rotate(0)' }, { transform: 'translate(' + (((i * 29) % 7) - 3) * s + 'px,' + (H + s * 2) + 'px) rotate(' + (360 + (i * 47) % 360) + 'deg)' }],
+        { duration: 2200 + (i * 131) % 1100, delay: (i * 37) % 500, easing: 'cubic-bezier(.3,.2,.7,1)', fill: 'both' });
+    }
+  }
+  function celebrate(parent, o) {
+    o = o || {};
+    var nodes = [], anims = [], ms = o.ms || 3000;
+    var A = function (el, fr, op) { var a = anim(el, fr, op); if (a) anims.push(a); return a; };
+    var bg = mk('rfx-party-bg', null); parent.insertBefore(bg, parent.firstChild); nodes.push(bg);
+    var pa = mk('rfx-party', parent); nodes.push(pa);
+    if (parent === document.body) { pa.classList.add('fixed'); bg.classList.add('fixed'); }
+    var fl0 = o.flash === false ? null : mk('rfx-party-flash', pa), glow = o.glow === false ? null : mk('rfx-party-glow', bg), rays = o.rays === false ? null : mk('rfx-party-rays', bg);
+    if (fl0) A(fl0, [{ opacity: 0 }, { opacity: 0.6, offset: 0.25 }, { opacity: 0 }], { duration: 500, easing: 'ease-out', fill: 'both' });
+    if (o.inner) o.inner(pa, A);
+    confettiIn(pa, o.n == null ? 40 : o.n, A);
+    if (glow) A(glow, [{ opacity: 0 }, { opacity: 0.9, offset: 0.2 }, { opacity: 0.9, offset: 0.6 }, { opacity: 0 }], { duration: ms, easing: 'ease-out', fill: 'both' });
+    if (rays) A(rays, [{ opacity: 0, transform: 'translate(-50%,-50%) rotate(0deg) scale(.6)' }, { opacity: 0.8, transform: 'translate(-50%,-50%) rotate(20deg) scale(1)', offset: 0.25 }, { opacity: 0, transform: 'translate(-50%,-50%) rotate(60deg) scale(1.1)' }], { duration: ms, easing: 'ease-out', fill: 'both' });
+    return { pa: pa, bg: bg, nodes: nodes, anims: anims, remove: function () {
+      anims.forEach(function (a) { try { a.cancel(); } catch (e) {} }); anims = [];
+      nodes.forEach(function (n) { if (n.parentNode) n.remove(); }); nodes = [];
+    } };
+  }
+  function nenBox(parent, title, sub) {
+    var b = mk('rfx-nen', parent); if (parent === document.body) b.classList.add('fixed');
+    mk('rfx-nen-t', b, 'b').textContent = title;
+    mk('rfx-nen-s', b).textContent = sub;
+    mk('rfx-nen-fill', mk('rfx-nen-bar', b));
+    return b;
+  }
+
+  // 凡例（盤の番号と中身）。盤の字は短く切れるので、何が入っているかを一覧で読めるように（配信カウンターの罰ゲーム）。★は赤
+  function legend(parent, items) {
+    var box = mk('rfx-legend', parent, 'ol');
+    (items || []).forEach(function (it, i) {
+      var li = mk('rfx-lg-li' + (isStar(it.label) ? ' star' : ''), box, 'li');
+      mk('rfx-lg-n', li, 'b').textContent = i + 1;
+      mk('rfx-lg-t', li, 'span').textContent = String(it.label || '').replace(/^\s*[★☆]\s*|\s*[★☆]\s*$/g, '');
+    });
+    return { el: box, mark: function (w) { [].forEach.call(box.children, function (li, j) { li.classList.toggle('win', j === w); li.classList.toggle('dim', j !== w); }); } };
+  }
+  // 盤＋凡例の置き方。横に広い所は「左に盤・右に凡例（盛り上げの待ちの札は凡例の下）」、縦に長い所は「上に盤・下に凡例」。
+  // o: { rect {x,y,w,h}（layer の中の px）, host（盤の箱）, R（KkpWheel.make の盤）, legend, anchor（待ちの札の目印・ctx.yamaAt に渡す）, font（凡例の字 px）, hype,
+  //      lgMinY（凡例をこれより下に・右上の表をよけるとき）, mid（盤＋凡例を囲む箱にする要素・ctx.kusuAt に渡すと判子が真ん中に出る）, dir（'h'|'v'・なければ形で決める） }
+  // 戻り値: 凡例の下の端（はみ出したかを呼ぶ側が見る）
+  function sideLayout(o) {
+    var r = o.rect, host = o.host, lg = o.legend.el, an = o.anchor, f = o.font, nenH = f * 4.4, nenW = f * 13, sz, wx, wy, lx, ly, lw, lh, horiz = o.dir ? o.dir === 'h' : r.w > r.h * 1.25;
+    lg.style.fontSize = f + 'px';
+    if (horiz) {
+      sz = Math.floor(Math.min(r.h * (o.hype ? 0.8 : 0.86), r.w * 0.4));
+      wx = r.x + Math.max(8, r.w * 0.03); wy = r.y + (r.h - sz) / 2;
+      if (o._under) { sz = Math.floor(Math.min(sz, r.h - nenH - 24)); wy = r.y + 4; }   // 待ちの札を盤の下に置くため、盤を少し小さく上に
+      lx = wx + sz + Math.max(40, sz * 0.27); lw = r.x + r.w - lx - Math.max(8, r.w * 0.02);
+      lg.style.left = lx + 'px'; lg.style.width = lw + 'px';
+      lh = lg.offsetHeight; ly = o.hype ? r.y + (r.h - lh - nenH - 12) / 2 : r.y + (r.h - lh) / 2;
+      ly = Math.max(r.y + 4, o.lgMinY || 0, ly);
+    } else {
+      sz = Math.floor(o.hype ? Math.min(r.w * 0.62, r.h * 0.4) : Math.min(r.w * 0.74, r.h * 0.5));   // 盛り上げのときは待ちの札の分だけ小さく
+      wx = r.x + (r.w - sz) / 2; wy = r.y + Math.max(14, sz * 0.06);   // 赤く光るふちが切れないように上を空ける
+      lx = r.x + 8; lw = r.w - 16; lg.style.left = lx + 'px'; lg.style.width = lw + 'px';
+      lh = lg.offsetHeight; ly = wy + sz + 10;
+    }
+    lg.style.top = ly + 'px';
+    // 待ちの札の置き場所: 凡例の下 → 盤の下 → 凡例の上 の順に、空いている所（入らなければ凡例の下に重ねる）
+    var bottom = r.y + r.h, nx = lx + lw / 2, ny = ly + lh + 12 + nenH / 2;
+    if (o.hype && horiz && !o._under && ny + nenH / 2 > bottom && !(ly - 12 - nenH >= Math.max(r.y, o.lgMinY || 0))) return sideLayout(Object.assign({}, o, { _under: true }));
+    if (ny + nenH / 2 > bottom) {
+      if (wy + sz + 12 + nenH <= bottom && horiz) { nx = Math.max(r.x + nenW / 2, wx + sz / 2); ny = wy + sz + 12 + nenH / 2; }
+      else if (ly - 12 - nenH >= Math.max(r.y, o.lgMinY || 0)) { ny = ly - 12 - nenH / 2; }
+      else ny = bottom - nenH / 2;
+    }
+    host.style.width = host.style.height = sz + 'px'; host.style.left = Math.round(wx) + 'px'; host.style.top = Math.round(wy) + 'px';
+    o.R.resize(sz);
+    if (an) { an.style.left = (nx - 74) + 'px'; an.style.top = (ny - 5) + 'px'; an.style.width = '100px'; an.style.height = '10px'; }
+    if (o.mid) { var ux = Math.min(wx, lx), uy = Math.min(wy, ly), m = o.mid.style; m.left = ux + 'px'; m.top = uy + 'px'; m.width = (Math.max(wx + sz, lx + lw) - ux) + 'px'; m.height = (Math.max(wy + sz, ly + lh) - uy) + 'px'; }
+    return ly + lh;
+  }
+
   /* ---------- 演出の本体（両方の画面） ----------
      ctx: { wheel, host, party, kusuAt（当選の札・くす玉を出す真上の要素）, yamaAt（待ちの札の置き場所）, sound, isView,
             onFake(番号), onResult(番号, plan), onYama(true|false), onAutoGo() }
@@ -228,15 +321,14 @@
     function startYama() {
       waiting = true; ctx.onYama && ctx.onYama(true);
       snd('yama');
-      yamaBox = node(mk('rfx-nen', party)); if (party === document.body) yamaBox.classList.add('fixed');
-      mk('rfx-nen-t', yamaBox, 'b').textContent = mode === 'name' ? '誰に刺さる？' : mode === 'batsu' ? 'どの罰になる？' : 'どこに刺さる？';
-      mk('rfx-nen-s', yamaBox).textContent = 'コメントで番号を予想！';
-      var bar = mk('rfx-nen-bar', yamaBox), fill = mk('rfx-nen-fill', bar);
+      yamaBox = node(nenBox(party, mode === 'name' ? '誰に刺さる？' : mode === 'batsu' ? 'どの罰になる？' : 'どこに刺さる？', 'コメントで番号を予想！'));
+      var fill = yamaBox.querySelector('.rfx-nen-fill');
       if (ctx.yamaAt && ctx.yamaAt.offsetWidth) {
         var q = relTo(ctx.yamaAt, 0.74, 0.5); yamaBox.style.left = q.x + 'px'; yamaBox.style.top = q.y + 'px'; yamaBox.classList.add('at');
         var bw = yamaBox.offsetWidth, pw = party === document.body ? window.innerWidth : party.clientWidth;
         var lx = q.x;
-        if (hold) { var hb = hold.getBoundingClientRect(), pr0 = party === document.body ? { left: 0 } : party.getBoundingClientRect(); lx = Math.max(lx, hb.right - pr0.left + 10 + bw / 2); }   // 構えた手裏剣を隠さない
+        if (hold) { var hb = hold.getBoundingClientRect(), pr0 = party === document.body ? { left: 0, top: 0 } : party.getBoundingClientRect(), bh = yamaBox.offsetHeight;
+          if (hb.bottom - pr0.top > q.y - bh / 2 && hb.top - pr0.top < q.y + bh / 2) lx = Math.max(lx, hb.right - pr0.left + 10 + bw / 2); }   // 構えた手裏剣を隠さない（高さが重なるときだけ）
         if (lx + bw / 2 > pw - 10) lx = pw - 10 - bw / 2;
         yamaBox.style.left = lx + 'px';
       }
@@ -339,44 +431,30 @@
     // 名前の抽選: 当選の札（名前を大きく）＋くす玉と紙吹雪。札は3秒で消え、結果の帯は残る
     function winCard() {
       snd('win');
-      var bg = node(mk('rfx-party-bg', null)); party.insertBefore(bg, party.firstChild);
-      var pa = node(mk('rfx-party', party));
-      if (party === document.body) { pa.classList.add('fixed'); bg.classList.add('fixed'); }
-      var fl0 = mk('rfx-party-flash', pa); mk('rfx-party-glow', bg); mk('rfx-party-rays', bg);
-      A(fl0, [{ opacity: 0 }, { opacity: 0.6, offset: 0.25 }, { opacity: 0 }], { duration: 500, easing: 'ease-out', fill: 'both' });
-      var card = mk('rfx-wincard', pa); mk('rfx-wc-h', card, 'b').textContent = '当選'; mk('rfx-wc-n', card, 'b').textContent = honorific(p.label);
-      mk('rfx-wc-s', card).textContent = 'おめでとう！';
-      if (ctx.kusuAt && ctx.kusuAt.offsetWidth) { var q = relTo(ctx.kusuAt, 0.5, 0.5); card.style.left = q.x + 'px'; card.style.top = q.y + 'px'; }
-      A(card, [{ opacity: 0, transform: 'translate(-50%,-50%) scale(.6)' }, { opacity: 1, transform: 'translate(-50%,-50%) scale(1.06)', offset: 0.6 }, { opacity: 1, transform: 'translate(-50%,-50%) scale(1)' }], { duration: 380, easing: 'ease-out', fill: 'both' });
-      A(card, [{ opacity: 1 }, { opacity: 0 }], { duration: 400, delay: 2800, fill: 'forwards' });
-      confetti(pa, 40);
-      A(bg.querySelector('.rfx-party-glow'), [{ opacity: 0 }, { opacity: 0.9, offset: 0.2 }, { opacity: 0.9, offset: 0.6 }, { opacity: 0 }], { duration: 3000, easing: 'ease-out', fill: 'both' });
-      A(bg.querySelector('.rfx-party-rays'), [{ opacity: 0, transform: 'translate(-50%,-50%) rotate(0deg) scale(.6)' }, { opacity: 0.8, transform: 'translate(-50%,-50%) rotate(20deg) scale(1)', offset: 0.25 }, { opacity: 0, transform: 'translate(-50%,-50%) rotate(60deg) scale(1.1)' }], { duration: 3000, easing: 'ease-out', fill: 'both' });
+      var c = celebrate(party, { ms: 3000, inner: function (pa) {
+        var card = mk('rfx-wincard', pa); mk('rfx-wc-h', card, 'b').textContent = '当選'; mk('rfx-wc-n', card, 'b').textContent = honorific(p.label);
+        mk('rfx-wc-s', card).textContent = 'おめでとう！';
+        if (ctx.kusuAt && ctx.kusuAt.offsetWidth) { var q = relTo(ctx.kusuAt, 0.5, 0.5); card.style.left = q.x + 'px'; card.style.top = q.y + 'px'; }
+        A(card, [{ opacity: 0, transform: 'translate(-50%,-50%) scale(.6)' }, { opacity: 1, transform: 'translate(-50%,-50%) scale(1.06)', offset: 0.6 }, { opacity: 1, transform: 'translate(-50%,-50%) scale(1)' }], { duration: 380, easing: 'ease-out', fill: 'both' });
+        A(card, [{ opacity: 1 }, { opacity: 0 }], { duration: 400, delay: 2800, fill: 'forwards' });
+      } });
+      c.nodes.forEach(node); anims.push.apply(anims, c.anims);
     }
     // 罰ゲーム: 「罰ゲーム決定！」の判子を押す。★（きつい罰）は判子が大きく、盤が少し揺れる
     function batsuCard() {
       var card = node(mk('rfx-batsu' + (p.star ? ' star' : ''), party)); if (party === document.body) card.classList.add('fixed');
+      if (ctx.who) mk('rfx-bt-w', card, 'b').textContent = ctx.who + ' の罰ゲーム';   // だれの罰か（配信カウンター）。名前だけで、からかう言葉は足さない
       mk('rfx-bt-h', card, 'b').textContent = '罰ゲーム決定！';
       mk('rfx-bt-n', card, 'b').textContent = String(p.label).replace(/[★☆]/g, '').trim();
       if (ctx.kusuAt && ctx.kusuAt.offsetWidth) { var q = relTo(ctx.kusuAt, 0.5, 0.5); card.style.left = q.x + 'px'; card.style.top = q.y + 'px'; }
       A(card, [{ opacity: 0, transform: 'translate(-50%,-50%) rotate(-6deg) scale(2.2)' }, { opacity: 1, transform: 'translate(-50%,-50%) rotate(-6deg) scale(.94)', offset: 0.6 }, { opacity: 1, transform: 'translate(-50%,-50%) rotate(-6deg) scale(1)' }], { duration: 300, easing: 'ease-in', fill: 'both' });
       at0(200, function () { snd('stamp'); });
-      if (p.star) {
+      if (p.star && !p.calm) {   // calm（配信カウンター）: 罰の重さで見せ方を大きくしない
         var fl0 = node(mk('rfx-party-flash', party)); if (party === document.body) fl0.classList.add('fixed'); fl0.style.position = party === document.body ? 'fixed' : 'absolute'; fl0.style.zIndex = 49;
         A(fl0, [{ opacity: 0 }, { opacity: 0.45, offset: 0.3 }, { opacity: 0 }], { duration: 500, delay: 200, easing: 'ease-out', fill: 'both' });
         A(wEl, [{ transform: 'translate(0,0)' }, { transform: 'translate(-5px,2px)' }, { transform: 'translate(4px,-2px)' }, { transform: 'translate(-2px,1px)' }, { transform: 'translate(0,0)' }], { duration: 420, delay: 220, easing: 'ease-out' });
       }
       A(card, [{ opacity: 1 }, { opacity: 0 }], { duration: 400, delay: 2800, fill: 'forwards' });
-    }
-    function confetti(pa, n) {
-      var Wd = pa.clientWidth || window.innerWidth, H = pa.clientHeight || window.innerHeight;
-      for (var i = 0; i < n; i++) {
-        var c = mk('rfx-conf', pa), x = ((i * 61) % 100) / 100 * Wd, s = Math.max(9, Math.min(Wd, H) * 0.022) * (0.7 + ((i * 17) % 10) / 15);
-        c.setAttribute('data-k', ['kin', 'momiji', 'red', 'orange', 'cream', 'kin'][i % 6]);
-        c.style.left = x + 'px'; c.style.setProperty('--c', s + 'px');
-        A(c, [{ transform: 'translate(0,-' + s * 2 + 'px) rotate(0)' }, { transform: 'translate(' + (((i * 29) % 7) - 3) * s + 'px,' + (H + s * 2) + 'px) rotate(' + (360 + (i * 47) % 360) + 'deg)' }],
-          { duration: 2200 + (i * 131) % 1100, delay: (i * 37) % 500, easing: 'cubic-bezier(.3,.2,.7,1)', fill: 'both' });
-      }
     }
     function cleanup(all) {
       timers.forEach(clearTimeout); timers = []; bq = []; clearInterval(beatT);
@@ -426,5 +504,6 @@
     el.style.setProperty('--rfx-a', (-W.angle) + 'deg');
   }
 
-  window.KkpRfx = { honorific: honorific, plan: plan, play: play, still: still, tagStars: tagStars, isStar: isStar, sound: sound, MODES: MODES, orderList: orderList, clearOrder: clearOrder, reduce: REDUCE, YAMA_MAX: YAMA_MAX };
+  window.KkpRfx = { honorific: honorific, plan: plan, play: play, still: still, tagStars: tagStars, isStar: isStar, sound: sound, MODES: MODES, orderList: orderList, clearOrder: clearOrder, reduce: REDUCE, YAMA_MAX: YAMA_MAX,
+    celebrate: celebrate, nenBox: nenBox, shurikenEl: shurikenEl, legend: legend, sideLayout: sideLayout };
 })();

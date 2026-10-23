@@ -55,6 +55,7 @@
 .rfx-batsu.fixed{position:fixed}
 .rfx-bt-h{display:block;font-weight:900;font-size:2.2em;line-height:1.1;letter-spacing:.04em}
 .rfx-bt-n{display:block;margin-top:.1em;font-weight:900;font-size:1.6em;color:#1f1a17;word-break:auto-phrase}
+.rfx-bt-w{display:block;margin-bottom:.1em;font-weight:900;font-size:1em;color:#1f1a17;letter-spacing:.02em}   /* だれの罰か（配信カウンター） */
 .rfx-batsu.star{font-size:max(18px,3vw);background:#fff3ee}
 /* まさかの1マス: 「セーフ…？」 */
 .rfx-safe{position:absolute;left:70%;top:40%;z-index:57;transform:translate(-50%,-50%);padding:.15em .6em;border-radius:12px;background:#1f1a17;color:#fff;font-family:"M PLUS Rounded 1c","Hiragino Maru Gothic ProN",sans-serif;font-weight:900;font-size:max(26px,3.6vw)}
@@ -103,3 +104,26 @@ html.stream .rfx-mode-note{display:none}
 /* 配信モード: 使い方の切り替えは細く（盤を大きく） */
 html.stream .rfx-modes{margin:0 0 4px;gap:4px}
 html.stream .rfx-modes button{min-height:36px;padding:0 10px;font-size:14px}
+
+/* お題ガチャ（gacha.js・2026-10-23 試作）: 盛り上げの待ちの札は舞台の右（真ん中の札を隠さない）。字は舞台の大きさ（--u）から。表示ページは --k-ov-min（1/3に縮めても読める）を下限に */
+.kg .rfx-nen.kg-nen{left:auto;right:3%;top:50%;transform:translateY(-50%);min-width:0;width:30%;padding:.4em .6em .5em}
+.kg .kg-nen .rfx-nen-t{font-size:max(18px,var(--k-ov-min,0px),calc(var(--u) * 4.6))}
+.kg .kg-nen .rfx-nen-s{font-size:max(14px,var(--k-ov-min,0px),calc(var(--u) * 2.3))}
+.kg .rfx-party,.kg .rfx-party-bg{position:absolute}
+/* 凡例（盤の番号と中身・配信カウンターの罰ゲーム）。盤の字は出さず、ここで読ませる */
+.rfx-legend{position:absolute;z-index:4;margin:0;padding:.35em .55em .4em;list-style:none;display:grid;gap:.18em;box-sizing:border-box;
+  background:rgba(255,253,248,.96);border:3px solid #1f1a17;border-radius:10px;box-shadow:4px 4px 0 rgba(31,26,23,.25);font-family:"M PLUS Rounded 1c","Hiragino Maru Gothic ProN",sans-serif;font-weight:800;color:#1f1a17;line-height:1.25}
+.rfx-lg-li{display:flex;gap:.45em;align-items:flex-start;margin:0;padding:.05em .2em;border-radius:6px;transition:opacity .4s,background-color .4s}
+.rfx-lg-n{flex:none;width:1.45em;height:1.45em;margin-top:-.05em;display:grid;place-items:center;border-radius:50%;background:#fffdf8;box-shadow:0 0 0 2px #1f1a17;font-size:.86em;font-weight:900}
+.rfx-lg-t{min-width:0;word-break:auto-phrase;overflow-wrap:anywhere}
+.rfx-lg-li.star .rfx-lg-n{background:#d9432a;color:#fff}
+.rfx-lg-li.star .rfx-lg-t{color:#b3261e}
+.rfx-lg-li.star .rfx-lg-t::before{content:"★"}
+.rfx-lg-li.win{background:#ffe08a}
+.rfx-lg-li.dim{opacity:.4}
+.rfx-legendmode .k-wheel-t{display:none}
+.rfx-legendmode .rfx-nen.at{width:auto;max-width:90%;white-space:nowrap}
+/* 小さい舞台（スマホ・幅520px未満）: 札をよけて右に細く・字は14pxまで（2行に折る） */
+.kg .rfx-nen.kg-nen.kg-nen-n{right:2%;width:35%;padding:.3em .35em .4em}
+.kg .kg-nen.kg-nen-n .rfx-nen-t{font-size:16px}
+.kg .kg-nen.kg-nen-n .rfx-nen-s{font-size:14px;line-height:1.3}

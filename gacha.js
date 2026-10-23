@@ -178,62 +178,98 @@
   }
 
   // container は position:relative の箱。opts: rarity, text, packName, fx('full'|'lite'|'off'), speed('short'|'normal'|'long'), sound, scale, onDone
+  //   hype（次の1回を盛り上げる: 札が出たところで止めて「何が出る？」・3秒で自動）, isView（表示ページ: 操作画面の「進む」を待ち、来なければ5秒で自分で進む）, onWait(on), onAutoGo
   // 札が出る → 印の色が N→R→SR→SSR と上がる（溜め）→ 刀が一閃して札が斜めに斬れる → 中から結果のテロップ。
-  // 札と刀は共通部品 KKit.fx.slash（kit/kit.js）。光の粒は撒かない。動きを減らす設定では一瞬で結果。
+  // 札と刀は共通部品 KKit.fx.slash（kit/kit.js）。動きを減らす設定では一瞬で結果。
+  // 2026-10-23 試作: 何回も引くので N・R はすぐ読める長さ（N 約1.0秒・R 約1.3秒でテロップ）。色が上がるのは本当のレア度までだけ（割合と食い違う予告・ガセは出さない）。
+  //   SSR のときだけ、テロップが出た瞬間に短く祝う（rfx.js の celebrate: 一度だけの淡い光・後ろの光・紙吹雪。約2.4秒・控えめは光の放射なし・なしは祝いなし）
   function play(container, opts) {
     injectCss();
     if (container._kg) container._kg.destroy();
     var fx = opts.fx || 'full', lite = fx === 'lite', snd = !!opts.sound, sp = opts.speed || 'normal';
-    var FX = window.KKit && window.KKit.fx;
+    var FX = window.KKit && window.KKit.fx, RF = window.KkpRfx;
     var rarity = RAR.indexOf(opts.rarity) >= 0 ? opts.rarity : 'N', lv = RAR.indexOf(rarity);
     var root = el('div', 'kg', container), inner = el('div', 'kg-in', root);
     var w = container.clientWidth || 600, h = container.clientHeight || 340;
     root.style.setProperty('--u', (Math.min(w, h * 1.6) / 100) + 'px');
     root.style.setProperty('--s', opts.scale || 1);
     root.style.setProperty('--th', telopSize(w, h, opts.place, opts.scale) + 'px');
-    var timers = [], done = false, sl = null, ctl = {};
+    var timers = [], done = false, sl = null, ctl = {}, waiting = false, nen = null, party = null;
     function T(base) { return FX ? FX.ms(base, sp) : base; }
     function at(t, fn) { timers.push(setTimeout(fn, t)); }
     function finish() { if (done) return; done = true; if (opts.onDone) opts.onDone(); }
     function showCard(anim) { var c = cardHtml(inner, { rarity: rarity, text: opts.text, packName: opts.packName, band: opts.band }); if (anim) c.classList.add('in'); return c; }
-    ctl.destroy = function () { timers.forEach(clearTimeout); timers = []; if (sl) sl.destroy(); if (root.parentNode) root.parentNode.removeChild(root); container._kg = null; };
+    function cheer() {
+      if (rarity !== 'SSR' || party || !RF || fx === 'off' || (FX && FX.reduce)) return;
+      // 透過の表示ページ（opts.clear）では画面全体の光（淡い光・後ろの光・放射）を出さず、紙吹雪とテロップだけ（配信の画面を黄色くしない・2026-10-23）
+      var bare = !!opts.clear;
+      party = RF.celebrate(root, { ms: T(2400), flash: !lite && !bare, glow: !bare, rays: !lite && !bare, n: lite ? 18 : 32 });
+    }
+    function endWait() { if (!waiting) return; waiting = false; if (nen && nen.parentNode) nen.remove(); nen = null; if (opts.onWait) opts.onWait(false); }
+    ctl.destroy = function () { timers.forEach(clearTimeout); timers = []; waiting = false; if (sl) sl.destroy(); if (party) party.remove(); if (root.parentNode) root.parentNode.removeChild(root); container._kg = null; };
     ctl.skip = function () {
       if (done) return;
       timers.forEach(clearTimeout); timers = [];
+      endWait();
       if (sl) { sl.destroy(); sl = null; }
       inner.innerHTML = ''; inner.className = 'kg-in';
       showCard(false);
       if (snd) sfx('reveal', rarity);
+      cheer();
       finish();
     };
     ctl.playing = function () { return !done; };
+    ctl.waiting = function () { return waiting; };
+    ctl.go = function () {};
     container._kg = ctl;
 
     if (fx === 'off' || !FX || FX.reduce) { showCard(true); if (snd) sfx('reveal', rarity); timers.push(setTimeout(finish, 300)); return ctl; }
 
     var dim = el('div', 'kg-dim', inner);
-    // 溜め: 札が出てから、印の色を1段ずつ上げる（SR・SSR はまわりを少し暗くして一拍おく）
-    var first = T(380) + T(320), step = T(420), hold = lv === 3 ? T(700) : lv === 2 ? T(380) : 0;
-    var wait = T(320) + lv * step + hold;
+    // 溜め: 札が出てから、印の色を本当のレア度まで1段ずつ上げる（SR・SSR はまわりを少し暗くして一拍おく）
+    var first = T(380) + T(220), GAP = [0, T(300), T(380), T(420)], hold = lv === 3 ? T(600) : lv === 2 ? T(380) : 0;
+    var tintAt = [], t = first;
+    for (var i = 1; i <= lv; i++) { tintAt[i] = t; t += GAP[i]; }
+    var cutAt = lv ? t + hold : first;
+    var hype = !!opts.hype && !!RF;
     var fw = Math.max(70, Math.min(w * 0.22, h * 0.58 / 1.5));
     sl = FX.slash(inner, {
-      speed: sp, wait: wait, size: fw, color: COLOR.N,
+      speed: sp, wait: hype ? 1e8 : cutAt - T(380), size: fw, color: COLOR.N,
       sound: function (k) { if (!snd) return; if (k === 'fuda') sfx('fuda'); else if (k === 'slash') sfx('slash'); },
       onCut: function () {
         dim.classList.remove('on');
         if (!lite) { inner.classList.remove('shake'); void inner.offsetWidth; inner.classList.add('shake'); }
-        at(T(260), function () { showCard(true); if (snd) sfx('reveal', rarity); });
+        at(T(260), function () { showCard(true); if (snd) sfx('reveal', rarity); cheer(); });
       },
       onDone: function () { at(T(lv === 3 ? 700 : 400), finish); }
     });
-    for (var i = 1; i <= lv; i++) (function (i) {
-      at(first + (i - 1) * step, function () {
-        var r = RAR[i];
-        if (sl) sl.tint(COLOR[r], r === 'SSR' ? METAL.SSR : null);
-        if (snd) sfx('step', i);
-      });
-    })(i);
-    if (hold) at(first + lv * step - T(120), function () { dim.classList.add('on'); });
+    // 色上げ・暗くする・（盛り上げのときは）斬る。base からの時間で並べる
+    function steps(base, cut) {
+      for (var i = 1; i <= lv; i++) (function (i) {
+        at(tintAt[i] - base, function () {
+          var r = RAR[i];
+          if (sl) sl.tint(COLOR[r], r === 'SSR' ? METAL.SSR : null);
+          if (snd) sfx('step', i);
+        });
+      })(i);
+      if (hold) at(cutAt - base - T(120), function () { dim.classList.add('on'); });
+      if (cut) at(cutAt - base, function () { if (sl) sl.cut(); });
+    }
+    if (!hype) { steps(0, false); return ctl; }
+    // 次の1回を盛り上げる: 札が下りたら止めて「何が出る？ コメントでレア度を予想！」。札の色は N のまま（レア度の手がかりは出さない）
+    var yamaMs = RF.YAMA_MAX || 3000;
+    at(T(380), function () {
+      waiting = true; if (opts.onWait) opts.onWait(true);
+      if (snd) RF.sound('yama');
+      nen = RF.nenBox(inner, '何が出る？', 'コメントでレア度を予想！'); nen.classList.add('kg-nen'); if (w < 520) nen.classList.add('kg-nen-n');
+      try { nen.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 220, fill: 'both' }); nen.querySelector('.rfx-nen-fill').animate([{ transform: 'scaleX(1)' }, { transform: 'scaleX(0)' }], { duration: yamaMs, easing: 'linear', fill: 'both' }); } catch (e) {}
+      at(yamaMs + (opts.isView ? 2000 : 0), function () { if (waiting) { if (opts.onAutoGo) opts.onAutoGo(); ctl.go(); } });
+    });
+    ctl.go = function () {
+      if (!waiting || done) return;
+      endWait();
+      steps(first, true);
+    };
     return ctl;
   }
 

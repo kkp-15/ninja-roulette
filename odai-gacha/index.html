@@ -35,7 +35,7 @@
     {"@type":"FAQPage","@id":"https://roulette.kkpwebninja.com/odai-gacha/#faq","mainEntity":[
       {"@type":"Question","name":"SSRはどのくらいの確率で出ますか","acceptedAnswer":{"@type":"Answer","text":"N 55%・R 30%・SR 12%・SSR 3% です。SSRはおよそ33回に1回。何回目に引いてもこの割合は変わりません。"}},
       {"@type":"Question","name":"同じお題が続けて出ませんか","acceptedAnswer":{"@type":"Answer","text":"出ません。一度出たお題は、同じレア度のお題を一周するまで出ません。SSRは数が少ないので早く一周し、一周したレア度だけ自動で最初に戻ります。「最初から」でいつでも全部戻せます。"}},
-      {"@type":"Question","name":"演出がまぶしい・長いときは","acceptedAnswer":{"@type":"Answer","text":"演出を「控えめ」にすると、刀で斬ったときの画面の揺れがなくなります。「長さ」を「短い」にすると演出が短くなり、「なし」は結果だけを出します。演出中はスペースキーか「スキップ」で飛ばせます。端末で「視差効果を減らす（動きを減らす）」を設定していると、演出なしですぐ結果が出ます。"}},
+      {"@type":"Question","name":"演出がまぶしい・長いときは","acceptedAnswer":{"@type":"Answer","text":"演出を「控えめ」にすると、刀で斬ったときの画面の揺れがなくなります。「長さ」を「短い」にすると演出が短くなり、「なし」は結果だけを出します。演出中はスペースキーか「スキップ」で飛ばせます。端末で「視差効果を減らす（動きを減らす）」を設定していると、演出なしですぐ結果が出ます。SSRが出たときだけ短く祝います（紙吹雪。表示ページの背景が透過のときは、画面全体を光らせません）。「次の1回を盛り上げる」を押すと、次の1回だけ札が出たところで止まり、押すか3秒で進みます。"}},
       {"@type":"Question","name":"罰ゲームはきつすぎませんか","acceptedAnswer":{"@type":"Answer","text":"誰でもその場で安全にできるものだけにしています。「語尾に〜でござる」「1分間ささやき声で話す」のような話し方を変えるものが中心で、SSRでも語尾や話し方を長めに続ける程度です。入れていないものは 罰ゲームと縛りの決まり にまとめています。"}},
       {"@type":"Question","name":"縛りやNGワードの回数を数えたい","acceptedAnswer":{"@type":"Answer","text":"配信カウンター で、言ってしまった回数を人ごとに数えて配信画面に出せます。目標回数に届くと、このお題ガチャの「罰ゲーム」から引けます。"}},
       {"@type":"Question","name":"自分で考えたお題も入れられますか","acceptedAnswer":{"@type":"Answer","text":"入れられます。「自分のお題」に1行1つ書きます。行の最後に *SSR のように付けるとレア度を決められます（付けなければR）。書いたお題はこのブラウザの中にだけ保存され、送信しません。"}},
@@ -104,6 +104,9 @@ th{background:var(--head);font-weight:700;white-space:nowrap}
 .go[disabled]{background:#c9c2b8;box-shadow:none;cursor:not-allowed}
 .skip{flex:0 0 auto;border:2px solid var(--ink);background:#fff;font-weight:800;font-size:16px;padding:0 16px;min-height:72px}
 .skip[hidden]{display:none}
+.g-hype{margin:8px 0 0;justify-content:flex-start}
+.g-hype .rfx-hype{width:100%}
+.go.rfx-go{background:#ffd24a;color:#2b2b2b}
 .keys{font-size:14px;color:var(--sub);margin:8px 0 0;line-height:1.9}
 kbd{font-family:inherit;font-size:14px;border:1px solid var(--line);border-bottom-width:2px;padding:0 5px;background:#faf8f4;color:var(--ink);margin:0 2px}
 .stat{font-size:14px;margin:8px 0 0;padding:6px 0;border-top:2px solid var(--ink);border-bottom:1px solid var(--line);display:flex;flex-wrap:wrap;gap:6px;align-items:center}
@@ -208,6 +211,7 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
 @media(min-width:861px){.res .rt{font-size:clamp(20px,1.7vw,34px);word-break:auto-phrase;text-wrap:balance}}
 </style>
 <link rel="stylesheet" href="/d4.css">
+<link rel="stylesheet" href="/rfx.css?v=20261023b">
 <link rel="stylesheet" href="/stream.css">
 </head>
 <body class="k-page">
@@ -249,6 +253,7 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
       <button class="go k-btn k-btn-main k-btn-big" id="go">ガチャを回す</button>
       <button class="skip" id="skip" hidden>スキップ</button>
     </div>
+    <div class="rfx-modes g-hype"><button type="button" class="rfx-hype" id="hype" aria-pressed="false" title="次の1回だけ、札が出たところで止めて「何が出る？」と聞きます（3秒で自動で進む）">次の1回を盛り上げる</button></div>
     <p class="keys"><kbd>Space</kbd><kbd>Enter</kbd>回す・演出中はスキップ　<kbd>S</kbd>スキップ　<kbd>1</kbd>〜<kbd>9</kbd>パック切替</p>
     <div data-stream-sw></div>
     <div class="stat"><span id="leftTxt"></span> <button class="btn sm" id="resetSeen">最初から</button> <span class="flash" id="flash"></span></div>
@@ -316,7 +321,7 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
 <h2 id="faq" class="k-hd">よくある質問</h2>
 <details><summary>SSRはどのくらいの確率で出ますか</summary><p>N 55%・R 30%・SR 12%・SSR 3% です。SSRはおよそ33回に1回。何回目に引いてもこの割合は変わりません。</p></details>
 <details><summary>同じお題が続けて出ませんか</summary><p>出ません。一度出たお題は、同じレア度のお題を一周するまで出ません。SSRは数が少ないので早く一周し、一周したレア度だけ自動で最初に戻ります。「最初から」でいつでも全部戻せます。</p></details>
-<details><summary>演出がまぶしい・長いときは</summary><p>演出を「控えめ」にすると、刀で斬ったときの画面の揺れがなくなります。「長さ」を「短い」にすると演出が短くなり、「なし」は結果だけを出します。演出中はスペースキーか「スキップ」で飛ばせます。端末で「視差効果を減らす（動きを減らす）」を設定していると、演出なしですぐ結果が出ます。</p></details>
+<details><summary>演出がまぶしい・長いときは</summary><p>演出を「控えめ」にすると、刀で斬ったときの画面の揺れがなくなります。「長さ」を「短い」にすると演出が短くなり、「なし」は結果だけを出します。演出中はスペースキーか「スキップ」で飛ばせます。端末で「視差効果を減らす（動きを減らす）」を設定していると、演出なしですぐ結果が出ます。SSRが出たときだけ短く祝います（紙吹雪。表示ページの背景が透過のときは、画面全体を光らせません）。「次の1回を盛り上げる」を押すと、次の1回だけ札が出たところで止まり、押すか3秒で進みます。</p></details>
 <details><summary>罰ゲームはきつすぎませんか</summary><p>誰でもその場で安全にできるものだけにしています。「語尾に〜でござる」「1分間ささやき声で話す」のような話し方を変えるものが中心で、SSRでも語尾や話し方を長めに続ける程度です。入れていないものは <a href="#safe">罰ゲームと縛りの決まり</a> にまとめています。</p></details>
 <details><summary>縛りやNGワードの回数を数えたい</summary><p><a href="/counter/">配信カウンター</a> で、言ってしまった回数を人ごとに数えて配信画面に出せます。目標回数に届くと、このお題ガチャの「罰ゲーム」から引けます。</p></details>
 <details><summary>自分で考えたお題も入れられますか</summary><p>入れられます。「自分のお題」に1行1つ書きます。行の最後に <b>*SSR</b> のように付けるとレア度を決められます（付けなければR）。書いたお題はこのブラウザの中にだけ保存され、送信しません。</p></details>
@@ -336,8 +341,9 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
   <div class="uf-c">© 2025-2026 web忍者の砦</div>
 </footer>
 <script>kkpLoadAds();</script>
-<script src="/wheel.js"></script>
-<script src="/gacha.js"></script>
+<script src="/wheel.js?v=20261023b"></script>
+<script src="/rfx.js?v=20261023b"></script>
+<script src="/gacha.js?v=20261023b"></script>
 <script src="/odai-gacha/packs.js"></script>
 <script>
 (function () {
@@ -475,8 +481,14 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
   function setBusy(b) { busy = b; $('skip').hidden = !b; $('go').disabled = b || pool.length < 1; }
 
   // ガチャ
-  var wheel = K.make($('wheel'), { minPx: 14 }), wheelItems = [];   // 盤は kit の KKit.wheel（wheel.js の make）
+  var wheel = K.make($('wheel'), { minPx: 14, rfx: false }), wheelItems = [];   // rfx:false＝この盤は前の回し方（針で止まる）   // 盤は kit の KKit.wheel（wheel.js の make）
+  // 2026-10-23 試作: 次の1回を盛り上げる（札が出たところで止めて「何が出る？」。押すか3秒で進む）。レア度の割合は変えない
+  var hype = false, gid = 0;
+  $('hype').addEventListener('click', function () { hype = !hype; this.setAttribute('aria-pressed', hype ? 'true' : 'false'); });
+  function onWait(on) { $('go').disabled = !on && busy; $('go').textContent = on ? '進む' : 'ガチャを回す'; $('go').classList.toggle('rfx-go', on); }
+  function goWait() { if (ctl && ctl.waiting && ctl.waiting()) { ctl.go(); send({ t: 'ggo', id: gid }); return true; } return false; }
   function go() {
+    if (goWait()) return;
     if (busy) { skip(); return; }
     if (!pool.length) return;
     $('gidle').hidden = true;
@@ -484,12 +496,15 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
     $('gwheel').hidden = true; wheel.clearStar($('gwheel'));
     var it = pick(); if (!it) return;
     curIt = it;
-    var id = Date.now(), pn = packName[it.pack] || '';
+    var id = Date.now(), pn = packName[it.pack] || '', hy = hype && S.fx !== 'off' && !reduce;
+    gid = id; hype = false; $('hype').setAttribute('aria-pressed', 'false');
     setBusy(true);
-    send({ t: 'gacha', id: id, rarity: it.r, text: it.text, packName: pn, fx: S.fx, speed: S.speed, settings: viewSettings() });
-    kkpEvent('gacha_draw', { rarity: it.r, mode: 'gacha', fx: S.fx });
+    send({ t: 'gacha', id: id, rarity: it.r, text: it.text, packName: pn, fx: S.fx, speed: S.speed, hype: hy, settings: viewSettings() });
+    kkpEvent('gacha_draw', { rarity: it.r, mode: 'gacha', fx: S.fx, hype: hy ? 1 : 0 });
     if (seen.indexOf(it.id) < 0) seen.push(it.id);
-    ctl = G.play($('gstage'), { rarity: it.r, text: it.text, packName: pn, fx: S.fx, speed: S.speed, sound: S.snd, place: 'full', band: viewSettings().ink === 'light' ? 'dark' : 'orange', onDone: function () { setBusy(false); record(it); } });
+    ctl = G.play($('gstage'), { rarity: it.r, text: it.text, packName: pn, fx: S.fx, speed: S.speed, sound: S.snd, place: 'full', band: viewSettings().ink === 'light' ? 'dark' : 'orange', hype: hy,
+      onWait: onWait, onAutoGo: function () { send({ t: 'ggo', id: id }); },
+      onDone: function () { onWait(false); setBusy(false); record(it); } });
   }
   function skip() { if (ctl && ctl.playing()) { ctl.skip(); send({ t: 'gskip', st: curIt ? gState(curIt) : null }); } }
 

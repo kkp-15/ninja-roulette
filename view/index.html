@@ -12,7 +12,7 @@
 <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@800;900&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&display=swap&text=NRS%E7%B5%90%E6%9E%9C%E6%AE%8B%E3%82%8A0123456789%2F" rel="stylesheet">
 <link rel="stylesheet" href="/kit/kit.css?v=d2e3ac7">
-<link rel="stylesheet" href="/rfx.css?v=20261023">
+<link rel="stylesheet" href="/rfx.css?v=20261023b">
 <script src="/kit/kit.js?v=d2e3ac7"></script>
 <script src="/ga.js"></script>
 <style>
@@ -48,9 +48,9 @@
 <div class="k-view-idle k-ov-idle" hidden><b>配信ルーレット</b><p>まもなく始まります</p><small>操作ページで回すと、ここに出ます</small></div>
 <div class="hint k-ov-ink" id="hint" hidden>クリックかスペースキーで回す</div>
 <div class="k-ov-credit" id="credit">roulette.kkpwebninja.com</div>
-<script src="/wheel.js?v=20261023"></script>
-<script src="/rfx.js?v=20261023"></script>
-<script src="/gacha.js"></script>
+<script src="/wheel.js?v=20261023b"></script>
+<script src="/rfx.js?v=20261023b"></script>
+<script src="/gacha.js?v=20261023b"></script>
 <script src="/odai-gacha/packs.js"></script>
 <script>
 (function () {
@@ -64,7 +64,7 @@
   var V = KKit.view({ ch: 'kkp-roulette', def: 'clear', stage: 'body' });
   var wheel = K.make($('wheel'), { empty: remote ? '' : '操作ページで回すと出ます' });
   var settings = { layout: 'both', place: 'full', speed: 'normal', size: 2, ink: 'dark', credit: true, sound: false };
-  var items = [], lastId = 0, gctl = null, lastResult = '', rctl = null, rid = 0;
+  var items = [], lastId = 0, gctl = null, gid = 0, lastResult = '', rctl = null, rid = 0;
 
   function load(k) { try { var v = localStorage.getItem(k); return v === null ? null : JSON.parse(v); } catch (e) { return null; } }
   function place() { return /^(full|band|corner)$/.test(settings.place) ? settings.place : 'full'; }
@@ -105,7 +105,10 @@
     if (msg.settings) applySettings(msg.settings);
     showGacha(true);
     var o = { rarity: msg.rarity, text: msg.text, packName: msg.packName, scale: scale(), place: place(), band: band(), speed: msg.speed || settings.speed };
-    gctl = quiet ? G.show($('gstage'), o) : G.play($('gstage'), Object.assign(o, { fx: msg.fx || 'full', sound: !!settings.sound }));
+    gid = msg.id || 0;
+    var bgNow = document.documentElement.getAttribute('data-k-bg') || 'clear';
+    gctl = quiet ? G.show($('gstage'), o) : G.play($('gstage'), Object.assign(o, { fx: msg.fx || 'full', sound: !!settings.sound, hype: !!msg.hype, isView: true, clear: bgNow === 'clear',
+      onDone: function () { if (q.get('kkptest') === '1') (window.__gLog = window.__gLog || []).push(msg.rarity + '|' + msg.text); } }));
   }
   // quiet: 開き直したときの最後の画面（回す演出・手裏剣・音なしで止まった所だけ出す）。角度は度（前の版の知らせはラジアンなので直す）
   function runSpin(msg, quiet) {
@@ -153,6 +156,7 @@
     else if (msg.t === 'rgo') { if (rctl && msg.id === rid) rctl.go(); }
     else if (msg.t === 'rorder') { if (msg.list && msg.list.length) KkpRfx.orderList($('stage'), msg.list, msg.full ? msg.list.length : 0); else KkpRfx.clearOrder($('stage')); }
     else if (msg.t === 'gskip') { if (gctl && gctl.playing()) gctl.skip(); }
+    else if (msg.t === 'ggo') { if (gctl && gctl.waiting && gctl.waiting() && msg.id === gid) gctl.go(); }
     else if (msg.t === 'state' && msg.kind === 'gacha') { if (!(gctl && gctl.playing())) runGacha(msg, true); }
     else if (msg.t === 'state') {
       if (gctl && gctl.playing()) return;
