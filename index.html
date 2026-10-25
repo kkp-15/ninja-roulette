@@ -161,6 +161,9 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
 /* 2026-10-20 配信で映しても読めるように：大きい画面では道具の欄を広く・直前の結果を大きく（PC・2列のときだけ） */
 @media(min-width:1500px){.wrap{max-width:1560px}.site-in{max-width:1560px}}
 @media(min-width:861px){.result{max-width:none}.result .r-txt{font-size:clamp(28px,2.6vw,52px);line-height:1.25;word-break:auto-phrase;text-wrap:balance}.spin{max-width:none}}
+/* 2026-10-25 「当たった項目を次から外す」のチェック欄が13pxだった。箱20px・押せる高さ44px */
+.opt>label:has(#exclude){display:inline-flex;align-items:center;gap:8px;min-height:44px}
+#exclude{width:20px;height:20px;margin:0;flex:none}
 </style>
 <link rel="stylesheet" href="/d4.css">
 <link rel="stylesheet" href="/stream.css">
