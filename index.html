@@ -612,7 +612,8 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
 
   // 初期化
   var saved = load(LS.text, null);
-  $('items').value = saved === null ? '' : saved;
+  // 2026-10-25 はじめて開いたときは例の項目を入れておく（そのまま回せる）。保存した項目があればそちら（空にして保存した人は空のまま）
+  $('items').value = saved === null ? (SAMPLES[settings.mode] || SAMPLE) : saved;
   applySettingsToForm();
   fit();
   readItems();
