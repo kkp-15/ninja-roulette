@@ -216,6 +216,8 @@ a.k-card:hover h3,a.k-card:focus-visible h3{text-decoration:underline;text-decor
    下に .k-fix があれば、その上に出る。 */
 .k-install{position:fixed;left:10px;right:10px;bottom:var(--k-install-bottom,12px);z-index:80;display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;box-sizing:border-box;max-width:520px;margin:0 auto;padding:10px 12px;background:var(--k-kinari) url(img/d4-washi.webp) 0 0/320px auto;border:var(--k-bw) solid var(--k-sumi);border-radius:var(--k-r);box-shadow:var(--k-sh-l);color:var(--k-sumi);font-family:var(--k-body)}
 .k-install[hidden]{display:none}
+/* 遊んでいる間は出さない（ページが body に k-playing を付ける。結果の画面で外す） */
+body.k-playing .k-install{display:none!important}
 .k-install-t{flex:1;min-width:0}
 .k-install-t b{display:block;font-family:var(--k-bold);font-weight:400;font-size:15px;line-height:1.35}
 .k-install-t span{display:block;font-size:14px;color:var(--k-text-2);line-height:1.45}

@@ -131,6 +131,16 @@
       if (!ios && !touch && !desktop) return; // PC では出さない（浮いて見えるため）
       var go = el.querySelector('.k-install-go'), x = el.querySelector('.k-install-x'), how = el.querySelector('.k-install-how'), hint = el.querySelector('.k-install-t span');
       var deferred = null;
+      // 2026-10-25 はじめて開いた画面ではすぐ出さない（設定や盤面にかぶるため）。
+      // 「1回遊び終えたあと」（ページが KKit.installReady() を呼ぶ／document に 'kkp:done' を送る）か、
+      // 「2回目に開いたとき」に出す。開いた回数は key + '_visits' に数える（この端末の中だけ）
+      var visits = 1;
+      try { visits = (parseInt(localStorage.getItem(key + '_visits'), 10) || 0) + 1; localStorage.setItem(key + '_visits', String(visits)); } catch (e) {}
+      var ready = visits >= 2 || !!o.now || el.getAttribute('data-k-now') === '1';
+      var waiting = null;   // まだ出せないときに、出す処理をしまっておく
+      function whenReady(fn) { if (ready) fn(); else waiting = fn; }
+      function release() { if (ready) return; ready = true; if (waiting) { var f = waiting; waiting = null; f(); } }
+      K._installRelease = (K._installRelease || []).concat(release);
       function place() {
         var fix = document.querySelector('.k-fix');
         var h = fix && fix.offsetParent !== null ? fix.getBoundingClientRect() : null;
@@ -142,9 +152,9 @@
       if (ios) {
         if (hint && !hint.getAttribute('data-k-keep')) hint.textContent = 'Safari の共有ボタンから追加できます';
         if (go) { go.textContent = 'やり方'; go.addEventListener('click', function () { if (how) { how.hidden = !how.hidden; go.textContent = how.hidden ? 'やり方' : 'とじる'; } }); }
-        setTimeout(show, o.delay == null ? 3000 : o.delay);
+        whenReady(function () { setTimeout(show, o.delay == null ? 3000 : o.delay); });
       } else {
-        window.addEventListener('beforeinstallprompt', function (e) { e.preventDefault(); deferred = e; show(); });
+        window.addEventListener('beforeinstallprompt', function (e) { e.preventDefault(); deferred = e; whenReady(show); });
         if (go) go.addEventListener('click', function () {
           if (!deferred) return;
           deferred.prompt();
@@ -153,6 +163,10 @@
       }
       window.addEventListener('resize', function () { if (!el.hidden) place(); }, { passive: true });
     };
+
+    // 1回遊び終えたら呼ぶ（結果の画面など）。まだ出していないホーム画面追加の帯を、少し待ってから出す
+    K.installReady = function () { (K._installRelease || []).forEach(function (f) { setTimeout(f, 1200); }); };
+    document.addEventListener('kkp:done', function () { K.installReady(); });
 
     function auto() {
       [].forEach.call(document.querySelectorAll('.k-install[data-k-key]'), function (el) { K.install(el); });
@@ -404,7 +418,9 @@
           var box = stage.querySelector('.k-view-idle');
           if (box) {
             box.hidden = !on;
-            if (on && title != null) { var t = box.querySelector('b,.k-view-idle-t'); if (t && t.textContent !== title) { t.textContent = title; K.fitText(t, { min: 42 }); } }
+            // 題字は HTML に最初から同じ文字で入っていることが多く、「文字が変わったときだけ」縮めると一度も縮まらず「…」で切れた（2026-10-30 ito 1280x720）。
+            // 待ち画面に入るたびに縮め直す。字のデータが後から届いて幅が変わるので、少し遅れてもう一度
+            if (on) { var t = box.querySelector('b,.k-view-idle-t'); if (t) { if (title != null && t.textContent !== title) t.textContent = title; K.fitText(t, { min: 42 }); clearTimeout(idleT); idleT = setTimeout(function () { if (!box.hidden) K.fitText(t, { min: 42 }); }, 600); } }
           }
         }
       };
