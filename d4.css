@@ -91,3 +91,11 @@ kbd,.keys kbd{border:1.5px solid var(--k-sumi);border-bottom-width:3px;border-ra
 .uf-c{color:var(--k-text-2)}
 a.btn{text-decoration:none}
 @media(max-width:600px){main h2.k-hd{font-size:19px;letter-spacing:.03em}}
+
+/* 配色の見直し 2026-10-30（ワードウルフで先に試したものを横展開）: 押す所＝はっきりしたオレンジ、選んでいる所＝紺。
+   根拠と計測は ~/test/デザイン調査_2026-10-30/提案.md。結果が悪ければこの塊を消せば元に戻る */
+:root{--kc-navy:#2b3768;--kc-orange:#f26a1b}
+body .k-btn-main{padding:0 22px}
+body .k-btn.k-btn-main,body .k-btn.k-btn-main:hover,body .k-btn.k-btn-main:hover:not([disabled]),body .k-btn.k-btn-main:disabled,body .k-btn.k-btn-main[disabled]{border:3px solid var(--k-sumi);border-image:none;border-radius:14px;background:var(--kc-orange)}
+body .k-btn.k-btn-main::after{inset:0;top:0;left:0;width:auto;height:auto;-webkit-mask:none;mask:none;border-radius:11px}
+
