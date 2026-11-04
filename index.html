@@ -164,6 +164,13 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
 /* 2026-10-25 「当たった項目を次から外す」のチェック欄が13pxだった。箱20px・押せる高さ44px */
 .opt>label:has(#exclude){display:inline-flex;align-items:center;gap:8px;min-height:44px}
 #exclude{width:20px;height:20px;margin:0;flex:none}
+/* 2026-11-04 スマホ幅だけ、盤と「回す」を項目の欄より上に。項目の欄は「項目を編集」で開け閉め（PC・配信用は変えない） */
+.edit-tg{display:none}
+@media(max-width:600px){
+  .tool .col-wheel{order:-1}
+  .col-in .edit-tg{display:block;width:100%;min-height:48px;font-size:15px;text-align:left}
+  .col-in.shut>:not(.edit-tg){display:none}
+}
 </style>
 <link rel="stylesheet" href="/d4.css?v=20261030b">
 <link rel="stylesheet" href="/stream.css">
@@ -184,7 +191,8 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
 <main>
 <div class="fromstream" id="fromStream" hidden><p>配信で見たルーレットはこれです。項目を入れて「回す」だけ。登録なし・無料です。</p><button class="btn sm" id="fromStreamTry">例で回してみる</button><button class="btn sm" id="fromStreamX" aria-label="閉じる">閉じる</button></div>
 <div class="tool">
-  <div class="col-in">
+  <div class="col-in" id="colIn">
+    <button type="button" class="btn edit-tg" id="editTg" aria-controls="colIn" aria-expanded="true">項目の欄を閉じる</button>
     <label class="lab" for="items">項目（1行に1つ。「名前*3」で当たりやすさ3倍）</label>
     <textarea id="items" spellcheck="false" placeholder="最近ハマっていること
 今日のごはん
@@ -413,7 +421,15 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
     $('exN').textContent = excluded.length;
     $('restore').hidden = excluded.length === 0;
     $('remoteUrl').value = ORIGIN + '/view/?' + remoteQuery();
+    editLabel();
   }
+  // スマホ幅の「項目を編集」（開け閉めは見た目だけ。PC幅では欄はいつも出ている）
+  function editLabel() {
+    var shut = $('colIn').classList.contains('shut');
+    $('editTg').textContent = shut ? '項目を編集（' + pool.length + '件）' : '項目の欄を閉じる';
+    $('editTg').setAttribute('aria-expanded', shut ? 'false' : 'true');
+  }
+  $('editTg').addEventListener('click', function () { $('colIn').classList.toggle('shut'); editLabel(); });
   function remoteQuery() {
     var vs = viewSettings();
     var q = ['items=' + encodeURIComponent(pool.map(function (i) { return i.weight === 1 ? i.label : i.label + '*' + i.weight; }).join('\n'))];
@@ -588,6 +604,10 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
       var mn = $('modeNote'), rfxH = mn && mn.offsetHeight ? mn.offsetHeight + 4 : 0;
       var below = $('spin').offsetHeight + 14 + (keys ? keys.offsetHeight + 12 : 0) + swH + rfxH + Math.max(res.offsetHeight, rl * 2 + 64) + 24;
       h = Math.max(150, window.innerHeight - top - below);   // 960x540 の配信モードでも「直前の結果」まで入るよう、盤は150pxまで縮める
+    } else if (window.innerWidth <= 600) {
+      // 2026-11-04 スマホ幅は開いた画面に「回す」まで入る大きさ（小さくても260px）
+      var tp = col.querySelector('.stage').getBoundingClientRect().top + window.scrollY;
+      h = Math.max(260, window.innerHeight - tp - $('spin').offsetHeight - 26);
     }
     wheel.resize(Math.max(150, Math.floor(Math.min(w, h))));
   }
@@ -616,6 +636,8 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
   // 2026-10-25 はじめて開いたときは例の項目を入れておく（そのまま回せる）。保存した項目があればそちら（空にして保存した人は空のまま）
   $('items').value = saved === null ? (SAMPLES[settings.mode] || SAMPLE) : saved;
   applySettingsToForm();
+  // スマホ幅で回せる項目があれば、項目の欄は閉じて始める（2つ未満なら開いておく）
+  if (K.parseItems($('items').value).length >= 2) $('colIn').classList.add('shut');
   fit();
   readItems();
   setMode(settings.mode || 'odai');
