@@ -164,6 +164,13 @@ details p{margin:.5rem 0 .3rem;font-size:15px}
 /* 2026-10-25 「当たった項目を次から外す」のチェック欄が13pxだった。箱20px・押せる高さ44px */
 .opt>label:has(#exclude){display:inline-flex;align-items:center;gap:8px;min-height:44px}
 #exclude{width:20px;height:20px;margin:0;flex:none}
+/* 2026-11-10 設定の選ぶ所が高さ22px・丸13pxだった。押せる高さ44px・丸20px */
+.set td label,.opt label{min-height:44px;min-width:44px}
+body .btn.sm,body .stream-sw{min-height:44px}
+.set input[type=radio],.set input[type=checkbox]{width:20px;height:20px;margin:0;flex:none}
+.k-vo-bg button{min-width:44px}
+.k-vo-color input[type=color]{min-width:44px;min-height:44px}
+.urlrow input{min-height:44px}
 /* 2026-11-04 スマホ幅だけ、盤と「回す」を項目の欄より上に。項目の欄は「項目を編集」で開け閉め（PC・配信用は変えない） */
 .edit-tg{display:none}
 @media(max-width:600px){
