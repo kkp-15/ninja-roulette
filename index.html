@@ -182,11 +182,20 @@ body .btn.sm,body .stream-sw{min-height:44px}
 <link rel="stylesheet" href="/d4.css?v=20261030b">
 <link rel="stylesheet" href="/stream.css">
 <link rel="stylesheet" href="/rfx.css?v=20261023b">
+<style>
+/* 2026-11-11 スマホの上のナビを1段に：「設定」「よくある質問」はページの下の1行へ（PCは今のまま） */
+@media(max-width:600px){.site-nav .nav-pc{display:none}}
+.page-links{margin:28px 0 0;padding:12px 0 0;border-top:1px solid var(--line);font-size:15px}
+.page-links a{display:inline-flex;align-items:center;min-height:44px;margin-right:14px}
+html.stream .page-links{display:none}
+/* 2026-11-11 本文と補足の字を15px以上に（表の中の小さい字はそのまま） */
+body .meta,body .note,body .gacha-link,body .count,body .keys,body .rfx-mode-note,body .col-in label.lab,body .k-vo-how,body .set td label{font-size:15px}
+</style>
 </head>
 <body class="k-page">
 <div class="site"><div class="k-bg" aria-hidden="true"><img class="k-deco k-ninja" src="/kit/img/d4-ninja.webp" alt=""><img class="k-deco k-season k-season-momiji" src="/kit/img/d4-momiji.webp" alt=""><img class="k-deco k-season k-season-yuki" src="/kit/img/d4-yuki.webp" alt=""><img class="k-deco k-season k-season-shochikubai" src="/kit/img/d4-kadomatsu.webp" alt=""></div><div class="site-in">
   <a class="site-name" href="/">配信ルーレット</a>
-  <nav class="site-nav"><a href="/odai-gacha/">お題ガチャ</a><a href="/counter/">配信カウンター</a><a href="#howto">使い方</a><a href="#obs">OBSに映す</a><a href="#settings">設定</a><a href="#faq">よくある質問</a></nav>
+  <nav class="site-nav"><a href="/odai-gacha/">お題ガチャ</a><a href="/counter/">配信カウンター</a><a href="#howto">使い方</a><a href="#obs">OBSに映す</a><a class="nav-pc" href="#settings">設定</a><a class="nav-pc" href="#faq">よくある質問</a></nav>
 </div></div>
 <div class="wrap">
 <header>
@@ -349,6 +358,7 @@ body .btn.sm,body .stream-sw{min-height:44px}
 
 <h2 class="k-hd">個人情報の扱い</h2>
 <p>入力した項目（お題・視聴者名など）は、このブラウザの中にだけ保存します。サーバーには送らず、運営者も見られません。計測（Google アナリティクス）は回した回数などの回数だけで、入力した文字は含みません。</p>
+<p class="page-links">このページの中：<a href="#howto">使い方</a><a href="#obs">OBSに映す</a><a href="#settings">設定</a><a href="#faq">よくある質問</a></p>
 </div>
 </main>
 </div>
@@ -613,6 +623,11 @@ body .btn.sm,body .stream-sw{min-height:44px}
       var mn = $('modeNote'), rfxH = mn && mn.offsetHeight ? mn.offsetHeight + 4 : 0;
       var below = $('spin').offsetHeight + 14 + (keys ? keys.offsetHeight + 12 : 0) + swH + rfxH + Math.max(res.offsetHeight, rl * 2 + 64) + 24;
       h = Math.max(150, window.innerHeight - top - below);   // 960x540 の配信モードでも「直前の結果」まで入るよう、盤は150pxまで縮める
+      // 2026-11-11 PC（900px以上・配信モード以外）は盤を直径320〜360pxまで大きく。「回す」までは1画面に入れる（直前の結果は下へ送ってよい）
+      if (window.innerWidth >= 900 && !document.documentElement.classList.contains('stream')) {
+        var fitSpin = window.innerHeight - top - $('spin').offsetHeight - 14 - 24;
+        h = Math.max(h, Math.min(360, Math.max(320, fitSpin)));
+      }
     } else if (window.innerWidth <= 600) {
       // 2026-11-04 スマホ幅は開いた画面に「回す」まで入る大きさ（小さくても260px）
       var tp = col.querySelector('.stage').getBoundingClientRect().top + window.scrollY;
