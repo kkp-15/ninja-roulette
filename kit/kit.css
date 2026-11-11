@@ -501,7 +501,7 @@ body.k-playing .k-install{display:none!important}
 .k-view-open{display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px}
 .k-view-open>.k-btn{min-height:44px;padding:0 14px;font-size:15px;box-shadow:var(--k-sh-s)}
 .k-view-open>.k-seg{flex:none}
-.k-view-open>.k-seg>button{min-height:44px;padding:4px 10px;font-size:14px}
+.k-view-open>.k-seg>button{min-width:44px;min-height:44px;padding:4px 10px;font-size:14px}
 .k-view-open>p{flex:1 1 260px;margin:0;font-size:14px;line-height:1.5;color:var(--k-text-2)}
 .k-view-open>.k-vo-msg{flex-basis:100%;color:var(--k-shu);font-weight:700}
 .k-view-open .k-vo-color{flex-direction:row;gap:6px}
