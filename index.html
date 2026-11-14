@@ -73,6 +73,8 @@ code{font-size:.95em;background:#f4f1ec;padding:1px 5px;border-radius:3px}
 .wrap{max-width:1180px;margin:0 auto;padding:12px 16px 40px}
 h1{font-size:21px;font-weight:700;margin:0 0 .2rem;line-height:1.4}
 .lead{font-size:15px;margin:0 0 .2rem}
+.lead-below{margin:18px 0 6px}
+@media(max-width:600px){header h1{font-size:19px;line-height:1.4;margin:.5rem 0 .6rem}}
 .meta{font-size:14px;color:var(--sub);margin:0 0 .8rem}
 h2{font-size:19px;font-weight:700;margin:2.4rem 0 .6rem;padding:0 0 .3rem;border-bottom:2px solid var(--ink);line-height:1.4;scroll-margin-top:8px}
 h3{font-size:16.5px;font-weight:700;margin:1.4rem 0 .4rem;padding-left:.55rem;border-left:4px solid var(--accent);line-height:1.4}
@@ -200,8 +202,6 @@ body .meta,body .note,body .gacha-link,body .count,body .keys,body .rfx-mode-not
 <div class="wrap">
 <header>
   <h1>配信ルーレット　OBSで使える無料のお題ルーレット</h1>
-  <p class="lead">雑談のお題・企画・罰ゲーム・視聴者名を1行に1つ貼って回す。配信に映すなら <a href="#obs">表示ページ</a> をOBSの「ウィンドウキャプチャ」で取り込みます。</p>
-  <p class="meta">更新日 2026年10月22日　項目はこの端末にだけ保存（送信なし）。登録不要・無料。</p>
 </header>
 
 <main>
@@ -262,6 +262,9 @@ body .meta,body .note,body .gacha-link,body .count,body .keys,body .rfx-mode-not
   <li><b>ゲーム実況の前に</b>　配信してよいか・収益化の条件は <a href="/guideline/">ゲーム会社ごとの公式ガイドライン一覧</a> で確かめる。</li>
 </ul>
 
+<!-- 2026-11-14 説明と更新日は道具の下へ（スマホで最初の画面にルーレットを出す） -->
+<div class="lead-below"><p class="lead">雑談のお題・企画・罰ゲーム・視聴者名を1行に1つ貼って回す。配信に映すなら <a href="#obs">表示ページ</a> をOBSの「ウィンドウキャプチャ」で取り込みます。</p>
+  <p class="meta">更新日 2026年10月22日　項目はこの端末にだけ保存（送信なし）。登録不要・無料。</p></div>
 <h2 id="howto" class="k-hd">使い方（3段）</h2>
 <ol class="steps">
   <li><b>1. 項目を貼る</b><span>お題・視聴者名などを1行に1つ。まとめて貼り付けできます。</span></li>
