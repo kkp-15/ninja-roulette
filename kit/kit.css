@@ -36,9 +36,9 @@
 
 /* ---------- ボタン（主＝木札／副／小／大） ---------- */
 .k-btn{display:inline-flex;align-items:center;justify-content:center;font-family:var(--k-bold);font-weight:400;letter-spacing:.04em;line-height:1.2;font-feature-settings:"palt" 1;text-decoration:none;cursor:pointer;transition:transform .08s,box-shadow .08s,filter .08s,background .15s;-webkit-tap-highlight-color:transparent}
-/* 主ボタン: 2026-11-09 ユーザー承認で全サイト「平らなオレンジ＋墨の枠」に統一（木目の板はやめた。10/30の配色調査・ワードウルフ等5サイトの試しを kit に取り込み）。色は --k-btn-main（既定 #f26a1b） */
+/* 主ボタン: 2026-11-24 文字を17→19pxに（白×#f26a1b は 3.06:1。WCAG/HIG の大きな太字＝3:1 を満たすため・ユーザー承認A）。2026-11-09 ユーザー承認で全サイト「平らなオレンジ＋墨の枠」に統一（木目の板はやめた。10/30の配色調査・ワードウルフ等5サイトの試しを kit に取り込み）。色は --k-btn-main（既定 #f26a1b） */
 :root{--k-btn-main:#f26a1b;--k-navy:#2b3768}
-.k-btn-main{position:relative;min-height:56px;padding:0 22px;border:3px solid var(--k-sumi);border-radius:14px;background:var(--k-btn-main);color:#fff;font-size:17px;text-shadow:0 1px 0 var(--k-sumi),1px 0 0 var(--k-sumi),0 -1px 0 var(--k-sumi),-1px 0 0 var(--k-sumi);filter:drop-shadow(4px 4px 0 var(--k-sumi));white-space:nowrap}
+.k-btn-main{position:relative;min-height:56px;padding:0 22px;border:3px solid var(--k-sumi);border-radius:14px;background:var(--k-btn-main);color:#fff;font-size:19px;text-shadow:0 1px 0 var(--k-sumi),1px 0 0 var(--k-sumi),0 -1px 0 var(--k-sumi),-1px 0 0 var(--k-sumi);filter:drop-shadow(4px 4px 0 var(--k-sumi));white-space:nowrap}
 .k-btn-main:hover,.k-btn-main:disabled,.k-btn-main[disabled]{background:var(--k-btn-main)}
 .k-btn-main::after{content:"";position:absolute;inset:0;border-radius:11px;pointer-events:none;background:linear-gradient(110deg,transparent 38%,rgba(255,255,255,.45) 50%,transparent 62%) no-repeat;background-size:260% 100%;background-position:120% 0;transition:background-position .7s ease}
 .k-btn-main:hover::after,.k-btn-main:focus-visible::after{background-position:-20% 0}
@@ -731,3 +731,56 @@ body.k-view-ov.k-idle .k-ov{visibility:hidden}   /* 待ち画面の間は中身�
 .k-map-br>a{display:flex;align-items:center;min-height:44px;padding:2px 0;border-bottom:1px dashed var(--k-line-soft);font-size:15px;line-height:1.35;overflow-wrap:anywhere}
 .k-map-br>a:last-child{border-bottom:0}
 .k-map-br>a.k-link::after{width:18px;height:12px}
+
+/* ===== 読み物の挿し絵と会話（2026-11-15）=====
+   絵は img/chara3/（一覧.md）から、使うサイトの img/ へコピーして使う。
+   .k-say  絵＋ひとこと     <div class="k-say"><img src="/img/girl-smile.webp" width="240" height="265" alt=""><p>ひとこと</p></div>
+   .k-ask  読んでいる人の声  <p class="k-ask"><span>読んでいる人</span>問い</p>（すぐ下に .k-say を置くと会話になる）
+   .k-chat 会話だけで要点が分かるまとまり（.k-ask と .k-say を交互に入れる箱）
+   .k-fig  場面の挿し絵      <figure class="k-fig"><img src="/img/scene-kinko.webp" width="760" height="425" alt="何の絵か"></figure> */
+.k-say{display:flex;align-items:flex-end;gap:10px;margin:1rem 0 1.1rem}
+.k-say img{flex:0 0 auto;width:84px;height:auto}
+.k-say p{position:relative;flex:1 1 auto;margin:0 0 10px;padding:.7rem .9rem;border:2px solid var(--k-sumi,#2b2b2b);background:#fff;font-size:16.5px;font-weight:700;line-height:1.6}
+.k-say p::before{content:"";position:absolute;left:-9px;bottom:14px;width:14px;height:14px;background:#fff;border-left:2px solid var(--k-sumi,#2b2b2b);border-bottom:2px solid var(--k-sumi,#2b2b2b);transform:rotate(45deg)}
+.k-ask{position:relative;margin:1rem 0 0 auto;max-width:86%;width:fit-content;padding:.6rem .9rem;border:2px solid #cfc6b8;background:#fff6ea;font-size:16.5px;line-height:1.6}
+.k-ask span{display:block;font-size:13px;color:#5f5f5f;margin-bottom:.1rem}
+.k-ask::after{content:"";position:absolute;right:18px;bottom:-9px;width:14px;height:14px;background:#fff6ea;border-right:2px solid #cfc6b8;border-bottom:2px solid #cfc6b8;transform:rotate(45deg)}
+.k-ask + .k-say{margin-top:.5rem}
+.k-chat{border:2px solid var(--k-sumi,#2b2b2b);background:#fffdf8;padding:.2rem .9rem .6rem;margin:1rem 0 1.2rem}
+.k-fig{margin:.6rem 0 1rem}
+.k-fig img{display:block;width:100%;height:auto;max-width:560px;border:2px solid var(--k-sumi,#2b2b2b)}
+@media(min-width:600px){.k-say img{width:104px}.k-say p{font-size:17px}}
+@media print{.k-say,.k-ask,.k-chat,.k-fig{display:none}}
+
+/* ===== 会話でわかる（砦のブログと同じ形・2026-11-15）=====
+   女の子が聞いて、柴犬の忍者（書き手）が答える。会話だけ読んでも要点が分かるように4〜5組。最後の組は、次にやること（結果・収益のページ）につなぐ。
+   <section class="k-talks"><h2>会話でわかる（1分）</h2>
+     <div class="k-talk q"><img src="/kit/img/k-ava-girl.webp" width="64" height="64" alt="" loading="lazy"><p>問い</p></div>
+     <div class="k-talk a"><img src="/kit/img/k-ava-ninja.webp" width="64" height="64" alt="" loading="lazy"><p>答え</p></div>
+   </section>  （絵は飾りなので alt は空。img のパスは、そのサイトの kit/ の場所に合わせる） */
+.k-talks{margin:1.2rem 0 1.4rem}
+.k-talk{display:flex;align-items:flex-start;gap:12px;margin:1rem 0}
+.k-talk>img{flex:none;width:64px;height:64px;border-radius:50%;display:block}
+.k-talk>p{position:relative;flex:1;min-width:0;margin:0;background:#fff;border:2px solid #e6d7bd;border-radius:14px;padding:.7rem .95rem;font-size:16px;line-height:1.75;color:#2b2b2b;text-align:left}
+.k-talk>p::before{content:"";position:absolute;top:20px;left:-9px;width:14px;height:14px;background:inherit;border-left:2px solid #e6d7bd;border-bottom:2px solid #e6d7bd;transform:rotate(45deg)}
+.k-talk.a{flex-direction:row-reverse}
+.k-talk.a>p{background:#fff6e3;border-color:#efc98a}
+.k-talk.a>p::before{left:auto;right:-9px;border:0;border-right:2px solid #efc98a;border-top:2px solid #efc98a}
+@media(max-width:420px){.k-talk>img{width:52px;height:52px}}
+@media print{.k-talks{display:none}}
+
+/* ===== アプリのような操作感（2026-11-23）=====
+   スマホで「Webページを触っている感じ」を減らす小さな決まり。見た目は変えない。
+   1) 入力欄を押しても画面が勝手に拡大しない（iOS は 16px 未満の入力欄で拡大する）
+   2) ボタンのダブルタップ拡大の待ちをなくし、押した瞬間に反応する
+   3) ボタンを長押ししても文字選択やメニューが出ない
+   4) 同じサイト内のページ移動をふわっと切り替える（対応ブラウザだけ。動きを減らす設定の人には出さない） */
+@media (pointer:coarse){
+  input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color]),select,textarea{font-size:16px!important}
+}
+a,button,summary,label,select,[role=button],input[type=checkbox],input[type=radio]{touch-action:manipulation}
+button,[role=button],.k-btn{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+@media (prefers-reduced-motion:no-preference){
+  @view-transition{navigation:auto}
+  ::view-transition-old(root),::view-transition-new(root){animation-duration:.18s}
+}
