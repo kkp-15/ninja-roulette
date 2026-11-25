@@ -8,7 +8,7 @@
     t = localStorage.getItem('kkp-test') === '1';
   } catch (e) {}
   window.__kkpTest = t;
-  var p = t || /[?&]preview=1/.test(location.search) || location.hostname === 'localhost' || location.hostname === '127.0.0.1' || location.protocol === 'file:';
+  var p = t || /[?&]preview=1/.test(location.search) || location.hostname === 'localhost' || location.hostname === '127.0.0.1' || !/(^|\.)kkpwebninja\.com$/.test(location.hostname) || location.protocol === 'file:';
   window.dataLayer = window.dataLayer || [];
   window.gtag = function () { dataLayer.push(arguments); };
   if (p) { window.__kkpPreview = true; window['ga-disable-G-2LM85GJN0L'] = true; return; }
