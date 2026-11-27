@@ -13,7 +13,8 @@
   window.gtag = function () { dataLayer.push(arguments); };
   if (p) { window.__kkpPreview = true; window['ga-disable-G-2LM85GJN0L'] = true; return; }
   gtag('js', new Date());
-  gtag('config', 'G-2LM85GJN0L');
+  // page_location に # の後ろを入れない（別端末用URLの項目を GA4 に残さない）
+  gtag('config', 'G-2LM85GJN0L', { page_location: location.origin + location.pathname + location.search });
   var s = document.createElement('script');
   s.async = true; s.src = 'https://www.googletagmanager.com/gtag/js?id=G-2LM85GJN0L';
   document.head.appendChild(s);

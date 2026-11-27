@@ -38,7 +38,7 @@
     {"@type":"FAQPage","@id":"https://roulette.kkpwebninja.com/#faq","mainEntity":[
       {"@type":"Question","name":"OBSで背景が透明になりません","acceptedAnswer":{"@type":"Answer","text":"ウィンドウキャプチャはウィンドウをそのまま映すので、背景は透けません。設定の背景を「緑（クロマキー）」にして、OBSでそのソースにフィルタ「クロマキー」をかけてください。別端末用のURLをブラウザソースに入れているときは、ページ側で背景を透過にしています。そのときは、ブラウザソースの「カスタムCSS」に body { background-color: ... } が残っていると透過になりません。カスタムCSSを空にするか、設定の背景を「透過」に戻してください。"}},
       {"@type":"Question","name":"配信用のPCと操作するスマホが別でも使えますか","acceptedAnswer":{"@type":"Answer","text":"同じ端末・同じブラウザなら自動で同期します（タブをまたいで通信するだけで、サーバーは通りません）。OBSの「ブラウザ」ソースは別のブラウザなので、同じPCでも同期しません。別の端末のときは設定の「別端末用のURL」を配信用PCで開いてください。項目がURLに入っているので、そのページ側でスペースキーかクリックで回せます。"}},
-      {"@type":"Question","name":"入力した視聴者名やお題はどこかに送られますか","acceptedAnswer":{"@type":"Answer","text":"送られません。項目はこのブラウザの中（localStorage）にだけ残り、「全部消す」で消せます。計測は「回した回数」のような回数だけで、項目の中身は送りません。"}},
+      {"@type":"Question","name":"入力した視聴者名やお題はどこかに送られますか","acceptedAnswer":{"@type":"Answer","text":"サーバーには送りません。項目はこのブラウザの中（localStorage）に残り、「全部消す」で消せます。「別端末用のURL」には項目が入ります（URLを見た人には読めます）。計測は「回した回数」のような回数だけで、項目の中身は送りません。"}},
       {"@type":"Question","name":"同じ項目ばかり出ます","acceptedAnswer":{"@type":"Answer","text":"「当たった項目を次から外す」にチェックを入れると、出た項目は候補から外れます。全部出し切ったら「外した項目を戻す」で最初からにできます。"}},
       {"@type":"Question","name":"音が出ません","acceptedAnswer":{"@type":"Answer","text":"最初はオフです。設定の「効果音」を入れてください。ウィンドウキャプチャで映すときは、PCから出た音がOBSの「デスクトップ音声」として配信に乗ります。別端末用のURLをブラウザソースに入れているときは、ソースの「音声をOBSで制御する」をオンにし、「表示ページ（OBS側）で鳴らす」にもチェックを入れます。ブラウザの決まりで、ページを一度クリックするまで音が鳴らないことがあります。"}},
       {"@type":"Question","name":"OBSのブラウザソースで使えますか","acceptedAnswer":{"@type":"Answer","text":"この画面の操作は、OBSのブラウザソースには届きません（OBSの中は別のブラウザのため）。ブラウザソースを使うなら、設定の「別端末用のURL」をコピーして入れてください。そのページだけで、スペースキーかクリックで回せます。ふだんは「表示ページを別ウィンドウで開く」を「ウィンドウキャプチャ」で取り込むのがかんたんです。"}},
@@ -403,7 +403,7 @@ body .meta,body .note,body .gacha-link,body .count,body .keys,body .rfx-mode-not
 <h2 id="faq" class="k-hd">よくある質問</h2>
 <details><summary>OBSで背景が透明になりません</summary><p>ウィンドウキャプチャはウィンドウをそのまま映すので、背景は透けません。設定の背景を「緑（クロマキー）」にして、OBSでそのソースにフィルタ「クロマキー」をかけてください。別端末用のURLをブラウザソースに入れているときは、ページ側で背景を透過にしています。そのときは、ブラウザソースの「カスタムCSS」に <code>body { background-color: ... }</code> が残っていると透過になりません。カスタムCSSを空にするか、設定の背景を「透過」に戻してください。</p></details>
 <details><summary>配信用のPCと操作するスマホが別でも使えますか</summary><p>同じ端末・同じブラウザなら自動で同期します（タブをまたいで通信するだけで、サーバーは通りません）。OBSの「ブラウザ」ソースは別のブラウザなので、同じPCでも同期しません。別の端末のときは設定の「別端末用のURL」を配信用PCで開いてください。項目がURLに入っているので、そのページ側でスペースキーかクリックで回せます。</p></details>
-<details><summary>入力した視聴者名やお題はどこかに送られますか</summary><p>送られません。項目はこのブラウザの中（localStorage）にだけ残り、「全部消す」で消せます。計測は「回した回数」のような回数だけで、項目の中身は送りません。</p></details>
+<details><summary>入力した視聴者名やお題はどこかに送られますか</summary><p>サーバーには送りません。項目はこのブラウザの中（localStorage）に残り、「全部消す」で消せます。「別端末用のURL」には項目が入ります（URLを見た人には読めます）。計測は「回した回数」のような回数だけで、項目の中身は送りません。</p></details>
 <details><summary>同じ項目ばかり出ます</summary><p>「当たった項目を次から外す」にチェックを入れると、出た項目は候補から外れます。全部出し切ったら「外した項目を戻す」で最初からにできます。</p></details>
 <details><summary>音が出ません</summary><p>最初はオフです。設定の「効果音」を入れてください。ウィンドウキャプチャで映すときは、PCから出た音がOBSの「デスクトップ音声」として配信に乗ります。別端末用のURLをブラウザソースに入れているときは、ソースの「音声をOBSで制御する」をオンにし、「表示ページ（OBS側）で鳴らす」にもチェックを入れます。ブラウザの決まりで、ページを一度クリックするまで音が鳴らないことがあります。</p></details>
 <details><summary>OBSのブラウザソースで使えますか</summary><p>この画面の操作は、OBSのブラウザソースには届きません（OBSの中は別のブラウザのため）。ブラウザソースを使うなら、設定の「別端末用のURL」をコピーして入れてください。そのページだけで、スペースキーかクリックで回せます。ふだんは「表示ページを別ウィンドウで開く」を「ウィンドウキャプチャ」で取り込むのがかんたんです。</p></details>
@@ -501,7 +501,8 @@ body .meta,body .note,body .gacha-link,body .count,body .keys,body .rfx-mode-not
     if (REC) recIdle();
     $('exN').textContent = excluded.length;
     $('restore').hidden = excluded.length === 0;
-    $('remoteUrl').value = ORIGIN + '/view/?' + remoteQuery();
+    // 項目は # の後ろに入れる（サーバー・GA4 に届かない）
+    $('remoteUrl').value = ORIGIN + '/view/?' + remoteQuery() + '#items=' + remoteItems();
     editLabel();
   }
   // スマホ幅の「項目を編集」（開け閉めは見た目だけ。PC幅では欄はいつも出ている）
@@ -511,9 +512,12 @@ body .meta,body .note,body .gacha-link,body .count,body .keys,body .rfx-mode-not
     $('editTg').setAttribute('aria-expanded', shut ? 'false' : 'true');
   }
   $('editTg').addEventListener('click', function () { $('colIn').classList.toggle('shut'); editLabel(); });
+  function remoteItems() {
+    return encodeURIComponent(pool.map(function (i) { return i.weight === 1 ? i.label : i.label + '*' + i.weight; }).join('\n'));
+  }
   function remoteQuery() {
     var vs = viewSettings();
-    var q = ['items=' + encodeURIComponent(pool.map(function (i) { return i.weight === 1 ? i.label : i.label + '*' + i.weight; }).join('\n'))];
+    var q = [];
     var b = bgNow();
     q.push('bg=' + encodeURIComponent(b.charAt(0) === '#' ? b.slice(1) : b), 'layout=' + vs.layout, 'place=' + vs.place, 'wfx=' + vs.wfx, 'speed=' + vs.speed, 'size=' + vs.size, 'ink=' + vs.ink, 'credit=' + (vs.credit ? 1 : 0), 'sound=' + (vs.sound ? 1 : 0));
     return q.join('&');

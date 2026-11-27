@@ -13,8 +13,22 @@
 <link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&display=swap&text=NRS%E7%B5%90%E6%9E%9C%E6%AE%8B%E3%82%8A0123456789%2F" rel="stylesheet">
 <link rel="stylesheet" href="/kit/kit.css?v=3363b13">
 <link rel="stylesheet" href="/rfx.css?v=20261023b">
+<!-- 別端末用URLの項目は # の後ろ（#items=）。# の後ろはサーバー・GA4・Referer に届かない。
+     古い形式（?items=）で開いたときは、GA4 より先に ? から # へ移す -->
+<script>
+(function () {
+  try {
+    var m = /[?&]items=([^&#]*)/.exec(location.search);
+    if (m) {
+      var q = location.search.replace(/([?&])items=[^&#]*&?/, '$1').replace(/[?&]$/, '');
+      history.replaceState(null, '', location.pathname + q + '#items=' + m[1]);
+    }
+  } catch (e) {}
+  window.addEventListener('hashchange', function () { location.reload(); });
+})();
+</script>
 <script src="/kit/kit.js?v=3363b13"></script>
-<script src="/ga.js"></script>
+<script src="/ga.js?v=20261128"></script>
 <style>
 /* OBS のウィンドウキャプチャで取り込む表示ページ（別端末用のURLはブラウザソースでも動く）。操作ボタン・広告・説明文は映さない。
    2026-10-22 枠は kit の重ね表示型 k-view-ov（.k-ov[data-k-place] full／band 下の帯／corner 右下に小さく・縦長の窓と ?layout=v は縦に並ぶ）。
@@ -58,6 +72,7 @@
   var K = window.KkpWheel, G = window.KkpGacha;
   var $ = function (id) { return document.getElementById(id); };
   var q = new URLSearchParams(location.search);
+  new URLSearchParams(location.hash.slice(1)).forEach(function (v, k) { q.set(k, v); });
   var remote = q.has('items');   // 別端末モード: 項目はURLから。回す操作はこのページで
   var gremote = q.has('gacha');  // 別端末のお題ガチャ: パックはURLから。このページで引く
   // 操作画面から開いた窓は ?bg= が付いていても切り替えに付いていく（kit 97e144f の KKit.view が opener を見る）。opener のない窓は ?bg= で固定
