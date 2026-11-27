@@ -17,7 +17,8 @@
   // 広告のスクリプトは配信モードと確認用（?kkptest=1）では読まない
   var loaded = false;
   window.kkpLoadAds = function () {
-    if (loaded || KKit.stream.noAds()) return;
+    // 2026-11-28 録画モード（?rec=1・インスタ用の縦画面）も読まない（KKit.stream.noAds() も録画モードでは true だが、明示する）
+    if (loaded || KKit.stream.noAds() || (KKit.rec && KKit.rec.noAds())) return;
     loaded = true;
     var s = document.createElement('script');
     s.async = true; s.crossOrigin = 'anonymous';

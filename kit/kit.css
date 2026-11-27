@@ -784,3 +784,96 @@ button,[role=button],.k-btn{-webkit-user-select:none;user-select:none;-webkit-to
   @view-transition{navigation:auto}
   ::view-transition-old(root),::view-transition-new(root){animation-duration:.18s}
 }
+
+/* ===== 商品カード（アフィリエイト・2026-11-26）=====
+   すでに貼ってあるアフィリのリンクを「楽天の商品画像＋商品名＋1行＋ボタン」のカードにする。手本は砦の /block/ と年末ゲーム記事のマリオ花札。
+   約束: PR の表記を必ず出す／画像は楽天の商品画像（thumbnail.image.rakuten.co.jp・Amazon の画像は直接読まない）／値段は書かない／
+         楽天＝赤い「楽天で見る」、Amazon＝白い「Amazonで探す」（文字だけ）。クリックは kit.js が gtag('event','toride_click') を送る。
+   <aside class="k-aff" data-zone="affiliate_ito_compare">
+     <p class="k-aff-h"><span class="k-aff-pr">PR</span>見出し</p>
+     <div class="k-aff-item">
+       <a class="k-aff-img" href="楽天のリンク" target="_blank" rel="nofollow sponsored noopener" data-store="rakuten" data-item="rainbow"><img src="https://thumbnail.image.rakuten.co.jp/@0_mall/…jpg?_ex=200x200" width="88" height="88" loading="lazy" alt="商品の箱"></a>
+       <div class="k-aff-txt"><b>商品名</b><span class="k-aff-desc">1行の説明</span>
+         <div class="k-aff-btns"><a class="k-aff-rakuten" href="…" …>楽天で見る</a><a class="k-aff-amazon" href="…" …>Amazonで探す</a></div></div>
+     </div>
+   </aside> */
+.k-aff{border:1px solid #d9cbb5;border-radius:6px;padding:8px 10px 10px;margin:14px 0 18px;background:#fffdf8;color:#3d3427;text-align:left}
+.k-aff-h{display:flex;align-items:center;gap:6px;margin:0 0 4px;font-size:14px;font-weight:700;line-height:1.5;color:#4a3f37}
+.k-aff-pr{flex:none;font-size:12px;border:1px solid #8a7d6b;color:#5b5047;padding:0 4px;border-radius:3px;line-height:1.5;font-weight:400;letter-spacing:0}
+.k-aff-lead{margin:0 0 6px;font-size:14px;line-height:1.6;color:#3d3427}
+.k-aff-item{display:flex;gap:10px;align-items:center;padding:8px 0;border-top:1px dashed #e4d8c4}
+.k-aff-h+.k-aff-item,.k-aff>.k-aff-item:first-child{border-top:0}
+.k-aff-img{flex:none;display:block;width:88px;height:88px;border-radius:4px;background:#fff;overflow:hidden;line-height:0}
+.k-aff-img img{width:100%;height:100%;object-fit:contain;display:block;margin:0;border:0}
+.k-aff-txt{flex:1;min-width:0;font-size:14px;line-height:1.5;color:#3d3427}
+.k-aff-txt b{display:block;font-size:15px;line-height:1.4;color:#2b231d}
+.k-aff-desc{display:block;font-size:14px;line-height:1.5;color:#5b5047}
+.k-aff-btns{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.k-aff .k-aff-btns>a[href]{flex:1 1 96px;min-width:fit-content;font-family:var(--k-head);min-height:44px;box-sizing:border-box;display:flex;align-items:center;justify-content:center;padding:0 6px;font-size:14px;font-weight:700;line-height:1.2;border:1.5px solid #3d3427;border-radius:6px;color:#3d3427!important;background:#fff!important;text-decoration:none!important;text-decoration-line:none!important;white-space:nowrap;box-shadow:none;text-shadow:none;letter-spacing:0}
+.k-aff .k-aff-btns>a.k-aff-rakuten[href]{background:#bf0000!important;border-color:#bf0000;color:#fff!important}
+.k-aff .k-aff-btns>a[href]::after,.k-aff .k-aff-btns>a[href]::before{content:none}
+.k-aff a.k-aff-img[href]{text-decoration:none!important;border:0}
+.k-aff-note{margin:6px 0 0;font-size:14px;line-height:1.5;color:#5b5047}
+/* 比べる表の中などで1商品だけ置くとき: <div class="k-aff k-aff-solo"><div class="k-aff-item">…<b><span class="k-aff-pr">PR</span>商品名</b>… */
+.k-aff-solo{margin:8px 0 0;padding:4px 10px}
+.k-aff-solo .k-aff-item{border-top:0;padding:6px 0}
+.k-aff-txt b .k-aff-pr{display:inline-block;margin-right:6px;vertical-align:2px;font-size:12px}
+.k-aff-desc a{color:#7a4a12;text-decoration:underline}
+/* 同じ種類の商品が5つ以上並ぶときは横に流す（縦に長くしない）: <div class="k-aff-scroll"><div class="k-aff-item">…</div>…</div> */
+.k-aff-scroll{display:flex;gap:8px;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x proximity;padding:2px 2px 8px;margin:4px 0 0;-webkit-overflow-scrolling:touch}
+.k-aff-scroll .k-aff-item{flex:0 0 136px;flex-direction:column;align-items:stretch;gap:6px;padding:8px;border:1px solid #e4d8c4;border-radius:6px;background:#fff;scroll-snap-align:start}
+.k-aff-scroll .k-aff-img{width:100%;height:100px}
+.k-aff-scroll .k-aff-txt b{font-size:14px}
+.k-aff-scroll .k-aff-desc{font-size:14px;line-height:1.4}
+.k-aff-scroll .k-aff-btns{flex-direction:column}
+.k-aff .k-aff-scroll .k-aff-btns>a[href]{flex:none;min-width:0}
+.k-aff-hint{margin:0;font-size:14px;color:#5b5047}
+@media (max-width:360px){.k-aff-img{width:72px;height:72px}}
+@media print{.k-aff{display:none}}
+
+/* =====================================================================
+   2026-11-27 録画モード（k-rec・?rec=1）。画面録画してインスタに載せやすい縦9:16の画面
+   手本はマッスルタイピング（90712ed）。kit.js の KKit.rec が <html data-k-rec> を付ける。使い方は README の「録画モード」
+   <body> の直下に <div class="k-rec-stage"> を1つ置き、録画モードの場面はその中にサイトごとに書く。
+   録画モードでは body の直下の .k-rec-stage 以外（広告・説明・フッター）を消す。外側は黒、PC では中央に 9:16 の枠。
+   安全地帯（インスタの表示に隠れる所）: 上 --k-rec-top 14% ／ 下 --k-rec-bottom 20% ／ 右端 --k-rec-right 12%。大事な字はここに置かない
+   ===================================================================== */
+.k-rec-only{display:none!important}
+.k-rec-link{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:44px;font-size:14px;font-weight:700;color:var(--k-sumi);text-decoration:underline;text-decoration-color:var(--k-orange);text-underline-offset:4px}
+.k-rec-link-note{margin:0;font-size:14px;color:var(--k-text-2,#5b5047)}
+html[data-k-rec] .k-rec-link,html[data-k-rec] .k-rec-link-note,html[data-k-rec] .k-rec-hide{display:none!important}
+html[data-k-rec] .k-rec-only{display:revert!important}
+/* 枠を置いていないページ（下層ページなど）に ?rec=1 が付いても白紙にしないよう、.k-rec-stage があるときだけ */
+html[data-k-rec]:has(>body>.k-rec-stage),html[data-k-rec] body:has(>.k-rec-stage){height:100%;overflow:hidden;overscroll-behavior:none}
+html[data-k-rec] body:has(>.k-rec-stage){margin:0;padding:0;background:#000!important}
+html[data-k-rec] body:has(>.k-rec-stage)>*:not(.k-rec-stage):not(script):not(style):not(noscript){display:none!important}
+.k-rec-stage{display:none}
+html[data-k-rec] .k-rec-stage{
+  --k-rec-top:14cqh;--k-rec-bottom:20cqh;--k-rec-right:12cqw;--k-rec-side:5cqw;
+  --k-rec-out:2px 2px 0 #000,-2px -2px 0 #000,2px -2px 0 #000,-2px 2px 0 #000,0 2px 0 #000,2px 0 0 #000,0 -2px 0 #000,-2px 0 0 #000;
+  display:block;position:fixed;inset:0;margin:auto;box-sizing:border-box;
+  width:min(100vw,calc(100dvh * 9 / 16));height:min(100dvh,calc(100vw * 16 / 9));
+  container-type:size;overflow:hidden;background:var(--k-kinari);color:var(--k-sumi);
+  font-family:var(--k-body,"M PLUS Rounded 1c",sans-serif);-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
+/* 安全地帯の中だけを使う入れ物（上14%・下20%・右12%をあける）。スマホのキーボードが出たら下をその分あける */
+.k-rec-safe{position:absolute;top:var(--k-rec-top);left:var(--k-rec-side);right:var(--k-rec-right);bottom:max(var(--k-rec-bottom),var(--k-rec-kb,0px));display:flex;flex-direction:column;min-height:0}
+/* 太字＋黒ふち（字の上に白か金）。録画を縮めて見ても読める */
+.k-rec-big{font-family:var(--k-bold,"RocknRoll One",sans-serif);font-weight:400;color:#fff;text-shadow:var(--k-rec-out);line-height:1.15;letter-spacing:.02em}
+/* はじめの見出し（KKit.rec.title）。上14%の下に帯で1.8秒 */
+.k-rec-title{position:absolute;left:0;right:0;top:var(--k-rec-top);height:24cqh;z-index:30;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;background:rgba(31,26,23,.78);pointer-events:none;animation:k-rec-title 1.8s ease-out forwards}
+.k-rec-title b{font-family:var(--k-bold,"RocknRoll One",sans-serif);font-weight:400;font-size:9cqw;line-height:1.15;color:#ffd27a;text-shadow:var(--k-rec-out);white-space:nowrap}
+.k-rec-title span{margin-top:.8cqh;font-size:4.4cqw;font-weight:800;color:#fff;text-shadow:var(--k-rec-out)}
+@keyframes k-rec-title{0%{opacity:0;transform:scale(.85)}12%{opacity:1;transform:scale(1)}80%{opacity:1}100%{opacity:0}}
+/* 終わりのサイト名（結果の下・下20%より上に置く） */
+.k-rec-credit{display:block;text-align:center;font-size:2.1cqh;font-weight:800;letter-spacing:.03em;color:var(--k-sumi)}
+.k-rec-credit small{display:block;font-size:1.7cqh;font-weight:700;color:var(--k-text-2,#5b5047)}
+/* ふつうの画面に戻る（スタートの場面だけに置く。録画中の画面には出さない） */
+.k-rec-exit{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 3cqw;font-size:max(14px,3.4cqw);font-weight:700;color:var(--k-sumi);text-decoration:underline;text-decoration-color:var(--k-orange);text-underline-offset:4px}
+/* 確かめ用（?recguide=1）: 隠れる所を赤く */
+.k-rec-guide{position:absolute;inset:0;z-index:999;pointer-events:none}
+.k-rec-guide i{position:absolute;background:rgba(255,0,0,.22)}
+.k-rec-guide .t{left:0;right:0;top:0;height:var(--k-rec-top)}
+.k-rec-guide .b{left:0;right:0;bottom:0;height:var(--k-rec-bottom)}
+.k-rec-guide .r{right:0;top:var(--k-rec-top);bottom:var(--k-rec-bottom);width:var(--k-rec-right)}
+@media (prefers-reduced-motion:reduce){.k-rec-title{animation:k-rec-title-still 1.8s step-end forwards}}
+@keyframes k-rec-title-still{0%,99%{opacity:1}100%{opacity:0}}

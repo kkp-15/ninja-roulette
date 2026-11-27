@@ -8,6 +8,7 @@
    - 演出の部品: KKit.fx.slash（札を刀で斬る）・KKit.fx.shuriken（手裏剣が飛んできて刺さる）。下の fxParts を見る
    - 配信の土台（2026-10-21〜）: KKit.stream / KKit.live / KKit.openView / KKit.view / KKit.resume / KKit.twice / KKit.fitText / KKit.streamTitle。下の streamParts を見る。
      読み込み時に使うページは kit.js を defer なしで <head> に置く（本体の script より先に KKit が要るため）
+   - 録画モード（2026-11-27〜）: KKit.rec。?rec=1 でインスタ用の縦9:16画面。下の recParts を見る
    - 遊びの部品（2026-10-22〜）: KKit.die（サイコロ）・KKit.wheel（ルーレット盤）・KKit.gateArt（ゲートの絵・canvas 用）。下の gameParts を見る
    動きを減らす設定（prefers-reduced-motion）では、季節と部品の手伝い以外は何もしない（演出の部品は動かさずに、すぐ結果の合図だけ出す）。 */
 (function () {
@@ -18,6 +19,7 @@
   if (season) root.setAttribute('data-k-season', season);
 
   var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  recParts();
   fxParts();
   helpers();
   streamParts();
@@ -59,6 +61,15 @@
      KKit.sfx(種類, { vol })        効果音（全サイト共通の音の決まり。種類は下の SFX を見る） */
   function helpers() {
     var K = window.KKit = window.KKit || {};
+    // 商品カード（.k-aff）のクリック計測。砦の手本（/block/・年末ゲーム記事）と同じ toride_click で送る（2026-11-26）
+    document.addEventListener('click', function (e) {
+      var a = e.target && e.target.closest ? e.target.closest('.k-aff a[href]') : null;
+      if (!a) return;
+      var box = a.closest('.k-aff');
+      try {
+        if (window.gtag) gtag('event', 'toride_click', { link_class: (box && box.getAttribute('data-zone')) || 'affiliate', link_url: a.href, store: a.getAttribute('data-store') || '', item: a.getAttribute('data-item') || '' });
+      } catch (err) {}
+    }, true);
     var toastEl = null, toastT = 0;
     K.toast = function (msg, ms) {
       if (!toastEl) {
@@ -289,6 +300,79 @@
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', auto); else auto();
   }
 
+  /* ===== 録画モード（2026-11-27〜・手本はマッスルタイピング 90712ed） =====
+     ?rec=1 で入る。画面録画してインスタ（リール・ストーリーズ）に載せやすい縦9:16の画面にする。
+     kit.js を読んだ時点で判定して <html data-k-rec> を付ける（広告の判定より前に kit.js を defer なしで読む）。
+     KKit.rec.on                 録画モードか
+     KKit.rec.noAds()            広告を読まないか（録画モードなら true）。KKit.stream.noAds() も録画モードでは true
+     KKit.rec.ga()               GA4 は rec_mode のイベントを1回だけ送り、そのあとの gtag は何もしない。
+                                 kit.js を読んだときに window.gtag があれば自動で呼ぶ（GA4 のあとに kit.js を置く）
+     KKit.rec.title(枠, { big, sub, ms })  はじめの見出し（何のゲームか1〜2秒で分かる。既定1.8秒で消える）
+     KKit.rec.exitUrl()          rec を外した URL（a.k-rec-exit の href は自動でこれになる＝「ふつうの画面に戻る」）
+     KKit.rec.kb()               スマホのキーボードの高さを --k-rec-kb に入れ直す（visualViewport。自動で追う）
+     ?rec=1&recguide=1           インスタに隠れる所（上14%・下20%・右端12%）を赤く塗って確かめる
+     配信モード（KKit.stream）とは別物。録画モードの間は配信モードに入らない（覚えた配信モードは消さない）。 */
+  function recParts() {
+    var K = window.KKit = window.KKit || {};
+    var q = location.search;
+    var R = K.rec = {
+      on: /[?&]rec=1(&|$)/.test(q),
+      guide: /[?&]recguide=1(&|$)/.test(q),
+      noAds: function () { return R.on; },
+      ga: function () {
+        if (!R.on || R._ga) return;
+        if (typeof window.gtag !== 'function') return;
+        R._ga = true;
+        try { window.gtag('event', 'rec_mode', { page_path: location.pathname }); } catch (e) {}
+        window.gtag = function () {};
+      },
+      exitUrl: function () {
+        try {
+          var u = new URL(location.href);
+          u.searchParams.delete('rec'); u.searchParams.delete('recguide'); u.hash = '';
+          return u.pathname + u.search;
+        } catch (e) { return location.pathname; }
+      },
+      title: function (box, o) {
+        o = o || {}; box = typeof box === 'string' ? document.querySelector(box) : box;
+        if (!box) return null;
+        var old = box.querySelector('.k-rec-title'); if (old) old.remove();
+        var t = document.createElement('div');
+        t.className = 'k-rec-title'; t.setAttribute('aria-hidden', 'true');
+        var b = document.createElement('b'); b.textContent = o.big || ''; t.appendChild(b);
+        if (o.sub) { var s = document.createElement('span'); s.textContent = o.sub; t.appendChild(s); }
+        box.appendChild(t);
+        setTimeout(function () { if (t.parentNode) t.remove(); }, o.ms || 1800);
+        return t;
+      },
+      kb: function () {
+        var vv = window.visualViewport, h = 0;
+        if (vv) h = Math.max(0, Math.round(window.innerHeight - vv.height - vv.offsetTop));
+        root.style.setProperty('--k-rec-kb', h + 'px');
+        return h;
+      }
+    };
+    if (!R.on) return;
+    root.setAttribute('data-k-rec', '');
+    if (R.guide) root.setAttribute('data-k-rec-guide', '');
+    R.ga();
+    if (window.visualViewport) { visualViewport.addEventListener('resize', R.kb); visualViewport.addEventListener('scroll', R.kb); }
+    var wire = function () {
+      R.kb();
+      var ex = document.querySelectorAll('a.k-rec-exit');
+      for (var i = 0; i < ex.length; i++) ex[i].setAttribute('href', R.exitUrl());
+      if (R.guide) {
+        var st = document.querySelector('.k-rec-stage');
+        if (st && !st.querySelector('.k-rec-guide')) {
+          var g = document.createElement('div'); g.className = 'k-rec-guide'; g.setAttribute('aria-hidden', 'true');
+          g.innerHTML = '<i class="t"></i><i class="b"></i><i class="r"></i>';
+          st.appendChild(g);
+        }
+      }
+    };
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', wire); else wire();
+  }
+
   /* ===== 配信の土台（2026-10-21〜） =====
      KKit.stream.init({ key })      配信モードかどうか（PC幅768以上・?mode=stream で入る・?mode=normal で出る）。<html data-k-stream> を付ける
      KKit.stream.set(on, params)    切り替え。URL の #… と mode= を消してから読み直す（#付きだと読み直さない不具合の再発防止）
@@ -327,13 +411,14 @@
     var ST = K.stream = {
       key: 'k-stream', on: false,
       can: function () { return !!window.__kkpTest || !!(window.matchMedia && matchMedia('(min-width:768px)').matches); },
-      noAds: function () { return ST.on || !!window.__kkpTest; },
+      noAds: function () { return ST.on || !!window.__kkpTest || !!(K.rec && K.rec.on); },
       init: function (o) {
         o = o || {}; if (o.key) ST.key = o.key;
         var q = location.search;
         if (/[?&]mode=normal\b/.test(q)) ls.del(ST.key);
         else if (/[?&]mode=stream\b/.test(q) && ST.can()) ls.set(ST.key, '1');
-        ST.on = ST.can() && ls.get(ST.key) === '1';
+        // 録画モード（?rec=1）の間は配信モードに入らない（覚えた配信モードは消さない）
+        ST.on = ST.can() && ls.get(ST.key) === '1' && !(K.rec && K.rec.on);
         if (ST.on) {
           root.setAttribute('data-k-stream', '');
           try { history.scrollRestoration = 'manual'; } catch (e) {}
