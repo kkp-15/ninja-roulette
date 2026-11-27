@@ -877,3 +877,28 @@ html[data-k-rec] .k-rec-stage{
 .k-rec-guide .r{right:0;top:var(--k-rec-top);bottom:var(--k-rec-bottom);width:var(--k-rec-right)}
 @media (prefers-reduced-motion:reduce){.k-rec-title{animation:k-rec-title-still 1.8s step-end forwards}}
 @keyframes k-rec-title-still{0%,99%{opacity:1}100%{opacity:0}}
+
+/* ===== 録画モードの見せ方（2026-11-28〜）: 背景の絵・女の子のひとこと・しめの札 =====
+   背景: <div class="k-rec-stage" data-rec-bg="img/rec-bg.webp"> と書くと、kit.js が --k-rec-bg に入れる。
+         絵は上14%・下20%（インスタに隠れる所）にそのまま見え、まん中は生成りの幕で薄めて字を読みやすくする。
+         絵は画像のAI（Gemini）に描いてもらう。文字・数字・ロゴなし・縦9:16・まん中は空けてもらう。
+   KKit.rec.cheer(枠, { pose:'clap'|'wow'|'wave'|'guts', say:'ぴったり！', ms }) 看板の女の子が左下から出てひとこと（既定2.4秒）
+   KKit.rec.end(枠, { name, sub, url })  しめの札（サイト名・ひとこと・URL・無料登録なし）。押すと消える */
+html[data-k-rec] .k-rec-stage[data-rec-bg]{background:var(--k-kinari) var(--k-rec-bg) center/cover no-repeat}
+html[data-k-rec] .k-rec-stage[data-rec-bg]::before{content:"";position:absolute;left:0;right:0;top:var(--k-rec-top);bottom:var(--k-rec-bottom);background:linear-gradient(to bottom,rgba(255,247,232,.55),rgba(255,247,232,.93) 7%,rgba(255,247,232,.93) 93%,rgba(255,247,232,.55));pointer-events:none;z-index:0}
+html[data-k-rec] .k-rec-stage[data-rec-bg]>*:not(.k-rec-cheer):not(.k-rec-end):not(.k-rec-title):not(.k-rec-guide){z-index:1}
+.k-rec-cheer{position:absolute;left:var(--k-rec-side);bottom:calc(var(--k-rec-bottom) + 1cqh);z-index:40;display:flex;align-items:flex-end;gap:1cqw;pointer-events:none;animation:k-rec-cheer var(--k-rec-cheer-ms,2.4s) ease-out forwards}
+.k-rec-cheer i{display:block;width:26cqw;aspect-ratio:240/298;background:url(img/rec-girl-clap.webp) bottom/contain no-repeat;filter:drop-shadow(0 .4cqh 0 rgba(31,26,23,.25))}
+.k-rec-cheer[data-pose="wow"] i{aspect-ratio:240/256;background-image:url(img/rec-girl-wow.webp)}
+.k-rec-cheer[data-pose="wave"] i{aspect-ratio:240/395;background-image:url(img/rec-girl-wave.webp)}
+.k-rec-cheer[data-pose="guts"] i{aspect-ratio:240/278;background-image:url(img/rec-girl-guts.webp)}
+.k-rec-cheer b{margin-bottom:14cqw;padding:1.2cqh 3.2cqw;border:3px solid var(--k-sumi);border-radius:4cqw 4cqw 4cqw 0;background:#fff;font-family:var(--k-bold,"RocknRoll One",sans-serif);font-weight:400;font-size:6.2cqw;line-height:1.2;color:var(--k-sumi);white-space:nowrap;box-shadow:0 .5cqh 0 var(--k-orange,#e8742a)}
+@keyframes k-rec-cheer{0%{opacity:0;transform:translateY(12cqh)}12%{opacity:1;transform:translateY(-1cqh)}18%{transform:translateY(0)}85%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(4cqh)}}
+.k-rec-end{position:absolute;inset:0;z-index:60;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.6cqh;padding:var(--k-rec-top) var(--k-rec-right) var(--k-rec-bottom) var(--k-rec-side);box-sizing:border-box;background:rgba(31,26,23,.86);text-align:center;cursor:pointer;animation:k-rec-end .5s ease-out both}
+.k-rec-end i{display:block;width:30cqw;aspect-ratio:240/395;background:url(img/rec-girl-wave.webp) bottom/contain no-repeat}
+.k-rec-end b{font-family:var(--k-bold,"RocknRoll One",sans-serif);font-weight:400;font-size:8.6cqw;line-height:1.15;color:#ffd27a;text-shadow:var(--k-rec-out)}
+.k-rec-end span{font-size:4.6cqw;font-weight:800;color:#fff;line-height:1.4}
+.k-rec-end u{display:inline-block;margin-top:.6cqh;padding:1cqh 4cqw;border-radius:99px;background:#fff;color:var(--k-sumi);font-size:4.6cqw;font-weight:800;text-decoration:none}
+.k-rec-end small{font-size:3.6cqw;font-weight:700;color:#f3e6cf}
+@keyframes k-rec-end{from{opacity:0}to{opacity:1}}
+@media (prefers-reduced-motion:reduce){.k-rec-cheer{animation:k-rec-title-still var(--k-rec-cheer-ms,2.4s) step-end forwards}.k-rec-end{animation:none}}

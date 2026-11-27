@@ -310,6 +310,9 @@
      KKit.rec.title(枠, { big, sub, ms })  はじめの見出し（何のゲームか1〜2秒で分かる。既定1.8秒で消える）
      KKit.rec.exitUrl()          rec を外した URL（a.k-rec-exit の href は自動でこれになる＝「ふつうの画面に戻る」）
      KKit.rec.kb()               スマホのキーボードの高さを --k-rec-kb に入れ直す（visualViewport。自動で追う）
+     KKit.rec.cheer(枠, { pose, say, ms })  看板の女の子が左下から出てひとこと（pose: clap・wow・wave・guts）
+     KKit.rec.end(枠, { name, sub, url, note })   しめの札（押すと消える・note は下の小さい字＝英語版用）。結果のあと「もう1回」と並べて出す
+     <div class="k-rec-stage" data-rec-bg="…webp">  背景の絵（上下の隠れる所に見え、まん中は幕で薄める）
      ?rec=1&recguide=1           インスタに隠れる所（上14%・下20%・右端12%）を赤く塗って確かめる
      配信モード（KKit.stream）とは別物。録画モードの間は配信モードに入らない（覚えた配信モードは消さない）。 */
   function recParts() {
@@ -345,6 +348,35 @@
         setTimeout(function () { if (t.parentNode) t.remove(); }, o.ms || 1800);
         return t;
       },
+      cheer: function (box, o) {
+        o = o || {}; box = typeof box === 'string' ? document.querySelector(box) : box;
+        if (!R.on || !box) return null;
+        var old = box.querySelector('.k-rec-cheer'); if (old) old.remove();
+        var c = document.createElement('div'), ms = o.ms || 2400;
+        c.className = 'k-rec-cheer'; c.setAttribute('aria-hidden', 'true');
+        if (o.pose && o.pose !== 'clap') c.setAttribute('data-pose', o.pose);
+        c.style.setProperty('--k-rec-cheer-ms', ms + 'ms');
+        c.appendChild(document.createElement('i'));
+        if (o.say) { var b = document.createElement('b'); b.textContent = o.say; c.appendChild(b); }
+        box.appendChild(c);
+        setTimeout(function () { if (c.parentNode) c.remove(); }, ms);
+        return c;
+      },
+      end: function (box, o) {
+        o = o || {}; box = typeof box === 'string' ? document.querySelector(box) : box;
+        if (!R.on || !box) return null;
+        var old = box.querySelector('.k-rec-end'); if (old) old.remove();
+        var e = document.createElement('div');
+        e.className = 'k-rec-end'; e.setAttribute('role', 'button'); e.setAttribute('aria-label', '閉じる');
+        e.appendChild(document.createElement('i'));
+        var b = document.createElement('b'); b.textContent = o.name || document.title.split(/[｜|]/)[0]; e.appendChild(b);
+        if (o.sub) { var s = document.createElement('span'); s.textContent = o.sub; e.appendChild(s); }
+        var u = document.createElement('u'); u.textContent = o.url || location.host; e.appendChild(u);
+        var sm = document.createElement('small'); sm.textContent = o.note || '無料・会員登録なし・スマホ1台で'; e.appendChild(sm);  // 英語版は note で差し替える
+        e.addEventListener('click', function () { e.remove(); });
+        box.appendChild(e);
+        return e;
+      },
       kb: function () {
         var vv = window.visualViewport, h = 0;
         if (vv) h = Math.max(0, Math.round(window.innerHeight - vv.height - vv.offsetTop));
@@ -359,6 +391,8 @@
     if (window.visualViewport) { visualViewport.addEventListener('resize', R.kb); visualViewport.addEventListener('scroll', R.kb); }
     var wire = function () {
       R.kb();
+      var bgs = document.querySelectorAll('.k-rec-stage[data-rec-bg]');
+      for (var j = 0; j < bgs.length; j++) bgs[j].style.setProperty('--k-rec-bg', 'url("' + new URL(bgs[j].getAttribute('data-rec-bg'), location.href).href + '")');  // css の url() は kit.css からの相対になるので、ページからの絶対URLにして渡す
       var ex = document.querySelectorAll('a.k-rec-exit');
       for (var i = 0; i < ex.length; i++) ex[i].setAttribute('href', R.exitUrl());
       if (R.guide) {
